@@ -27,8 +27,21 @@ import {
   BookOpen,
   CheckCircle2,
   FileText,
+  Mic,
+  MicOff,
+  Volume2,
+  VolumeX,
+  Radio,
+  Languages,
 } from "lucide-react";
 import { sendMessage, fetchConversations } from "../lib/api";
+import {
+  speakText,
+  stopSpeaking,
+  createSpeechRecognizer,
+  isSpeechRecognitionSupported,
+  LANG_LOCALE_MAP,
+} from "../lib/voice";
 import { ChatMessage, Conversation, SourceCitation } from "../types";
 import { ConfidenceBar } from "./ConfidenceBar";
 import { SourceCard } from "./SourceCard";
@@ -56,6 +69,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
   const [selectedSource, setSelectedSource] = useState<SourceCitation | null>(null);
   const [isInspectorOpen, setIsInspectorOpen] = useState(true);
+
+  // Bhashini Voice Assistant State
+  const [isListening, setIsListening] = useState(false);
+  const [activeSpeakingId, setActiveSpeakingId] = useState<string | null>(null);
+  const [autoSpeakEnabled, setAutoSpeakEnabled] = useState(false);
+  const recognizerRef = useRef<any>(null);
 
   // Modals state
   const [explainModalData, setExplainModalData] = useState<{
@@ -141,6 +160,17 @@ export const ChatView: React.FC<ChatViewProps> = ({
         setIsInspectorOpen(true);
       }
       loadConversations();
+
+      // Bhashini Auto-Speak response if enabled
+      if (autoSpeakEnabled) {
+        setActiveSpeakingId(assistantMsg.id);
+        speakText(
+          assistantMsg.content,
+          currentLang,
+          () => setActiveSpeakingId(assistantMsg.id),
+          () => setActiveSpeakingId(null)
+        );
+      }
     } catch (err: any) {
       const errorMsg: ChatMessage = {
         id: `err-${Date.now()}`,
@@ -154,6 +184,78 @@ export const ChatView: React.FC<ChatViewProps> = ({
       setMessages((prev) => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Cleanup speech on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognizerRef.current) {
+        try {
+          recognizerRef.current.stop();
+        } catch (e) {}
+      }
+    };
+  }, []);
+
+  // Toggle Live Speech-to-Text Recognition (STT)
+  const handleToggleSpeechRecognition = () => {
+    if (isListening) {
+      if (recognizerRef.current) {
+        try {
+          recognizerRef.current.stop();
+        } catch (e) {}
+      }
+      setIsListening(false);
+      return;
+    }
+
+    if (!isSpeechRecognitionSupported()) {
+      alert("Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.");
+      return;
+    }
+
+    try {
+      const rec = createSpeechRecognizer(
+        currentLang,
+        (transcript, isFinal) => {
+          setInputText(transcript);
+        },
+        (err) => {
+          console.warn("Speech recognition error:", err);
+          setIsListening(false);
+        },
+        () => {
+          setIsListening(false);
+        }
+      );
+
+      if (rec) {
+        recognizerRef.current = rec;
+        rec.start();
+        setIsListening(true);
+      }
+    } catch (e) {
+      console.error("Speech recognition start failed:", e);
+      setIsListening(false);
+    }
+  };
+
+  // Toggle Speech Synthesis (TTS) for individual message
+  const handleToggleSpeakMessage = (msgId: string, content: string) => {
+    if (activeSpeakingId === msgId) {
+      stopSpeaking();
+      setActiveSpeakingId(null);
+    } else {
+      stopSpeaking();
+      setActiveSpeakingId(msgId);
+      speakText(
+        content,
+        currentLang,
+        () => setActiveSpeakingId(msgId),
+        () => setActiveSpeakingId(null)
+      );
     }
   };
 
@@ -258,6 +360,21 @@ export const ChatView: React.FC<ChatViewProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Bhashini Voice Auto-Speak Toggle */}
+            <button
+              onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${
+                autoSpeakEnabled
+                  ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-bold shadow-2xs"
+                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+              }`}
+              title="Automatically read aloud answers in selected language (TTS)"
+            >
+              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-400"}`} />
+              <span>Voice Auto-Speak</span>
+              <span className={`w-1.5 h-1.5 rounded-full ${autoSpeakEnabled ? "bg-emerald-500 animate-ping" : "bg-slate-300"}`} />
+            </button>
+
             <button
               onClick={() => setIsInspectorOpen(!isInspectorOpen)}
               className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${
@@ -280,6 +397,15 @@ export const ChatView: React.FC<ChatViewProps> = ({
             <span>BIS AI Assistant</span>
           </div>
           <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
+              className={`p-1.5 rounded-lg border text-[11px] font-semibold flex items-center gap-1 ${
+                autoSpeakEnabled ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold" : "bg-white text-slate-600 border-slate-300"
+              }`}
+              title="Toggle Auto-Speak"
+            >
+              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-400"}`} />
+            </button>
             <button
               onClick={() => setMobileHistoryOpen(true)}
               className="px-2 py-1 rounded bg-white border border-slate-300 text-slate-700 flex items-center gap-1 text-[11px] font-medium"
@@ -325,6 +451,38 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 flex-shrink-0" />
                   </button>
                 ))}
+              </div>
+
+              {/* Bhashini Multilingual Voice Prompt Chips */}
+              <div className="pt-3 max-w-xl mx-auto border-t border-slate-100">
+                <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 mb-2">
+                  <Mic className="w-3.5 h-3.5 text-amber-600" />
+                  <span className="font-bold text-slate-700">Bhashini Multilingual Voice Queries:</span>
+                </div>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {[
+                    { text: "हॉलमार्किंग में 6-अंकीय HUID कैसे चेक करें?", lang: "hi", label: "हिन्दी" },
+                    { text: "पिण्याच्या पाण्यासाठी ISI मार्क नियम काय आहेत?", lang: "mr", label: "मराठी" },
+                    { text: "What are the mandatory QCO deadlines for toys?", lang: "en", label: "English" },
+                    { text: "How does an MSME obtain 50% fee concession?", lang: "en", label: "MSME" },
+                  ].map((v, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        if (onLanguageChange && v.lang !== currentLang) {
+                          onLanguageChange(v.lang);
+                        }
+                        handleSendMessage(v.text);
+                      }}
+                      className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/60 text-slate-700 hover:text-amber-950 text-xs font-medium transition shadow-2xs flex items-center gap-1.5"
+                    >
+                      <span className="px-1.5 py-0.2 rounded bg-slate-100 text-[9px] font-bold text-slate-600">
+                        {v.label}
+                      </span>
+                      <span>{v.text}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
@@ -432,6 +590,28 @@ export const ChatView: React.FC<ChatViewProps> = ({
                             </>
                           )}
                         </button>
+                        {/* Bhashini Voice Listen Button */}
+                        <button
+                          onClick={() => handleToggleSpeakMessage(msg.id, msg.content)}
+                          className={`p-1 rounded flex items-center gap-1 text-[11px] transition-all ${
+                            activeSpeakingId === msg.id
+                              ? "bg-amber-100 text-amber-900 font-bold shadow-2xs"
+                              : "hover:text-slate-700 hover:bg-slate-100 text-slate-500"
+                          }`}
+                          title={activeSpeakingId === msg.id ? "Stop voice playback" : "Listen in selected language (Bhashini Voice)"}
+                        >
+                          {activeSpeakingId === msg.id ? (
+                            <>
+                              <VolumeX className="w-3.5 h-3.5 text-amber-700 animate-pulse" />
+                              <span className="text-amber-800 font-mono text-[10px]">Speaking...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="w-3.5 h-3.5 text-slate-500" />
+                              <span>Listen</span>
+                            </>
+                          )}
+                        </button>
                         <button
                           onClick={() => handleSendMessage(messages[messages.indexOf(msg) - 1]?.content || "")}
                           className="hover:text-slate-700 p-1 rounded hover:bg-slate-100 flex items-center gap-1 text-[11px]"
@@ -535,6 +715,25 @@ export const ChatView: React.FC<ChatViewProps> = ({
               </div>
             )}
 
+            {/* Live Bhashini Speech Recognition Banner when active */}
+            {isListening && (
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs animate-fadeIn shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping shrink-0" />
+                  <span className="font-semibold">
+                    {LANG_LOCALE_MAP[currentLang]?.listeningPrompt || "Listening... Speak now."}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleToggleSpeechRecognition}
+                  className="px-2.5 py-1 rounded-lg bg-red-200 hover:bg-red-300 text-red-950 font-bold text-[11px] transition"
+                >
+                  Done Speaking
+                </button>
+              </div>
+            )}
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -542,11 +741,33 @@ export const ChatView: React.FC<ChatViewProps> = ({
               }}
               className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-amber-500 focus-within:border-amber-500"
             >
+              {/* Bhashini Voice Microphone Input Button */}
+              <button
+                type="button"
+                onClick={handleToggleSpeechRecognition}
+                className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${
+                  isListening
+                    ? "bg-red-600 text-white animate-pulse ring-4 ring-red-400/40 shadow-md"
+                    : "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                }`}
+                title={
+                  isListening
+                    ? "Listening... click to stop"
+                    : `Speak question in ${LANG_LOCALE_MAP[currentLang]?.label || "Indian Languages"} (Bhashini STT)`
+                }
+              >
+                {isListening ? <MicOff className="w-4 h-4 text-white" /> : <Mic className="w-4 h-4 text-slate-700" />}
+              </button>
+
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Ask about Indian Standards, certification, testing, hallmarking or BIS services..."
+                placeholder={
+                  isListening
+                    ? "Listening to your voice..."
+                    : `Ask about Indian Standards, e.g. '${sampleQuestions[0]}' (or tap Mic to speak)...`
+                }
                 disabled={isLoading}
                 className="flex-1 bg-transparent px-3 py-2 text-xs sm:text-sm focus:outline-none placeholder-slate-400 text-slate-800"
               />
@@ -563,8 +784,17 @@ export const ChatView: React.FC<ChatViewProps> = ({
               </button>
             </form>
             <div className="flex items-center justify-between text-[10px] text-slate-400 px-1">
-              <span>Press Enter to send. Supports English, हिन्दी, and मराठी.</span>
-              <span className="font-mono">SIH26107 Grounded Prototype</span>
+              <div className="flex items-center gap-2">
+                <span>Supports Voice Input & Audio Playback in:</span>
+                <div className="flex gap-1 font-semibold text-slate-600">
+                  <span className={currentLang === "en" ? "text-blue-900 font-bold" : ""}>English (IN)</span>
+                  <span>•</span>
+                  <span className={currentLang === "hi" ? "text-blue-900 font-bold" : ""}>हिन्दी</span>
+                  <span>•</span>
+                  <span className={currentLang === "mr" ? "text-blue-900 font-bold" : ""}>मराठी</span>
+                </div>
+              </div>
+              <span className="font-mono text-emerald-700 font-semibold">Bhashini Multilingual AI</span>
             </div>
           </div>
         </div>
