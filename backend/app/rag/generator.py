@@ -3,6 +3,7 @@ import json
 from typing import List, Dict, Any, Optional
 import requests
 from backend.app.core.config import settings
+from backend.app.core.circuit_breaker import llm_circuit_breaker
 from backend.app.schemas.schemas import SourceCitation
 
 SYSTEM_PROMPT = """You are "BIS SmartAssist", the official AI-powered Assistant for Indian Standards and BIS Services (Bureau of Indian Standards).
@@ -531,64 +532,79 @@ def generate_rag_answer(
 
     prompt = f"""{history_str}BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}\n\nAnswer the user accurately, maintaining conversational flow and context."""
 
-    # 1a. Try OpenAI API if configured
-    if openai_key and (len(sources) > 0 or intent in ["GREETING", "BOT_CAPABILITIES", "LABORATORY", "HALLMARKING", "LICENSING", "CONSUMER_QUERY"]):
-        try:
-            model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-            api_messages = [{"role": "system", "content": SYSTEM_PROMPT.format(language=language)}]
-            api_messages.extend(history_messages)
-            api_messages.append({
-                "role": "user",
-                "content": f"BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}"
-            })
-            resp = requests.post(
-                "https://api.openai.com/v1/chat/completions",
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer {openai_key}"
-                },
-                json={
-                    "model": model_name,
-                    "messages": api_messages,
-                    "temperature": 0.2,
-                    "max_tokens": 1000
-                },
-                timeout=12
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                text = data["choices"][0]["message"]["content"]
-                return text.replace("\ufffd", " - ")
-        except Exception:
-            pass
+    # 1. External LLM (Gemini / OpenAI) protected by Circuit Breaker
+    external_allowed = llm_circuit_breaker.can_execute()
+    gemini_key = settings.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
+    openai_key = settings.OPENAI_API_KEY or os.getenv("OPENAI_API_KEY")
 
-    # 1b. Try Gemini API if configured
-    if gemini_key and (len(sources) > 0 or intent in ["GREETING", "BOT_CAPABILITIES", "LABORATORY", "HALLMARKING", "LICENSING", "CONSUMER_QUERY"]):
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.LLM_MODEL}:generateContent?key={gemini_key}"
-            headers = {"Content-Type": "application/json"}
-            payload = {
-                "contents": [
-                    {
-                        "role": "user",
-                        "parts": [
-                            {"text": SYSTEM_PROMPT.format(language=language)},
-                            {"text": prompt}
-                        ]
+    if not external_allowed:
+        llm_circuit_breaker.record_fallback()
+
+    if external_allowed and (openai_key or gemini_key) and (len(sources) > 0 or intent in ["GREETING", "BOT_CAPABILITIES", "LABORATORY", "HALLMARKING", "LICENSING", "CONSUMER_QUERY"]):
+        # 1a. Try OpenAI API if configured
+        if openai_key:
+            try:
+                model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+                api_messages = [{"role": "system", "content": SYSTEM_PROMPT.format(language=language)}]
+                api_messages.extend(history_messages)
+                api_messages.append({
+                    "role": "user",
+                    "content": f"BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}"
+                })
+                resp = requests.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer {openai_key}"
+                    },
+                    json={
+                        "model": model_name,
+                        "messages": api_messages,
+                        "temperature": 0.2,
+                        "max_tokens": 1000
+                    },
+                    timeout=10
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = data["choices"][0]["message"]["content"]
+                    llm_circuit_breaker.record_success()
+                    return text.replace("\ufffd", " - ")
+                else:
+                    llm_circuit_breaker.record_failure(Exception(f"OpenAI HTTP {resp.status_code}: {resp.text[:100]}"))
+            except Exception as e:
+                llm_circuit_breaker.record_failure(e)
+
+        # 1b. Try Gemini API if configured
+        if gemini_key:
+            try:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.LLM_MODEL}:generateContent?key={gemini_key}"
+                headers = {"Content-Type": "application/json"}
+                payload = {
+                    "contents": [
+                        {
+                            "role": "user",
+                            "parts": [
+                                {"text": SYSTEM_PROMPT.format(language=language)},
+                                {"text": prompt}
+                            ]
+                        }
+                    ],
+                    "generationConfig": {
+                        "temperature": 0.2,
+                        "maxOutputTokens": 1000
                     }
-                ],
-                "generationConfig": {
-                    "temperature": 0.2,
-                    "maxOutputTokens": 1000
                 }
-            }
-            resp = requests.post(url, headers=headers, json=payload, timeout=12)
-            if resp.status_code == 200:
-                data = resp.json()
-                text = data["candidates"][0]["content"]["parts"][0]["text"]
-                return text.replace("\ufffd", " - ")
-        except Exception:
-            pass
+                resp = requests.post(url, headers=headers, json=payload, timeout=10)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = data["candidates"][0]["content"]["parts"][0]["text"]
+                    llm_circuit_breaker.record_success()
+                    return text.replace("\ufffd", " - ")
+                else:
+                    llm_circuit_breaker.record_failure(Exception(f"Gemini HTTP {resp.status_code}: {resp.text[:100]}"))
+            except Exception as e:
+                llm_circuit_breaker.record_failure(e)
 
     # 2. Local Grounded Engine
     raw_answer = generate_local_grounded_answer(

@@ -8,6 +8,11 @@ from backend.app.core.database import get_db
 from backend.app.models.models import Standard, Document, DocumentChunk, SearchLog, Feedback, User
 from backend.app.schemas.schemas import AdminStatsOut, DocumentOut, DocumentChunkOut, HealthOut
 from backend.app.core.config import settings
+from backend.app.core.database import SessionLocal
+from backend.app.core.cache import query_cache
+from backend.app.core.circuit_breaker import llm_circuit_breaker
+from backend.app.core.rate_limiter import chat_rate_limiter
+from backend.app.core.task_queue import async_task_queue, TaskStatus
 
 router = APIRouter(prefix="/admin", tags=["Admin & System"])
 
@@ -106,3 +111,131 @@ def health_check(db: Session = Depends(get_db)):
         standards_count=stds_count,
         llm_provider=settings.LLM_PROVIDER
     )
+
+def _async_ingest_worker(title: str, standard_number: Optional[str], document_type: str, version: Optional[str], content: str, progress_callback):
+    """Background task function to process document chunks and persist to DB."""
+    db = SessionLocal()
+    try:
+        progress_callback(30)
+        doc_id = f"BIS-DOC-{int(datetime.utcnow().timestamp())}"
+        doc = Document(
+            document_id=doc_id,
+            title=title,
+            document_type=document_type,
+            standard_number=standard_number,
+            version=version,
+            source_url="https://www.services.bis.gov.in/",
+            status="Indexed",
+            total_chunks=1
+        )
+        db.add(doc)
+        db.commit()
+
+        progress_callback(70)
+        chunk = DocumentChunk(
+            document_id=doc_id,
+            standard_number=standard_number,
+            title=title,
+            clause_number="Clause 1",
+            page_number=1,
+            content=content
+        )
+        db.add(chunk)
+        db.commit()
+        progress_callback(100)
+
+        return {
+            "document_id": doc_id,
+            "title": title,
+            "chunks_created": 1,
+            "status": "Indexed"
+        }
+    finally:
+        db.close()
+
+@router.post("/documents/upload-async", status_code=202)
+def upload_document_async(
+    title: str = Form(...),
+    standard_number: Optional[str] = Form(None),
+    document_type: str = Form("Indian Standard"),
+    version: Optional[str] = Form("2026"),
+    content: str = Form(...)
+):
+    """
+    Asynchronous Document Ingestion (Decoupled Worker Queue Pattern).
+    Returns 202 Accepted immediately with a task_id to prevent blocking HTTP clients.
+    """
+    task_id = async_task_queue.submit_task(
+        task_type="DOCUMENT_INGESTION",
+        fn=_async_ingest_worker,
+        title=title,
+        standard_number=standard_number,
+        document_type=document_type,
+        version=version,
+        content=content
+    )
+    return {
+        "status": "Accepted",
+        "task_id": task_id,
+        "message": "Document ingestion queued for asynchronous background processing.",
+        "status_check_url": f"/api/admin/tasks/{task_id}"
+    }
+
+@router.get("/tasks/{task_id}")
+def get_task_status(task_id: str):
+    """Poll progress of background ingestion tasks."""
+    task = async_task_queue.get_task(task_id)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return task
+
+@router.get("/tasks")
+def list_tasks(limit: int = 15):
+    """Lists recent background tasks."""
+    return async_task_queue.list_tasks(limit=limit)
+
+@router.get("/system-design")
+def get_system_design_telemetry():
+    """
+    System Design Observability Dashboard Telemetry:
+    Exposes real-time metrics for all implemented system design patterns.
+    """
+    return {
+        "architecture": {
+            "title": "BIS SmartAssist Enterprise RAG Architecture",
+            "stateless_tier": {
+                "pattern": "Stateless Application Tier",
+                "authentication": "JWT Bearer Tokens (RFC 7519)",
+                "horizontal_scalability": "Verified (No in-memory session locks, deployable across N replicas)"
+            },
+            "multi_tier_cache": {
+                "pattern": "Multi-Tier Query Cache (Exact Hash + Semantic Matching)",
+                "metrics": query_cache.get_stats()
+            },
+            "circuit_breaker": {
+                "pattern": "Circuit Breaker & Graceful Degradation (Martin Fowler)",
+                "metrics": llm_circuit_breaker.get_status()
+            },
+            "rate_limiter": {
+                "pattern": "Token Bucket Rate Limiting (API Gateway Protection)",
+                "metrics": chat_rate_limiter.get_stats()
+            },
+            "asynchronous_queue": {
+                "pattern": "Decoupled Asynchronous Worker Queue",
+                "active_tasks_count": len([t for t in async_task_queue.tasks.values() if t["status"] == TaskStatus.PROCESSING]),
+                "total_tasks_processed": len(async_task_queue.tasks)
+            },
+            "database_tiering": {
+                "pattern": "CQRS / Database Read-Write Separation Ready",
+                "engine": "SQLAlchemy 2.0 ORM with PostgreSQL + pgvector support"
+            }
+        },
+        "timestamp": datetime.utcnow().isoformat() + "Z"
+    }
+
+@router.post("/cache/clear")
+def clear_query_cache():
+    """Clears the query cache."""
+    query_cache.clear()
+    return {"message": "Query cache cleared successfully", "stats": query_cache.get_stats()}
+

@@ -174,3 +174,10 @@ export async function demoLogin(role: string = "user"): Promise<{ access_token: 
   }
   return data;
 }
+
+export async function fetchSystemDesignTelemetry(): Promise<any> {
+  const res = await fetch(`${BASE_URL}/admin/system-design`);
+  if (!res.ok) return null;
+  return res.json();
+}
+

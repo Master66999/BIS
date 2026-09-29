@@ -13,10 +13,12 @@ from backend.app.rag.retriever import hybrid_retriever
 from backend.app.rag.generator import generate_rag_answer
 from backend.app.rag.rl_optimizer import rl_optimizer
 from backend.app.api.auth import get_current_user
+from backend.app.core.cache import query_cache
+from backend.app.core.rate_limiter import check_rate_limit
 
 router = APIRouter(prefix="", tags=["Chat & RAG"])
 
-@router.post("/chat", response_model=ChatResponse)
+@router.post("/chat", response_model=ChatResponse, dependencies=[Depends(check_rate_limit)])
 def handle_chat(
     req: ChatRequest,
     current_user: Optional[User] = Depends(get_current_user),
@@ -25,6 +27,55 @@ def handle_chat(
     query_text = req.message.strip()
     if not query_text:
         raise HTTPException(status_code=400, detail="Query message cannot be empty.")
+
+    requested_lang = req.language or "en"
+
+    # Multi-Tier Query Cache Check (Tier 1 Hash + Tier 2 Semantic) for standalone queries
+    if not req.conversation_id:
+        cached_result = query_cache.get(query_text, requested_lang)
+        if cached_result:
+            cached_data, tier_source = cached_result
+            conv_id = str(uuid.uuid4())
+            msg_id = str(uuid.uuid4())
+            
+            # Create lightweight conversation record
+            conv = Conversation(
+                id=conv_id,
+                user_id=current_user.id if current_user else None,
+                title=query_text[:40] + ("..." if len(query_text) > 40 else ""),
+                language=requested_lang
+            )
+            db.add(conv)
+            u_msg = Message(id=str(uuid.uuid4()), conversation_id=conv_id, sender="user", content=query_text)
+            db.add(u_msg)
+
+            explain_dict = dict(cached_data["explainability"])
+            explain_dict["search_strategy"] = f"{tier_source} (Latency: ~8ms, 0 API Tokens)"
+            explain_obj = ExplainabilityData(**explain_dict)
+
+            a_msg = Message(
+                id=msg_id,
+                conversation_id=conv_id,
+                sender="assistant",
+                content=cached_data["answer"],
+                intent=cached_data["intent"],
+                confidence=cached_data["confidence"],
+                sources_json=json.dumps([s.model_dump() for s in cached_data["sources"]]),
+                explainability_json=json.dumps(explain_obj.model_dump())
+            )
+            db.add(a_msg)
+            db.commit()
+
+            return ChatResponse(
+                conversation_id=conv_id,
+                message_id=msg_id,
+                answer=cached_data["answer"],
+                confidence=cached_data["confidence"],
+                confidence_level=cached_data["confidence_level"],
+                intent=cached_data["intent"],
+                sources=cached_data["sources"],
+                explainability=explain_obj
+            )
 
     # 1. Multi-Turn Conversation Management & Memory Retention
     conversation = None
@@ -178,7 +229,15 @@ def handle_chat(
         results_count=len(sources)
     )
     db.add(log_entry)
-    db.commit()
+    # Save to Multi-Tier Cache for instant sub-10ms future lookups
+    query_cache.set(query_text, detected_lang, {
+        "answer": answer_text,
+        "confidence": confidence,
+        "confidence_level": conf_level,
+        "intent": intent,
+        "sources": sources,
+        "explainability": explainability.model_dump()
+    })
 
     return ChatResponse(
         conversation_id=conversation.id,

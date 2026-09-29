@@ -80,7 +80,9 @@ def api_status():
             "/api/standards/product-finder",
             "/api/services",
             "/api/laboratories",
-            "/api/admin/stats"
+            "/api/admin/stats",
+            "/api/admin/system-design",
+            "/api/admin/tasks"
         ]
     }
 
