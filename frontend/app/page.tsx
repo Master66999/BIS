@@ -1,6 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  Home as HomeIcon,
+  MessageSquare,
+  Search,
+  Calculator,
+  Layers,
+} from "lucide-react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { LandingHero } from "../components/LandingHero";
@@ -43,7 +50,7 @@ export default function Home() {
       />
 
       {/* Main Content Area based on Active Tab */}
-      <main className="flex-1">
+      <main className={`flex-1 ${activeTab === "chat" ? "" : "pb-16 lg:pb-0"}`}>
         {activeTab === "home" && (
           <LandingHero
             onStartChat={handleStartChat}
@@ -80,6 +87,67 @@ export default function Home() {
 
       {/* Official Government Footer */}
       {activeTab !== "chat" && <Footer />}
+
+      {/* Native-Style Mobile Bottom Navigation Bar */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl px-2 py-1 flex items-center justify-around">
+        <button
+          onClick={() => setActiveTab("home")}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+            activeTab === "home" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <HomeIcon className={`w-5 h-5 mb-0.5 ${activeTab === "home" ? "text-[#0B2545]" : "text-slate-400"}`} />
+          <span>Home</span>
+          {activeTab === "home" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+        </button>
+
+        <button
+          onClick={() => setActiveTab("chat")}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+            activeTab === "chat" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <div className="relative">
+            <MessageSquare className={`w-5 h-5 mb-0.5 ${activeTab === "chat" ? "text-amber-500" : "text-slate-400"}`} />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          </div>
+          <span>AI Assist</span>
+          {activeTab === "chat" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+        </button>
+
+        <button
+          onClick={() => setActiveTab("finder")}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+            activeTab === "finder" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <Search className={`w-5 h-5 mb-0.5 ${activeTab === "finder" ? "text-[#0B2545]" : "text-slate-400"}`} />
+          <span>Standards</span>
+          {activeTab === "finder" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+        </button>
+
+        <button
+          onClick={() => setActiveTab("calculator")}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+            activeTab === "calculator" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <Calculator className={`w-5 h-5 mb-0.5 ${activeTab === "calculator" ? "text-[#0B2545]" : "text-slate-400"}`} />
+          <span>Fees</span>
+          {activeTab === "calculator" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+        </button>
+
+        <button
+          onClick={() => setActiveTab("services")}
+          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+            activeTab === "services" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+          }`}
+        >
+          <Layers className={`w-5 h-5 mb-0.5 ${activeTab === "services" ? "text-[#0B2545]" : "text-slate-400"}`} />
+          <span>Schemes</span>
+          {activeTab === "services" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+        </button>
+      </nav>
     </div>
   );
 }

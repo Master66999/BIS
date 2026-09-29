@@ -260,24 +260,24 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
 
           {/* Quick Action Navigation CTAs */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <div className="pt-2 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2 sm:gap-3">
             <button
               onClick={() => onStartChat()}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-2.5 rounded shadow-md transition-all flex items-center gap-2 text-xs sm:text-sm"
+              className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-5 py-3 sm:py-2.5 rounded shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm"
             >
               <Compass className="w-4 h-4 text-slate-950 font-bold" />
               <span>Launch Interactive Assistant</span>
             </button>
             <button
               onClick={() => onNavigateTab("finder")}
-              className="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-2.5 rounded border border-white/20 transition-all text-xs sm:text-sm flex items-center gap-2"
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-3 sm:py-2.5 rounded border border-white/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2"
             >
               <Search className="w-4 h-4 text-amber-400" />
               <span>Explore Product Standard Finder</span>
             </button>
             <button
               onClick={() => onNavigateTab("calculator")}
-              className="bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-2.5 rounded border border-white/20 transition-all text-xs sm:text-sm flex items-center gap-2"
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white font-semibold px-5 py-3 sm:py-2.5 rounded border border-white/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2"
             >
               <Calculator className="w-4 h-4 text-emerald-400" />
               <span>Fee & Timeline Calculator</span>
@@ -287,27 +287,27 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
       </section>
 
       {/* 2. Official National Metric Dashboard Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
-        <div className="bg-white rounded-lg shadow-md border border-slate-300 p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200">
-          <div className="pt-2 md:pt-0">
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#0B2545] font-serif">23,866</div>
-            <div className="text-xs text-slate-700 font-semibold mt-0.5">Published Indian Standards</div>
-            <div className="text-[10px] text-slate-500">Harmonized with ISO / IEC</div>
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20">
+        <div className="bg-white rounded-xl shadow-lg border border-slate-300 p-3 sm:p-5 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 text-center">
+          <div className="bg-slate-50/80 md:bg-transparent rounded-lg p-2.5 md:p-0 md:border-r border-slate-200">
+            <div className="text-xl sm:text-3xl font-extrabold text-[#0B2545] font-serif">23,866</div>
+            <div className="text-[11px] sm:text-xs text-slate-800 font-semibold mt-0.5">Published Standards</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-500">Harmonized with ISO / IEC</div>
           </div>
-          <div className="pt-2 md:pt-0">
-            <div className="text-2xl sm:text-3xl font-extrabold text-amber-700 font-serif">600+</div>
-            <div className="text-xs text-slate-700 font-semibold mt-0.5">Mandatory QCO Products</div>
-            <div className="text-[10px] text-slate-500">Compulsory ISI Mark Enforced</div>
+          <div className="bg-amber-50/50 md:bg-transparent rounded-lg p-2.5 md:p-0 md:border-r border-slate-200">
+            <div className="text-xl sm:text-3xl font-extrabold text-amber-700 font-serif">600+</div>
+            <div className="text-[11px] sm:text-xs text-slate-800 font-semibold mt-0.5">Mandatory QCOs</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-500">Compulsory ISI Mark</div>
           </div>
-          <div className="pt-2 md:pt-0">
-            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-700 font-serif">8 Schemes</div>
-            <div className="text-xs text-slate-700 font-semibold mt-0.5">Conformity Assessment</div>
-            <div className="text-[10px] text-slate-500">ISI Mark, CRS, FMCS, Hallmarking</div>
+          <div className="bg-emerald-50/50 md:bg-transparent rounded-lg p-2.5 md:p-0 md:border-r border-slate-200">
+            <div className="text-xl sm:text-3xl font-extrabold text-emerald-700 font-serif">8 Schemes</div>
+            <div className="text-[11px] sm:text-xs text-slate-800 font-semibold mt-0.5">Conformity Schemes</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-500">ISI Mark, CRS, FMCS</div>
           </div>
-          <div className="pt-2 md:pt-0">
-            <div className="text-2xl sm:text-3xl font-extrabold text-blue-800 font-serif">100%</div>
-            <div className="text-xs text-slate-700 font-semibold mt-0.5">Factual Grounding</div>
-            <div className="text-[10px] text-slate-500">Exact Clause & Gazette Citation</div>
+          <div className="bg-blue-50/50 md:bg-transparent rounded-lg p-2.5 md:p-0">
+            <div className="text-xl sm:text-3xl font-extrabold text-blue-800 font-serif">100%</div>
+            <div className="text-[11px] sm:text-xs text-slate-800 font-semibold mt-0.5">Factual Grounding</div>
+            <div className="text-[9px] sm:text-[10px] text-slate-500">Exact Clause Citation</div>
           </div>
         </div>
       </section>

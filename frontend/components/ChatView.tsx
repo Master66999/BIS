@@ -20,6 +20,7 @@ import {
   ExternalLink,
   ChevronRight,
   ShieldAlert,
+  X,
 } from "lucide-react";
 import { sendMessage, fetchConversations } from "../lib/api";
 import { ChatMessage, Conversation, SourceCitation } from "../types";
@@ -45,6 +46,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
 
   // Modals state
   const [explainModalData, setExplainModalData] = useState<{
@@ -227,31 +229,55 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
       {/* Main Chat Area */}
       <main className="flex-1 flex flex-col bg-white overflow-hidden">
+        {/* Mobile Header Bar */}
+        <div className="md:hidden flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-[#0B2545]">
+            <Bot className="w-4 h-4 text-amber-500" />
+            <span>BIS AI Assistant</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setMobileHistoryOpen(true)}
+              className="px-2 py-1 rounded bg-white border border-slate-300 text-slate-700 flex items-center gap-1 text-[11px] font-medium"
+            >
+              <MessageSquare className="w-3 h-3 text-slate-500" />
+              <span>History ({conversations.length})</span>
+            </button>
+            <button
+              onClick={handleNewChat}
+              className="px-2 py-1 rounded bg-[#0B2545] text-amber-300 flex items-center gap-1 text-[11px] font-bold shadow-sm"
+            >
+              <Plus className="w-3 h-3" />
+              <span>New</span>
+            </button>
+          </div>
+        </div>
+
         {/* Messages Scrollable View */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
-            <div className="max-w-2xl mx-auto my-auto text-center py-10 space-y-6">
-              <div className="w-14 h-14 rounded-xl bg-[#0B2545] flex items-center justify-center text-white mx-auto shadow-md border border-slate-700">
-                <Bot className="w-7 h-7 text-amber-400" />
+            <div className="max-w-2xl mx-auto my-auto text-center py-8 sm:py-10 space-y-5 sm:space-y-6 px-2">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#0B2545] flex items-center justify-center text-white mx-auto shadow-md border border-slate-700">
+                <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
               </div>
-              <div className="space-y-2">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+              <div className="space-y-1.5 sm:space-y-2">
+                <h2 className="text-lg sm:text-2xl font-bold text-slate-900">
                   How can BIS SmartAssist help you today?
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto">
+                <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
                   Ask any question about Indian Standards, certification requirements, lab testing, or hallmarking procedures.
                 </p>
               </div>
 
               {/* Sample Questions Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left text-xs pt-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left text-xs pt-1">
                 {sampleQuestions.slice(0, 4).map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(q)}
-                    className="p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 text-slate-700 transition-all text-xs font-medium flex items-center justify-between group"
+                    className="p-2.5 sm:p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 text-slate-700 transition-all text-xs font-medium flex items-center justify-between group"
                   >
-                    <span>{q}</span>
+                    <span className="pr-2">{q}</span>
                     <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 flex-shrink-0" />
                   </button>
                 ))}
@@ -261,21 +287,21 @@ export const ChatView: React.FC<ChatViewProps> = ({
             messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex gap-3 max-w-4xl mx-auto ${
+                className={`flex gap-2 sm:gap-3 max-w-4xl mx-auto w-full ${
                   msg.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 {msg.sender === "assistant" && (
-                  <div className="w-8 h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
-                    <Bot className="w-4 h-4" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow mt-0.5">
+                    <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-2xl rounded-lg p-4 sm:p-5 text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[88%] sm:max-w-2xl rounded-lg p-3 sm:p-5 text-xs sm:text-sm leading-relaxed ${
                     msg.sender === "user"
-                      ? "bg-[#0B2545] text-white shadow-md ml-12"
-                      : "bg-white border border-slate-300 text-slate-800 shadow-sm"
+                      ? "bg-[#0B2545] text-white shadow-md ml-3 sm:ml-12"
+                      : "bg-white border border-slate-300 text-slate-800 shadow-sm mr-2 sm:mr-0"
                   }`}
                 >
                   {/* Markdown Body */}
@@ -502,6 +528,70 @@ export const ChatView: React.FC<ChatViewProps> = ({
         query={feedbackModalData.query}
         answer={feedbackModalData.answer}
       />
+
+      {/* Mobile History Slide-over Drawer */}
+      {mobileHistoryOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-start">
+          <div className="w-4/5 max-w-xs bg-white h-full p-4 flex flex-col justify-between shadow-2xl animate-fadeIn">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                  <MessageSquare className="w-4 h-4 text-[#0B2545]" />
+                  <span>Recent Queries</span>
+                </div>
+                <button
+                  onClick={() => setMobileHistoryOpen(false)}
+                  className="p-1 rounded text-slate-400 hover:text-slate-600"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <button
+                onClick={() => {
+                  handleNewChat();
+                  setMobileHistoryOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#0B2545] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+              >
+                <Plus className="w-4 h-4 text-amber-400" />
+                <span>New BIS Query</span>
+              </button>
+
+              <div className="space-y-1 max-h-[65vh] overflow-y-auto pr-1">
+                {conversations.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic px-2 py-4 text-center">
+                    No previous queries yet.
+                  </p>
+                ) : (
+                  conversations.map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => {
+                        selectConversation(c);
+                        setMobileHistoryOpen(false);
+                      }}
+                      className={`w-full text-left px-2.5 py-2.5 rounded-lg text-xs flex items-center gap-2 transition-colors ${
+                        currentConversationId === c.id
+                          ? "bg-amber-50 text-blue-950 font-bold border border-amber-300"
+                          : "text-slate-600 hover:bg-slate-100"
+                      }`}
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
+                      <span className="truncate">{c.title || "Query Session"}</span>
+                    </button>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className="text-[10px] text-slate-400 text-center border-t border-slate-100 pt-2">
+              Bureau of Indian Standards • BIS SmartAssist
+            </div>
+          </div>
+          <div className="flex-1" onClick={() => setMobileHistoryOpen(false)} />
+        </div>
+      )}
     </div>
   );
 };

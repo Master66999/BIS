@@ -157,7 +157,7 @@ export const StandardFinderView: React.FC<StandardFinderViewProps> = ({
           <button
             onClick={() => handleSearch()}
             disabled={loading}
-            className="px-6 py-2 bg-[#0B2545] hover:bg-[#133E68] text-amber-300 font-semibold rounded-lg text-xs flex items-center gap-2 shadow transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 sm:py-2 bg-[#0B2545] hover:bg-[#133E68] text-amber-300 font-semibold rounded-lg text-xs flex items-center justify-center gap-2 shadow transition-colors"
           >
             {loading ? "Analyzing Standards..." : "Find Applicable Standards"}
             <ArrowRight className="w-4 h-4" />

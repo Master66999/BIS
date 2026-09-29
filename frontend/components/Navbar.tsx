@@ -185,42 +185,42 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* 3. Main Government Brand Header with Dual Emblems */}
-      <div className="bg-white border-b border-slate-200 py-3 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      <div className="bg-white border-b border-slate-200 py-2.5 sm:py-3 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           {/* Left: Ashoka Lion Capital + BIS Crest + Bilingual Titles */}
           <div
             onClick={() => setActiveTab && setActiveTab("home")}
-            className="flex items-center space-x-4 cursor-pointer group"
+            className="flex items-center space-x-2 sm:space-x-4 cursor-pointer group min-w-0"
           >
             {/* National Emblem of India (Ashoka Lion) */}
             <div className="text-slate-800 hover:text-[#0B2545] transition-colors flex-shrink-0">
-              <EmblemOfIndia className="h-14 sm:h-16 w-auto" />
+              <EmblemOfIndia className="h-10 sm:h-14 md:h-16 w-auto" />
             </div>
 
-            <div className="h-12 w-[1px] bg-slate-300 hidden sm:block" />
+            <div className="h-10 sm:h-12 w-[1px] bg-slate-300 hidden xs:block flex-shrink-0" />
 
             {/* BIS Official Seal */}
             <div className="flex-shrink-0">
-              <BisEmblem className="h-12 sm:h-14 w-auto" />
+              <BisEmblem className="h-9 sm:h-12 md:h-14 w-auto" />
             </div>
 
             {/* Official Typography */}
-            <div>
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <h1 className="text-lg sm:text-2xl font-bold tracking-tight text-[#0B2545] font-serif leading-none">
+            <div className="min-w-0">
+              <div className="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+                <h1 className="text-sm sm:text-xl md:text-2xl font-bold tracking-tight text-[#0B2545] font-serif leading-none">
                   भारतीय मानक ब्यूरो
                 </h1>
-                <span className="text-sm sm:text-lg font-bold text-slate-700 tracking-wide font-sans">
+                <span className="text-xs sm:text-base md:text-lg font-bold text-slate-700 tracking-wide font-sans truncate">
                   BUREAU OF INDIAN STANDARDS
                 </span>
               </div>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
-                राष्ट्रीय मानक निकाय • National Standards Body of India • Ministry of Consumer Affairs
+              <p className="text-[10px] sm:text-xs text-slate-600 font-medium mt-0.5 line-clamp-1 sm:line-clamp-none">
+                राष्ट्रीय मानक निकाय • National Standards Body • Govt. of India
               </p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded">
-                  <Shield className="w-3 h-3 text-amber-600" />
-                  BIS SmartAssist 🇮🇳 • AI RAG Assistant
+              <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
+                <span className="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-300 px-1.5 sm:px-2 py-0.5 rounded truncate">
+                  <Shield className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-600 flex-shrink-0" />
+                  BIS SmartAssist 🇮🇳 • AI Portal
                 </span>
                 <span className="hidden md:inline-block text-[11px] text-slate-500">
                   SIH26107 Verified Regulatory System
@@ -230,7 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Right: National Badges & Persona Switcher */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center space-x-3 flex-shrink-0">
             {/* Persona Switcher Pill */}
             <div className="flex flex-col items-end">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-0.5">
@@ -274,13 +274,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Mobile menu toggle */}
-          <div className="flex lg:hidden items-center">
+          <div className="flex lg:hidden items-center flex-shrink-0">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-md border border-slate-300 hover:bg-slate-100 text-slate-800"
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
             </button>
           </div>
         </div>
@@ -321,14 +321,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       </nav>
 
       {/* 5. Official Government Breaking Ticker */}
-      <div className="bg-[#FFF8E7] border-b border-amber-200 px-4 py-1.5 flex items-center overflow-hidden text-xs">
+      <div className="bg-[#FFF8E7] border-b border-amber-200 px-3 sm:px-4 py-1.5 flex items-center overflow-hidden text-xs">
         <div className="max-w-7xl mx-auto w-full flex items-center">
-          <div className="flex-shrink-0 bg-red-700 text-white font-bold text-[10px] px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
+          <div className="flex-shrink-0 bg-red-700 text-white font-bold text-[9px] sm:text-[10px] px-2 py-0.5 rounded uppercase tracking-wider flex items-center gap-1 shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-            नवीन अपडेट्स / LATEST
+            नवीन / LATEST
           </div>
-          <div className="relative overflow-hidden w-full ml-3 h-5">
-            <div className="gov-ticker-track text-slate-800 text-xs font-medium space-x-12">
+          <div className="relative overflow-hidden w-full ml-2 sm:ml-3 h-5">
+            <div className="gov-ticker-track text-slate-800 text-[11px] sm:text-xs font-medium space-x-8 sm:space-x-12">
               <span className="inline-flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-600 inline" />
                 <strong>Quality Control Orders (QCOs) 2026:</strong> Mandatory ISI Mark compliance enforced for over 600 industrial & consumer product categories.
@@ -348,34 +348,19 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#0B2545] border-t border-slate-700 px-4 pt-3 pb-5 space-y-2 text-white">
-          <div className="grid grid-cols-2 gap-2 mb-3">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab && setActiveTab(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center space-x-2 px-3 py-2 rounded text-xs font-medium text-left ${
-                  activeTab === item.id ? "bg-amber-500 text-slate-950 font-bold" : "bg-white/5 text-slate-200"
-                }`}
-              >
-                <item.icon className="w-3.5 h-3.5 flex-shrink-0" />
-                <span className="truncate">{item.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="pt-2 border-t border-slate-700 flex items-center justify-between text-xs">
-            <span className="text-slate-400">Persona:</span>
-            <div className="flex gap-2">
+        <div className="lg:hidden bg-[#0B2545] border-t border-slate-700 px-4 pt-3 pb-6 space-y-3 text-white max-h-[85vh] overflow-y-auto">
+          {/* Mobile Persona Switcher */}
+          <div className="p-2.5 bg-white/10 rounded-lg flex items-center justify-between text-xs">
+            <span className="text-slate-300 font-medium">Active Persona:</span>
+            <div className="flex gap-1.5">
               <button
                 onClick={() => {
                   handleDemoSwitch("user");
                   setMobileMenuOpen(false);
                 }}
-                className="px-2 py-1 bg-white/10 rounded text-xs hover:bg-white/20"
+                className={`px-2.5 py-1 rounded text-xs font-semibold ${
+                  currentUser?.role !== "admin" ? "bg-amber-400 text-slate-950" : "bg-white/10 text-white"
+                }`}
               >
                 Industry MSME
               </button>
@@ -384,10 +369,60 @@ export const Navbar: React.FC<NavbarProps> = ({
                   handleDemoSwitch("admin");
                   setMobileMenuOpen(false);
                 }}
-                className="px-2 py-1 bg-amber-500 text-slate-950 font-bold rounded text-xs"
+                className={`px-2.5 py-1 rounded text-xs font-semibold ${
+                  currentUser?.role === "admin" ? "bg-amber-400 text-slate-950" : "bg-white/10 text-white"
+                }`}
               >
                 BIS Officer
               </button>
+            </div>
+          </div>
+
+          {/* Navigation Items Grid */}
+          <div className="grid grid-cols-2 gap-2">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab && setActiveTab(item.id);
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex items-center space-x-2 px-3 py-2.5 rounded-lg text-xs font-medium text-left transition-all ${
+                  activeTab === item.id
+                    ? "bg-amber-400 text-slate-950 font-bold shadow"
+                    : "bg-white/5 text-slate-200 hover:bg-white/10"
+                }`}
+              >
+                <item.icon className="w-4 h-4 flex-shrink-0" />
+                <span className="truncate">{currentLang === "hi" ? item.labelHi : item.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* External Gov Portals on Mobile */}
+          <div className="pt-3 border-t border-slate-700/80 space-y-1.5">
+            <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
+              Official Indian Standards Portals
+            </span>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <a
+                href="https://www.manakonline.in"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between p-2 rounded bg-white/5 text-slate-300 hover:text-white"
+              >
+                <span>Manakonline</span>
+                <ExternalLink className="w-3 h-3 text-slate-400" />
+              </a>
+              <a
+                href="https://www.services.bis.gov.in"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between p-2 rounded bg-white/5 text-slate-300 hover:text-white"
+              >
+                <span>e-BIS Services</span>
+                <ExternalLink className="w-3 h-3 text-slate-400" />
+              </a>
             </div>
           </div>
         </div>
