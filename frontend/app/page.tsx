@@ -18,11 +18,25 @@ import { LaboratoriesView } from "../components/LaboratoriesView";
 import { AdminPortalView } from "../components/AdminPortalView";
 import { FeeCalculatorView } from "../components/FeeCalculatorView";
 import { VerifyMarkView } from "../components/VerifyMarkView";
+import { CommandPalette } from "../components/CommandPalette";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<string>("home");
   const [currentLang, setCurrentLang] = useState<string>("en");
   const [chatInitialQuery, setChatInitialQuery] = useState<string>("");
+  const [isPaletteOpen, setIsPaletteOpen] = useState<boolean>(false);
+
+  // Global Cmd+K / Ctrl+K keyboard shortcut
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const handleStartChat = (query?: string) => {
     if (query) {
@@ -43,6 +57,7 @@ export default function Home() {
         currentLang={currentLang}
         onLanguageChange={(lang) => setCurrentLang(lang)}
         activeTab={activeTab}
+        onOpenSpotlight={() => setIsPaletteOpen(true)}
         setActiveTab={(tab) => {
           if (tab !== "chat") setChatInitialQuery("");
           setActiveTab(tab);
@@ -148,6 +163,17 @@ export default function Home() {
           {activeTab === "services" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
         </button>
       </nav>
+
+      {/* Global Cmd+K / Ctrl+K Spotlight Command Palette */}
+      <CommandPalette
+        isOpen={isPaletteOpen}
+        onClose={() => setIsPaletteOpen(false)}
+        onNavigateTab={(tab) => {
+          setChatInitialQuery("");
+          setActiveTab(tab);
+        }}
+        onStartChat={handleStartChat}
+      />
     </div>
   );
 }

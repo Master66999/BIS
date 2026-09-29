@@ -28,6 +28,7 @@ interface NavbarProps {
   onLanguageChange?: (lang: string) => void;
   activeTab?: string;
   setActiveTab?: (tab: string) => void;
+  onOpenSpotlight?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLanguageChange,
   activeTab = "home",
   setActiveTab,
+  onOpenSpotlight,
 }) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -231,6 +233,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right: National Badges & Persona Switcher */}
           <div className="hidden md:flex items-center space-x-3 flex-shrink-0">
+            {/* Quick Spotlight Trigger (Cmd+K) */}
+            {onOpenSpotlight && (
+              <button
+                onClick={onOpenSpotlight}
+                className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-300 text-xs font-medium text-slate-700 transition shadow-2xs"
+                title="Search 23,866 Indian Standards & Tools (Cmd+K)"
+              >
+                <Search className="w-3.5 h-3.5 text-blue-950" />
+                <span>Search Standards...</span>
+                <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-300 font-mono text-[10px] font-bold text-slate-500 shadow-2xs">
+                  ⌘K
+                </kbd>
+              </button>
+            )}
+
             {/* Persona Switcher Pill */}
             <div className="flex flex-col items-end">
               <span className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold mb-0.5">
