@@ -1,0 +1,44 @@
+{
+  "STANDARD_LOOKUP": {
+    "dense_weight": 0.174,
+    "bm25_weight": 0.826,
+    "exact_boost": 0.595,
+    "top_k": 3
+  },
+  "CERTIFICATION": {
+    "dense_weight": 0.353,
+    "bm25_weight": 0.647,
+    "exact_boost": 0.453,
+    "top_k": 4
+  },
+  "TESTING": {
+    "dense_weight": 0.324,
+    "bm25_weight": 0.676,
+    "exact_boost": 0.516,
+    "top_k": 4
+  },
+  "HALLMARKING": {
+    "dense_weight": 0.279,
+    "bm25_weight": 0.721,
+    "exact_boost": 0.6,
+    "top_k": 3
+  },
+  "LABORATORY": {
+    "dense_weight": 0.4,
+    "bm25_weight": 0.6,
+    "exact_boost": 0.466,
+    "top_k": 4
+  },
+  "CONSUMER_QUERY": {
+    "dense_weight": 0.65,
+    "bm25_weight": 0.35,
+    "exact_boost": 0.246,
+    "top_k": 4
+  },
+  "GENERAL": {
+    "dense_weight": 0.483,
+    "bm25_weight": 0.517,
+    "exact_boost": 0.523,
+    "top_k": 4
+  }
+}

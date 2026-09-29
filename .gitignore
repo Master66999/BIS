@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+dist/
+*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+
+# Python
+__pycache__/
+backend/**/__pycache__/
+scripts/**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Vector DB storage & model checkpoints
+data/chroma_db/
+models/**/checkpoints/
+
+# Environment variables & secrets
+.env
+.env*.local
+!.env.example
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

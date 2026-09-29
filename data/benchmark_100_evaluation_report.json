@@ -1,0 +1,2025 @@
+{
+  "total_questions": 100,
+  "standard_hit_count": 62,
+  "standard_hit_rate_pct": 62.0,
+  "intent_accuracy_pct": 64.0,
+  "avg_latency_ms": 65.6,
+  "p95_latency_ms": 141,
+  "category_breakdown": {
+    "Kitchenware": {
+      "total": 4,
+      "standard_hits": 3,
+      "intent_hits": 1
+    },
+    "Electrical Appliances": {
+      "total": 6,
+      "standard_hits": 6,
+      "intent_hits": 5
+    },
+    "Civil & Construction": {
+      "total": 12,
+      "standard_hits": 7,
+      "intent_hits": 8
+    },
+    "Safety Equipment": {
+      "total": 4,
+      "standard_hits": 4,
+      "intent_hits": 4
+    },
+    "Toys": {
+      "total": 2,
+      "standard_hits": 2,
+      "intent_hits": 1
+    },
+    "Food & Beverage": {
+      "total": 3,
+      "standard_hits": 3,
+      "intent_hits": 2
+    },
+    "Medical Equipment": {
+      "total": 1,
+      "standard_hits": 1,
+      "intent_hits": 1
+    },
+    "Hallmarking": {
+      "total": 8,
+      "standard_hits": 5,
+      "intent_hits": 5
+    },
+    "Electronics CRS": {
+      "total": 8,
+      "standard_hits": 6,
+      "intent_hits": 6
+    },
+    "Solar Energy": {
+      "total": 1,
+      "standard_hits": 1,
+      "intent_hits": 1
+    },
+    "Certification": {
+      "total": 1,
+      "standard_hits": 0,
+      "intent_hits": 1
+    },
+    "Electrical": {
+      "total": 9,
+      "standard_hits": 5,
+      "intent_hits": 6
+    },
+    "Mechanical": {
+      "total": 2,
+      "standard_hits": 1,
+      "intent_hits": 1
+    },
+    "Food & Agriculture": {
+      "total": 10,
+      "standard_hits": 7,
+      "intent_hits": 3
+    },
+    "Regulatory": {
+      "total": 10,
+      "standard_hits": 2,
+      "intent_hits": 7
+    },
+    "Licensing": {
+      "total": 10,
+      "standard_hits": 4,
+      "intent_hits": 7
+    },
+    "FMCS": {
+      "total": 4,
+      "standard_hits": 2,
+      "intent_hits": 2
+    },
+    "Laboratories": {
+      "total": 2,
+      "standard_hits": 2,
+      "intent_hits": 2
+    },
+    "Consumer Services": {
+      "total": 3,
+      "standard_hits": 1,
+      "intent_hits": 1
+    }
+  },
+  "test_results": [
+    {
+      "id": 1,
+      "persona": "Manufacturer",
+      "category": "Kitchenware",
+      "query": "I manufacture pressure cookers for domestic use. I want to know which Indian Standard applies to my product, whether BIS certification is mandatory, and what testing requirements I need to follow. Please provide the relevant IS number and official source.",
+      "expected_standard": "IS 2347:2023",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 276,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 2,
+      "persona": "Manufacturer",
+      "category": "Kitchenware",
+      "query": "Which Indian Standard specifies safety requirements for domestic gas stoves using LPG?",
+      "expected_standard": "IS 4246",
+      "retrieved_standards": [
+        "IS 4246 : 2025"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "PRODUCT_REQUIREMENTS",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 323,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 4246 : 2025** — *DOMESTIC GAS STOVE AND BUILT IN HOB FOR  USE WITH LPG  SPECIFICATION   (Sixth Revision )*\n\n### Scope & Technical Summary\nOfficial Indian Standard for..."
+    },
+    {
+      "id": 3,
+      "persona": "Manufacturer",
+      "category": "Electrical Appliances",
+      "query": "What is the BIS standard and testing protocol for electric ceiling fans?",
+      "expected_standard": "IS 374:2019",
+      "retrieved_standards": [
+        "IS 374:2019",
+        "IS 374:2019",
+        "IS 374:2019"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "TESTING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 118,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 374:2019** — *IS 374:2019 — Electric Ceiling Type Fans and Regulators — Specification (Fourth Revision)*\n\n### Scope & Technical Summary\nScope: This standard specifies..."
+    },
+    {
+      "id": 4,
+      "persona": "Manufacturer",
+      "category": "Electrical Appliances",
+      "query": "Are electric immersion water heaters covered under mandatory BIS certification in India?",
+      "expected_standard": "IS 368",
+      "retrieved_standards": [
+        "IS 368:2014"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 86,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 368**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily under **Sch..."
+    },
+    {
+      "id": 5,
+      "persona": "Manufacturer",
+      "category": "Electrical Appliances",
+      "query": "Which standard applies to electric dry and steam irons for household use?",
+      "expected_standard": "IS 366",
+      "retrieved_standards": [
+        "IS 366:1991"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 99,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 366:1991** — *Electric iron - Specification (Fourth Revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Electric iron - Specification (Fourth Revis..."
+    },
+    {
+      "id": 6,
+      "persona": "Manufacturer",
+      "category": "Electrical Appliances",
+      "query": "What are the safety requirements for electric food mixers and grinders under BIS?",
+      "expected_standard": "IS 4250",
+      "retrieved_standards": [
+        "IS 4250:2025"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "PRODUCT_REQUIREMENTS",
+      "intent_classified": "PRODUCT_REQUIREMENTS",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 91,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 4250:2025** — *Electric Food-Mixers (Liquidizers and Grinders) and Centrifugal Juicers - Specification  ( Second Revision )*\n\n### Scope & Technical Summary\nOfficial I..."
+    },
+    {
+      "id": 7,
+      "persona": "Engineer",
+      "category": "Electrical Appliances",
+      "query": "Which standard covers general safety for household electrical appliances in India?",
+      "expected_standard": "IS 302 (Part 1)",
+      "retrieved_standards": [
+        "IS 302 (Part 2/Sec 24):2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 444,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 302 (Part 2/Sec 24):2026** — *Household and Similar Electrical Appliances - Safety Part 2 Particular Requirements Section 24 Refrigerating Appliances, Ice-Cream Appli..."
+    },
+    {
+      "id": 8,
+      "persona": "Manufacturer",
+      "category": "Kitchenware",
+      "query": "What standard applies to commercial electric cooking ranges, ovens, and hobs?",
+      "expected_standard": "IS 302 (Part 2/Sec 36)",
+      "retrieved_standards": [
+        "IS 19014:2022"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 65,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 19014:2022** — *Household Electric Cooking Appliances - Performance Requirements of Electric Hobs*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Househo..."
+    },
+    {
+      "id": 9,
+      "persona": "Lab Technician",
+      "category": "Electrical Appliances",
+      "query": "What testing requirements apply to domestic microwave ovens under BIS?",
+      "expected_standard": "IS 302 (Part 2/Sec 25)",
+      "retrieved_standards": [
+        "IS 302 (Part 2/Sec 24):2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 90,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 302 (Part 2/Sec 24):2026** — *Household and Similar Electrical Appliances - Safety Part 2 Particular Requirements Section 24 Refrigerating Appliances, Ice-Cream Appli..."
+    },
+    {
+      "id": 10,
+      "persona": "Manufacturer",
+      "category": "Kitchenware",
+      "query": "What BIS standard specifies requirements for rubber gaskets used in pressure cookers?",
+      "expected_standard": "IS 7466",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "PRODUCT_REQUIREMENTS",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 38,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 11,
+      "persona": "Consumer",
+      "category": "Civil & Construction",
+      "query": "I want to buy a cement product for house construction. Which BIS standards should I check to make sure the product meets the required quality standards?",
+      "expected_standard": "IS 269:2015",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 34,
+      "response_snippet": "### BIS Standards & Quality Checklist for Cement in House Construction\n\nWhen purchasing cement for residential building or house construction in India, selecting the appropriate Indian Standard and ve..."
+    },
+    {
+      "id": 12,
+      "persona": "Student/Engineer",
+      "category": "Civil & Construction",
+      "query": "Please explain IS 456:2000 in simple language. What products or applications does it cover, and what are its main requirements?",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 38,
+      "response_snippet": "### IS 456:2000 — Plain and Reinforced Concrete (Explained Simply)\n\n**IS 456:2000** (*Plain and Reinforced Concrete — Code of Practice*) is India's national civil engineering standard that dictates ho..."
+    },
+    {
+      "id": 13,
+      "persona": "Engineer",
+      "category": "Civil & Construction",
+      "query": "What Indian Standards are available for reinforced concrete construction?",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 36,
+      "response_snippet": "### Indian Standards Available for Reinforced Concrete (RCC) Construction\n\nReinforced concrete structural design, execution, testing, and materials in India are governed by a comprehensive suite of In..."
+    },
+    {
+      "id": 14,
+      "persona": "Engineer",
+      "category": "Civil & Construction",
+      "query": "What are the chemical composition limits for Fe 500D grade TMT steel bars under IS 1786?",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1786:2008** — *IS 1786:2008 — High Strength Deformed Steel Bars and Wires for Concrete Reinforcement — Specification*\n\n### Scope & Technical Summary\nScope: Covers req..."
+    },
+    {
+      "id": 15,
+      "persona": "Lab Technician",
+      "category": "Civil & Construction",
+      "query": "What is the minimum elongation percentage required for Fe 500D steel rebar under IS 1786?",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 33,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1786:2008** — *IS 1786:2008 — High Strength Deformed Steel Bars and Wires for Concrete Reinforcement — Specification*\n\n### Scope & Technical Summary\nScope: Covers req..."
+    },
+    {
+      "id": 16,
+      "persona": "Engineer",
+      "category": "Civil & Construction",
+      "query": "Which Indian Standard provides guidelines for concrete mix design proportioning?",
+      "expected_standard": "IS 10262:2019",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 33,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 456:2000** — *IS 456:2000 — Plain and Reinforced Concrete — Code of Practice (Fourth Revision)*\n\n### Scope & Technical Summary\nScope and Applications: Code of practic..."
+    },
+    {
+      "id": 17,
+      "persona": "Engineer",
+      "category": "Civil & Construction",
+      "query": "Which code governs ductile detailing of reinforced concrete structures for earthquake resistance?",
+      "expected_standard": "IS 13920:2016",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 32,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1786:2008** — *IS 1786:2008 — High Strength Deformed Steel Bars and Wires for Concrete Reinforcement — Specification*\n\n### Scope & Technical Summary\nScope: Covers req..."
+    },
+    {
+      "id": 18,
+      "persona": "Engineer",
+      "category": "Civil & Construction",
+      "query": "What Indian Standard specifies coarse and fine aggregates from natural sources for concrete?",
+      "expected_standard": "IS 383:2016",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 37,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 456:2000** — *IS 456:2000 — Plain and Reinforced Concrete — Code of Practice (Fourth Revision)*\n\n### Scope & Technical Summary\nScope and Applications: Code of practic..."
+    },
+    {
+      "id": 19,
+      "persona": "Manufacturer",
+      "category": "Civil & Construction",
+      "query": "What standard governs Ready-Mixed Concrete (RMC) plants in India?",
+      "expected_standard": "IS 4926:2003",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 34,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 456:2000** — *IS 456:2000 — Plain and Reinforced Concrete — Code of Practice (Fourth Revision)*\n\n### Scope & Technical Summary\nScope and Applications: Code of practic..."
+    },
+    {
+      "id": 20,
+      "persona": "Lab Technician",
+      "category": "Civil & Construction",
+      "query": "What is the standard compressive strength test method for hardened concrete cubes?",
+      "expected_standard": "IS 516",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "TESTING",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 37,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 456:2000** — *IS 456:2000 — Plain and Reinforced Concrete — Code of Practice (Fourth Revision)*\n\n### Scope & Technical Summary\nConcrete Grades and Mix Proportioning: ..."
+    },
+    {
+      "id": 21,
+      "persona": "Manufacturer",
+      "category": "Civil & Construction",
+      "query": "Which Indian Standard covers transparent float glass used in building windows?",
+      "expected_standard": "IS 14900:2026",
+      "retrieved_standards": [
+        "IS 14900:2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 60,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14900:2026** — *Transparent float glass - Specification (Second Revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Transparent float glass - Speci..."
+    },
+    {
+      "id": 22,
+      "persona": "Manufacturer",
+      "category": "Civil & Construction",
+      "query": "What standard applies to unplasticized PVC profiles for framed doors and windows?",
+      "expected_standard": "IS 19609:2026",
+      "retrieved_standards": [
+        "IS 19609:2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 66,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 19609:2026** — *uPVC Profiles Framed Doors, Windows and sliders – Specification*\n\n### Scope & Technical Summary\nOfficial Indian Standard for uPVC Profiles Framed Door..."
+    },
+    {
+      "id": 23,
+      "persona": "Consumer",
+      "category": "Safety Equipment",
+      "query": "What is the mandatory Indian Standard for motorcycle and two-wheeler protective helmets?",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 56,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 4151:2020** — *IS 4151:2020 — Protective Helmets for Riders of Two Wheeled Motor Vehicles — Specification*\n\n### Scope & Technical Summary\nConstruction and Materials: ..."
+    },
+    {
+      "id": 24,
+      "persona": "Lab Technician",
+      "category": "Safety Equipment",
+      "query": "What tests are conducted on protective helmets to ensure impact absorption under IS 4151?",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 37,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 4151:2020** — *IS 4151:2020 — Protective Helmets for Riders of Two Wheeled Motor Vehicles — Specification*\n\n### Scope & Technical Summary\nConstruction and Materials: ..."
+    },
+    {
+      "id": 25,
+      "persona": "Manufacturer",
+      "category": "Toys",
+      "query": "Which Indian Standard specifies mechanical safety and heavy metal limits for children's toys?",
+      "expected_standard": "IS 9873 (Part 1):2019",
+      "retrieved_standards": [
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "TESTING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 9873 (Part 1):2019** — *IS 9873 (Part 1):2019 — Safety of Toys — Mechanical and Physical Properties*\n\n### Scope & Technical Summary\nSmall Parts and Choking Hazards: T..."
+    },
+    {
+      "id": 26,
+      "persona": "Lab Technician",
+      "category": "Toys",
+      "query": "What are the migration limits for toxic heavy metals like Lead and Cadmium in toys under IS 9873?",
+      "expected_standard": "IS 9873 (Part 3)",
+      "retrieved_standards": [
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 9873 (Part 1):2019** — *IS 9873 (Part 1):2019 — Safety of Toys — Mechanical and Physical Properties*\n\n### Scope & Technical Summary\nSmall Parts and Choking Hazards: T..."
+    },
+    {
+      "id": 27,
+      "persona": "Manufacturer",
+      "category": "Food & Beverage",
+      "query": "What Indian Standard applies to packaged drinking water (other than natural mineral water)?",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 36,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14543:2024** — *IS 14543:2024 — Packaged Drinking Water (Other than Packaged Natural Mineral Water) — Specification*\n\n### Scope & Technical Summary\nDefinition and Pro..."
+    },
+    {
+      "id": 28,
+      "persona": "Lab Technician",
+      "category": "Food & Beverage",
+      "query": "What microbiological test parameters are mandatory for packaged drinking water under IS 14543?",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 14543**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily under **S..."
+    },
+    {
+      "id": 29,
+      "persona": "Consumer",
+      "category": "Food & Beverage",
+      "query": "Which standard specifies natural mineral water in India?",
+      "expected_standard": "IS 13428",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 42,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14543:2024** — *IS 14543:2024 — Packaged Drinking Water (Other than Packaged Natural Mineral Water) — Specification*\n\n### Scope & Technical Summary\nDefinition and Pro..."
+    },
+    {
+      "id": 30,
+      "persona": "Manufacturer",
+      "category": "Medical Equipment",
+      "query": "What standard governs surgical face masks and medical PPE masks under BIS?",
+      "expected_standard": "IS 16289:2014",
+      "retrieved_standards": [
+        "IS 16289:2014"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 60,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 16289:2014** — *Medical Textiles - Surgical Face Masks - Specification*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Medical Textiles - Surgical Face M..."
+    },
+    {
+      "id": 31,
+      "persona": "Safety Officer",
+      "category": "Safety Equipment",
+      "query": "Which Indian Standard specifies portable fire extinguishers of ABC dry powder type?",
+      "expected_standard": "IS 15683",
+      "retrieved_standards": [
+        "IS 15683:2018"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 15683:2018** — *Portable Fire Extinguishers — Performance and Construction — Specification ( First Revision )*\n\n### Scope & Technical Summary\nOfficial Indian Standard..."
+    },
+    {
+      "id": 32,
+      "persona": "Safety Officer",
+      "category": "Safety Equipment",
+      "query": "What is the standard for safety footwear and industrial protective shoes?",
+      "expected_standard": "IS 15298",
+      "retrieved_standards": [
+        "IS 15298 (Part 1):2024"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 61,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 15298 (Part 1):2024** — *PERSONAL PROTECTIVE EQUIPMENT PART 1 TEST METHODS FOR FOOTWEAR (Third Revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for ..."
+    },
+    {
+      "id": 33,
+      "persona": "Consumer",
+      "category": "Hallmarking",
+      "query": "What are the official purity grades recognized for gold jewellery hallmarking in India?",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 34,
+      "persona": "Consumer",
+      "category": "Hallmarking",
+      "query": "What three marks must be present on genuine hallmarked gold jewellery in India?",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 37,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 35,
+      "persona": "Consumer",
+      "category": "Hallmarking",
+      "query": "How can a consumer verify the authenticity of a 6-digit HUID number on gold jewellery?",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "HALLMARKING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 36,
+      "persona": "Jeweler",
+      "category": "Hallmarking",
+      "query": "Which standard specifies silver and silver alloy jewellery hallmarking?",
+      "expected_standard": "IS 2112",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 34,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1417:2016** — *IS 1417:2016 — Gold and Gold Alloys, Jewellery/Artefacts — Fineness and Marking*\n\n### Scope & Technical Summary\nStandard Caratage and Fineness Grades: ..."
+    },
+    {
+      "id": 37,
+      "persona": "Lab Technician",
+      "category": "Hallmarking",
+      "query": "What is the procedure for an Assaying and Hallmarking Centre (AHC) to obtain BIS recognition?",
+      "expected_standard": "IS 15820",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 38,
+      "persona": "Jeweler",
+      "category": "Hallmarking",
+      "query": "Is gold hallmarking mandatory across all districts in India?",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 41,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 39,
+      "persona": "Lab Technician",
+      "category": "Hallmarking",
+      "query": "What assaying method is used as the referee test for gold purity under BIS?",
+      "expected_standard": "IS 1418",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "TESTING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 37,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 40,
+      "persona": "Jeweler",
+      "category": "Hallmarking",
+      "query": "What are the penalties if a jeweler sells non-hallmarked or sub-standard gold in mandatory districts?",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "HALLMARKING",
+      "intent_classified": "HALLMARKING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 33,
+      "response_snippet": "### Gold & Silver Hallmarking Regulations (HUID)\n\nHallmarking is the accurate determination and official recording of the proportionate content of precious metal in gold and silver articles.\n\n#### 3 M..."
+    },
+    {
+      "id": 41,
+      "persona": "Manufacturer",
+      "category": "Electronics CRS",
+      "query": "What is the Compulsory Registration Scheme (CRS) for electronics and IT goods?",
+      "expected_standard": "Scheme II (CRS)",
+      "retrieved_standards": [
+        "Scheme II (CRS)",
+        "Scheme II (CRS)",
+        "BIS Act 2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 33,
+      "response_snippet": "### BIS Certification & Licensing Process (**Scheme II (CRS)**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily un..."
+    },
+    {
+      "id": 42,
+      "persona": "Manufacturer",
+      "category": "Electronics CRS",
+      "query": "Which safety standard applies to mobile phones and laptops under BIS CRS?",
+      "expected_standard": "IS 13252 (Part 1)",
+      "retrieved_standards": [
+        "IS 13252 (Part 22):2019"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 65,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 13252**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily under **S..."
+    },
+    {
+      "id": 43,
+      "persona": "Manufacturer",
+      "category": "Electronics CRS",
+      "query": "What Indian Standard covers safety testing for Lithium-ion batteries and secondary cells?",
+      "expected_standard": "IS 16046 (Part 2)",
+      "retrieved_standards": [
+        "IS 16046 (Part 1):2018"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "TESTING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 68,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 16046 (Part 1):2018** — *Secondary Cells and Batteries Containing Alkaline or Other Non-Acid Electrolytes - Safety Requirements for Portable Sealed Secondary Cells an..."
+    },
+    {
+      "id": 44,
+      "persona": "Lab Technician",
+      "category": "Electronics CRS",
+      "query": "What tests are performed on lithium-ion batteries under IS 16046?",
+      "expected_standard": "IS 16046 (Part 2)",
+      "retrieved_standards": [
+        "IS 16046 (Part 1):2018"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 84,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 16046 (Part 1):2018** — *Secondary Cells and Batteries Containing Alkaline or Other Non-Acid Electrolytes - Safety Requirements for Portable Sealed Secondary Cells an..."
+    },
+    {
+      "id": 45,
+      "persona": "Manufacturer",
+      "category": "Electronics CRS",
+      "query": "Which standard applies to self-ballasted LED lamps for general lighting services?",
+      "expected_standard": "IS 16102 (Part 1)",
+      "retrieved_standards": [
+        "IS 16102 (Part 1):2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 61,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 16102 (Part 1):2026** — *Self-Ballasted LED Lamps for General Lighting Services Part 1 Safety Requirements (First Revision)*\n\n### Scope & Technical Summary\nOfficial I..."
+    },
+    {
+      "id": 46,
+      "persona": "Manufacturer",
+      "category": "Solar Energy",
+      "query": "What standard governs design qualification and type approval for crystalline silicon terrestrial photovoltaic (PV) modules?",
+      "expected_standard": "IS 14286",
+      "retrieved_standards": [
+        "IS 14286 (Part 1):2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 60,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14286 (Part 1):2023** — *Terrestrial Photovoltaic PV Modules  Design Qualification and Type Approval  Part 1: Test Requirements (Third Revision)*\n\n### Scope & Technic..."
+    },
+    {
+      "id": 47,
+      "persona": "Manufacturer",
+      "category": "Certification",
+      "query": "What is the difference between Scheme I (ISI Mark) and Scheme II (CRS)?",
+      "expected_standard": "Scheme I & II",
+      "retrieved_standards": [
+        "IS 17982:2022"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 61,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 17982:2022**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily unde..."
+    },
+    {
+      "id": 48,
+      "persona": "Manufacturer",
+      "category": "Electronics CRS",
+      "query": "Which standard specifies power adapters and chargers for IT equipment?",
+      "expected_standard": "IS 13252 (Part 1)",
+      "retrieved_standards": [
+        "IS/IEC 62680 (Part 1/Sec 1):2015",
+        "IS/IEC 62680 (Part 2/Sec 1):2015",
+        "IS/IEC 62680 (Part 2/Sec 2):2015"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 162,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS/IEC 62680 (Part 1/Sec 1):2015** — *Universal Serial Bus Interfaces for Data and Power Part 1: Common Components Section 1: USB Battery Charging Specification*\n\n### Sc..."
+    },
+    {
+      "id": 49,
+      "persona": "Importer",
+      "category": "Electronics CRS",
+      "query": "Are Smart Televisions and LED displays required to have BIS CRS registration?",
+      "expected_standard": "IS 616",
+      "retrieved_standards": [
+        "Scheme II (CRS)",
+        "Scheme II (CRS)",
+        "BIS Act 2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/CISPR TR 29:2020**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primaril..."
+    },
+    {
+      "id": 50,
+      "persona": "Manufacturer",
+      "category": "Electrical",
+      "query": "What standard covers electronic utility energy meters (smart meters)?",
+      "expected_standard": "IS 16444",
+      "retrieved_standards": [
+        "IS 12346:1999"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 78,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 12346:1999** — *Testing equipment for AC electrical energy meters (First Revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Testing equipment for ..."
+    },
+    {
+      "id": 51,
+      "persona": "Manufacturer",
+      "category": "Electrical",
+      "query": "What Indian Standard covers PVC insulated unsheathed and sheathed electrical wires and cables for working voltages up to 1100V?",
+      "expected_standard": "IS 694:2010",
+      "retrieved_standards": [
+        "IS 694:2010"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 694:2010** — *Polyvinyl chloride insulated unsheathed and sheathed cables/cords with rigid and flexible conductor for rated voltages up to and including 1 100 V (Four..."
+    },
+    {
+      "id": 52,
+      "persona": "Lab Technician",
+      "category": "Electrical",
+      "query": "What are the routine tests required for household wiring cables under IS 694?",
+      "expected_standard": "IS 694:2010",
+      "retrieved_standards": [
+        "IS 694:2010"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 73,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 694:2010** — *Polyvinyl chloride insulated unsheathed and sheathed cables/cords with rigid and flexible conductor for rated voltages up to and including 1 100 V (Four..."
+    },
+    {
+      "id": 53,
+      "persona": "Manufacturer",
+      "category": "Electrical",
+      "query": "Which Indian Standard specifies energy efficiency ratings and specifications for outdoor distribution transformers up to 2500 kVA?",
+      "expected_standard": "IS 1180 (Part 1)",
+      "retrieved_standards": [
+        "IS 1180 (Part 3):2021"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "PRODUCT_REQUIREMENTS",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1180 (Part 3):2021** — *Outdoor/Indoor Type Liquid Immersed Distribution Transformers Up to and Including 2 500 kVA, 33 kV — Specification  Part 3 Natural/Synthetic O..."
+    },
+    {
+      "id": 54,
+      "persona": "Manufacturer",
+      "category": "Electrical",
+      "query": "What standard governs three-phase induction motors energy efficiency in India?",
+      "expected_standard": "IS 12615",
+      "retrieved_standards": [
+        "IS 14578:2025"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 58,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14578:2025** — *THREE PHASE INDUCTION MOTORS FOR USE IN NUCLEAR POWER PLANTS - SPECIFICATION (first revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard..."
+    },
+    {
+      "id": 55,
+      "persona": "Engineer",
+      "category": "Electrical",
+      "query": "What Indian Standard specifies miniature circuit breakers (MCBs) for household installations?",
+      "expected_standard": "IS/IEC 60898",
+      "retrieved_standards": [
+        "IS/IEC 60898 (Part 2):2016",
+        "IS/IEC 60898 (Part 3):2019",
+        "IS/IEC 60898 (Part 1):2015"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 141,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS/IEC 60898 (Part 2):2016** — *Electrical accessories Circuit-breakers for overcurrent protection for household and similar installations Part 2: Circuit-breakers for A..."
+    },
+    {
+      "id": 56,
+      "persona": "Manufacturer",
+      "category": "Electrical",
+      "query": "Which standard governs switches for domestic and similar fixed electrical installations?",
+      "expected_standard": "IS 3854",
+      "retrieved_standards": [
+        "IS 3854:2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 59,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 3854:2023** — *Switches for Domestic and Similar Purposes - Specification (Third Revision) Amendment - 1*\n\n### Scope & Technical Summary\nOfficial Indian Standard for ..."
+    },
+    {
+      "id": 57,
+      "persona": "Consumer",
+      "category": "Electrical",
+      "query": "What standard applies to three-pin plugs and socket outlets for domestic use?",
+      "expected_standard": "IS 1293",
+      "retrieved_standards": [
+        "IS 3854:2023"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 74,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 3854:2023** — *Switches for Domestic and Similar Purposes - Specification (Third Revision) Amendment - 1*\n\n### Scope & Technical Summary\nOfficial Indian Standard for ..."
+    },
+    {
+      "id": 58,
+      "persona": "Engineer",
+      "category": "Electrical",
+      "query": "What standard applies to Cross-linked Polyethylene (XLPE) insulated power cables for voltages from 3.3 kV up to 33 kV?",
+      "expected_standard": "IS 7098 (Part 2)",
+      "retrieved_standards": [
+        "IS 694:2010"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 65,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 694:2010** — *Polyvinyl chloride insulated unsheathed and sheathed cables/cords with rigid and flexible conductor for rated voltages up to and including 1 100 V (Four..."
+    },
+    {
+      "id": 59,
+      "persona": "Manufacturer",
+      "category": "Mechanical",
+      "query": "What standard governs welded low carbon steel gas cylinders for low pressure liquefiable gases (LPG cylinders)?",
+      "expected_standard": "IS 3196",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 38,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1786:2008** — *IS 1786:2008 — High Strength Deformed Steel Bars and Wires for Concrete Reinforcement — Specification*\n\n### Scope & Technical Summary\nScope: Covers req..."
+    },
+    {
+      "id": 60,
+      "persona": "Consumer",
+      "category": "Mechanical",
+      "query": "What standard specifies rubber hoses for liquefied petroleum gas (LPG) domestic use (Suraksha hose)?",
+      "expected_standard": "IS 9573",
+      "retrieved_standards": [
+        "IS 9573 (Part 2):2017"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 64,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 9573 (Part 2):2017** — *Rubber hose for liquefied petroleum gas (Lpg) - Specification: Part 2 domestic and commercial application (Fourth Revision)*\n\n### Scope & Tech..."
+    },
+    {
+      "id": 61,
+      "persona": "Farmer/Manufacturer",
+      "category": "Food & Agriculture",
+      "query": "Which standard specifies multi-crop power threshers specifications and safety requirements?",
+      "expected_standard": "IS 11691:2026",
+      "retrieved_standards": [
+        "IS 11691:2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 61,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 11691:2026** — *Multi-crop thresher — Specification (first revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Multi-crop thresher — Specification ..."
+    },
+    {
+      "id": 62,
+      "persona": "Manufacturer",
+      "category": "Food & Agriculture",
+      "query": "What standard covers Sugarcane Juice Extractors specifications and test codes?",
+      "expected_standard": "IS 1973:2026",
+      "retrieved_standards": [
+        "IS 1973:2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "TESTING",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 60,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 1973:2026** — *Sugarcane Juice Extractor - Specification & Test Code (fourth revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Sugarcane Juice Ex..."
+    },
+    {
+      "id": 63,
+      "persona": "Consumer",
+      "category": "Food & Agriculture",
+      "query": "What standard governs infant milk food and follow-up formula in India?",
+      "expected_standard": "IS 14433",
+      "retrieved_standards": [
+        "IS 14433:2022"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 61,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14433:2022** — *INFANT MILK SUBSTITUTES - SPECIFICATION  (Second Revision of IS 14433) Amendment - 2*\n\n### Scope & Technical Summary\nOfficial Indian Standard for INFA..."
+    },
+    {
+      "id": 64,
+      "persona": "Lab Technician",
+      "category": "Food & Agriculture",
+      "query": "Which standard specifies sampling and test methods for chemical fertilizers?",
+      "expected_standard": "IS 6092 (Part 6):2026",
+      "retrieved_standards": [
+        "IS 6092 (Part 2/Sec 3):2004"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "TESTING",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 60,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 6092 (Part 2/Sec 3):2004** — *Methods of sampling and test for fertilizers: Part 2 determination of nitrogen: Sec 3 nitrate nitrogen content - Nitron gravimetric meth..."
+    },
+    {
+      "id": 65,
+      "persona": "Manufacturer",
+      "category": "Food & Agriculture",
+      "query": "What is the standard for square tin containers used for packaging ghee, vanaspati, and edible oils?",
+      "expected_standard": "IS 10325:2026",
+      "retrieved_standards": [
+        "IS 14636:1998"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 77,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14636:1998** — *Flexible packaging materials for packaging of edible oils, ghee and vanaspati*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Flexible pa..."
+    },
+    {
+      "id": 66,
+      "persona": "Miller",
+      "category": "Food & Agriculture",
+      "query": "What standard governs fortified rice kernels (FRK) used in public distribution?",
+      "expected_standard": "IS 17782",
+      "retrieved_standards": [
+        "IS 17853:2022"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 17853:2022** — *Equipment for Manufacture of Fortified Rice Kernel — Specification*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Equipment for Manufact..."
+    },
+    {
+      "id": 67,
+      "persona": "Manufacturer",
+      "category": "Food & Agriculture",
+      "query": "What standard governs cattle feed and compounded livestock feeds in India?",
+      "expected_standard": "IS 2052",
+      "retrieved_standards": [
+        "IS 2052:2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 62,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 2052:2023** — *Compounded Feeds for Cattle — Specification ( Fifth Revision )*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Compounded Feeds for Cattle..."
+    },
+    {
+      "id": 68,
+      "persona": "Manufacturer",
+      "category": "Food & Agriculture",
+      "query": "What standard specifies plastic containers used for packaging drinking water?",
+      "expected_standard": "IS 15410",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "STANDARD_LOOKUP",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 58,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14543:2024** — *IS 14543:2024 — Packaged Drinking Water (Other than Packaged Natural Mineral Water) — Specification*\n\n### Scope & Technical Summary\nDefinition and Pro..."
+    },
+    {
+      "id": 69,
+      "persona": "Consumer",
+      "category": "Food & Agriculture",
+      "query": "What standard specifies black tea requirements in India?",
+      "expected_standard": "IS 3633",
+      "retrieved_standards": [
+        "IS 3633:2024"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "PRODUCT_REQUIREMENTS",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 76,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 3633:2024** — *Black tea - Specification (third revision)*\n\n### Scope & Technical Summary\nOfficial Indian Standard for Black tea - Specification (third revision). Pub..."
+    },
+    {
+      "id": 70,
+      "persona": "Consumer",
+      "category": "Food & Agriculture",
+      "query": "What standard specifies iodized salt for direct human consumption?",
+      "expected_standard": "IS 7224",
+      "retrieved_standards": [
+        "IS 7224:2006"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "STANDARD_LOOKUP",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 78,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 7224:2006** — *Iodized salt, vacuum evaporated iodized salt and refined iodized salt - Specification (Second Revision)*\n\n### Scope & Technical Summary\nOfficial Indian..."
+    },
+    {
+      "id": 71,
+      "persona": "Manufacturer",
+      "category": "Regulatory",
+      "query": "I manufacture a product that falls under an Indian Standard. How can I check whether a Quality Control Order makes compliance with that standard mandatory?",
+      "expected_standard": "Section 16 BIS Act",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 37,
+      "response_snippet": "### How to Check Quality Control Orders (QCO) for Mandatory BIS Compliance\n\nQuality Control Orders (QCOs) are statutory orders issued by Government of India line ministries under **Section 16 of the B..."
+    },
+    {
+      "id": 72,
+      "persona": "Officer",
+      "category": "Regulatory",
+      "query": "Under which section of the BIS Act 2016 does the government issue Quality Control Orders?",
+      "expected_standard": "Section 16 BIS Act",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "BIS Act 2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 34,
+      "response_snippet": "### BIS Certification & Licensing Process (**BIS-CARE-GUIDE**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily und..."
+    },
+    {
+      "id": 73,
+      "persona": "Legal Officer",
+      "category": "Regulatory",
+      "query": "What are the legal penalties under Section 29 of the BIS Act 2016 for violating a mandatory QCO?",
+      "expected_standard": "Section 29 BIS Act",
+      "retrieved_standards": [
+        "IS 14700 (Part 1/Sec 1):2026"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CLAUSE_LOOKUP",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 14700 (Part 1/Sec 1):2026** — *Electromagnetic Compatibility EMC   Part 1: General   Section 1: Application and Interpretation of Fundamental Definitions and Terms Fi..."
+    },
+    {
+      "id": 74,
+      "persona": "Importer",
+      "category": "Regulatory",
+      "query": "Can imported goods enter India without a BIS licence if the product is under a mandatory QCO?",
+      "expected_standard": "FMCS & QCO",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "BIS Act 2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 36,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 75,
+      "persona": "Manufacturer",
+      "category": "Regulatory",
+      "query": "Which ministry notifies QCOs for toys, pressure cookers, and leather footwear?",
+      "expected_standard": "DPIIT",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 36,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 76,
+      "persona": "Manufacturer",
+      "category": "Regulatory",
+      "query": "Which ministry notifies QCOs for steel rebar, structural steel, and steel pipes?",
+      "expected_standard": "Ministry of Steel",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 34,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 1786:2008**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily under..."
+    },
+    {
+      "id": 77,
+      "persona": "MSME",
+      "category": "Regulatory",
+      "query": "Do small and micro enterprises get extended compliance timelines when a new QCO is notified?",
+      "expected_standard": "MSME QCO Guidelines",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "BIS Act 2016",
+        "IS 2347:2023"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/QC 760200:1995**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily ..."
+    },
+    {
+      "id": 78,
+      "persona": "Consumer",
+      "category": "Regulatory",
+      "query": "How can I verify whether a manufacturer's ISI licence is currently active or suspended?",
+      "expected_standard": "BIS CARE",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "LICENSING",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 72,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO 17316:2015**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily ..."
+    },
+    {
+      "id": 79,
+      "persona": "Student",
+      "category": "Regulatory",
+      "query": "What is the difference between a voluntary standard and a mandatory standard in India?",
+      "expected_standard": "BIS Regulatory Framework",
+      "retrieved_standards": [
+        "IS 16400:2015"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 65,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 16400:2015**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily unde..."
+    },
+    {
+      "id": 80,
+      "persona": "Consumer",
+      "category": "Regulatory",
+      "query": "Can an e-commerce platform sell products that violate a mandatory QCO without an ISI mark?",
+      "expected_standard": "BIS Act & CCPA",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 41,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 81,
+      "persona": "MSME",
+      "category": "Licensing",
+      "query": "I am a small manufacturer of electrical appliances. How can I find out whether my product requires BIS certification and what steps are involved in obtaining the licence?",
+      "expected_standard": "Scheme I (ISI Mark)",
+      "retrieved_standards": [
+        "IS 302 (Part 2/Sec 24):2026"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### BIS Certification & Licensing Guide for Electrical Appliances Manufacturers\n\nFor small and medium manufacturers (MSMEs) producing electrical appliances in India, obtaining BIS certification involv..."
+    },
+    {
+      "id": 82,
+      "persona": "MSME",
+      "category": "Licensing",
+      "query": "What is the Simplified Procedure (Option 2) for grant of BIS licence?",
+      "expected_standard": "Scheme I (Option 2)",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I (ISI Mark)",
+        "Scheme I"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO 22600 (Part 2):2014**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** p..."
+    },
+    {
+      "id": 83,
+      "persona": "MSME",
+      "category": "Licensing",
+      "query": "What marking fee concessions does BIS offer to micro, small, and women entrepreneurs?",
+      "expected_standard": "MSME Concessions",
+      "retrieved_standards": [
+        "IS 18688:2024"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 89,
+      "response_snippet": "### Applicable BIS Standard\n\n**IS 18688:2024** — *Collaborative business relationship management  Guidelines for micro small and medium-sized enterprises on the implementation of the fundamental princ..."
+    },
+    {
+      "id": 84,
+      "persona": "Manufacturer",
+      "category": "Licensing",
+      "query": "What is a Scheme of Inspection and Testing (SIT) issued by BIS?",
+      "expected_standard": "SIT Guidelines",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "Scheme I",
+        "Scheme I (ISI Mark)"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "TESTING",
+      "intent_classified": "TESTING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 68,
+      "response_snippet": "### Applicable BIS Standard\n\n**FMCS Scheme** — *Foreign Manufacturers Certification Scheme (FMCS) — Guidelines & Guidelines for AIR*\n\n### Scope & Technical Summary\nInspection and Testing for FMCS: A p..."
+    },
+    {
+      "id": 85,
+      "persona": "Manufacturer",
+      "category": "Licensing",
+      "query": "What happens during a BIS preliminary factory audit?",
+      "expected_standard": "Scheme I Audit",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I (ISI Mark)",
+        "FMCS Scheme"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "GENERAL_INFORMATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### Applicable BIS Standard\n\n**Scheme I** — *BIS Conformity Assessment Regulations, 2018 — Scheme I (Product Certification / ISI Mark)*\n\n### Scope & Technical Summary\nProcedure for Grant of Licence: A..."
+    },
+    {
+      "id": 86,
+      "persona": "Officer",
+      "category": "Licensing",
+      "query": "What is market surveillance under BIS product certification?",
+      "expected_standard": "Surveillance Guidelines",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I",
+        "Scheme I"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 36,
+      "response_snippet": "### BIS Certification & Licensing Process (**Scheme I**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily under **S..."
+    },
+    {
+      "id": 87,
+      "persona": "Manufacturer",
+      "category": "Licensing",
+      "query": "How long is a BIS Scheme I certification licence valid and how is it renewed?",
+      "expected_standard": "Licence Renewal",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I",
+        "Scheme I"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 59,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO/IEC/TS 17023:2013**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** pri..."
+    },
+    {
+      "id": 88,
+      "persona": "Manufacturer",
+      "category": "Licensing",
+      "query": "Can a manufacturer use the ISI mark on multiple factory locations under a single licence?",
+      "expected_standard": "Scheme I Regulations",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 60,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO 17316:2015**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily ..."
+    },
+    {
+      "id": 89,
+      "persona": "MSME",
+      "category": "Licensing",
+      "query": "What documents are required to apply for a BIS licence on Manakonline?",
+      "expected_standard": "Manakonline Checklist",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I",
+        "Scheme I (ISI Mark)"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 64,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO/IEC 17043:2023**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primar..."
+    },
+    {
+      "id": 90,
+      "persona": "Legal Officer",
+      "category": "Licensing",
+      "query": "What are the grounds on which BIS can cancel or stop marking of a licence?",
+      "expected_standard": "Conformity Regulations",
+      "retrieved_standards": [
+        "IS 16888:2018"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "LICENSING",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 62,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS 16888:2018**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily unde..."
+    },
+    {
+      "id": 91,
+      "persona": "Importer",
+      "category": "FMCS",
+      "query": "What is the Foreign Manufacturers Certification Scheme (FMCS) of BIS?",
+      "expected_standard": "FMCS Scheme",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "FMCS Scheme",
+        "FMCS Scheme"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 59,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO 10019:2005**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily ..."
+    },
+    {
+      "id": 92,
+      "persona": "Importer",
+      "category": "FMCS",
+      "query": "Who can be appointed as an Authorized Indian Representative (AIR) under FMCS?",
+      "expected_standard": "AIR Guidelines",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "FMCS Scheme",
+        "Scheme I"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 63,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO/IEC/TS 17021 (Part 11):2018**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, ..."
+    },
+    {
+      "id": 93,
+      "persona": "Foreign Manufacturer",
+      "category": "FMCS",
+      "query": "What is the timeline and fee structure for foreign manufacturers under FMCS?",
+      "expected_standard": "FMCS Timeline",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "FMCS Scheme",
+        "FMCS Scheme"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "LICENSING",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 59,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO/IEC/TS 17021 (Part 11):2018**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, ..."
+    },
+    {
+      "id": 94,
+      "persona": "Importer",
+      "category": "FMCS",
+      "query": "What happens if an imported container contains goods covered under a QCO without BIS registration?",
+      "expected_standard": "Customs QCO",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 35,
+      "response_snippet": "### Applicable BIS Standard for Domestic Pressure Cookers\n\n**IS 2347:2023** — *Domestic Pressure Cookers — Specification (Seventh Revision)*\n\n---\n\n### 1. Mandatory BIS Certification Status (QCO)\n> [!I..."
+    },
+    {
+      "id": 95,
+      "persona": "Foreign Manufacturer",
+      "category": "Electronics CRS",
+      "query": "Can a foreign company register electronics under CRS without a factory audit?",
+      "expected_standard": "CRS Guidelines",
+      "retrieved_standards": [
+        "Scheme II (CRS)",
+        "FMCS Scheme",
+        "Scheme I (ISI Mark)"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "CERTIFICATION",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": true,
+      "mandatory_match": true,
+      "latency_ms": 60,
+      "response_snippet": "### BIS Certification & Licensing Process (**IS/ISO/IEC/TS 17021 (Part 9):2016**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2..."
+    },
+    {
+      "id": 96,
+      "persona": "Lab Technician",
+      "category": "Laboratories",
+      "query": "Where are the official BIS Regional Testing Laboratories located in India?",
+      "expected_standard": "BIS Lab Network",
+      "retrieved_standards": [
+        "BIS Lab Network",
+        "BIS Lab Network",
+        "FMCS Scheme"
+      ],
+      "standard_hit": true,
+      "top1_hit": true,
+      "intent_expected": "LABORATORY",
+      "intent_classified": "LABORATORY",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 65,
+      "response_snippet": "### BIS Regional Testing Laboratories for **IS/ISO 15195:2018**\n\nTo conduct conformity, batch testing, or pre-certification testing under BIS regulations, manufacturers and applicants can utilize the ..."
+    },
+    {
+      "id": 97,
+      "persona": "Lab Technician",
+      "category": "Laboratories",
+      "query": "How can a private laboratory obtain BIS recognition for product testing?",
+      "expected_standard": "LIMS Guidelines",
+      "retrieved_standards": [
+        "BIS Lab Network",
+        "Scheme I",
+        "BIS Lab Network"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "LABORATORY",
+      "intent_classified": "LABORATORY",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 59,
+      "response_snippet": "### BIS Regional Testing Laboratories for **IS/ISO 15195:2018**\n\nTo conduct conformity, batch testing, or pre-certification testing under BIS regulations, manufacturers and applicants can utilize the ..."
+    },
+    {
+      "id": 98,
+      "persona": "Consumer",
+      "category": "Consumer Services",
+      "query": "What four main services does the BIS CARE mobile app offer to consumers?",
+      "expected_standard": "BIS CARE",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "IS 1417:2016"
+      ],
+      "standard_hit": true,
+      "top1_hit": false,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "CONSUMER_QUERY",
+      "intent_match": true,
+      "mandatory_match": false,
+      "latency_ms": 53,
+      "response_snippet": "### Consumer Rights & BIS CARE Grievance Redressal\n\nUnder the **BIS Act, 2016**, consumers are protected against sub-standard, misbranded, or counterfeit goods carrying fake ISI marks or falsified hal..."
+    },
+    {
+      "id": 99,
+      "persona": "Consumer",
+      "category": "Consumer Services",
+      "query": "How can a consumer file a complaint against fake ISI marked products or sub-standard goods?",
+      "expected_standard": "Grievance Redressal",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "BIS Act 2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": false,
+      "latency_ms": 32,
+      "response_snippet": "### BIS Certification & Licensing Process (**BIS-CARE-GUIDE**)\n\nProduct certification in India is governed by the **Bureau of Indian Standards (Conformity Assessment) Regulations, 2018** primarily und..."
+    },
+    {
+      "id": 100,
+      "persona": "Consumer",
+      "category": "Consumer Services",
+      "query": "Is a consumer entitled to compensation or product replacement if a BIS certified product fails quality standards?",
+      "expected_standard": "BIS Act Redressal",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "BIS Act 2016"
+      ],
+      "standard_hit": false,
+      "top1_hit": false,
+      "intent_expected": "CONSUMER_QUERY",
+      "intent_classified": "CERTIFICATION",
+      "intent_match": false,
+      "mandatory_match": true,
+      "latency_ms": 33,
+      "response_snippet": "### BIS Standards & Quality Checklist for Cement in House Construction\n\nWhen purchasing cement for residential building or house construction in India, selecting the appropriate Indian Standard and ve..."
+    }
+  ]
+}
