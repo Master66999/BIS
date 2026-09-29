@@ -7,7 +7,10 @@ from typing import List, Dict, Any, Tuple, Optional
 from sqlalchemy.orm import Session
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from rank_bm25 import BM25Okapi
+try:
+    from rank_bm25 import BM25Okapi
+except ImportError:
+    BM25Okapi = None
 
 from backend.app.models.models import DocumentChunk, Document, Standard
 from backend.app.schemas.schemas import SourceCitation
@@ -116,12 +119,13 @@ class HybridRetriever:
                 logger.info(f"Loaded {len(self.standards_meta)} published standards vectors into memory.")
 
                 # Build BM25 index for all 23,866 standards
-                std_corpus = [
-                    tokenize_text(f"{m.get('standard_number', '')} {m.get('title', '')} {m.get('product_category', '')} {m.get('type_of_standard', '')}")
-                    for m in self.standards_meta
-                ]
-                self.bm25_standards = BM25Okapi(std_corpus)
-                logger.info(f"Initialized BM25 index over {len(self.standards_meta)} published standards.")
+                if BM25Okapi is not None:
+                    std_corpus = [
+                        tokenize_text(f"{m.get('standard_number', '')} {m.get('title', '')} {m.get('product_category', '')} {m.get('type_of_standard', '')}")
+                        for m in self.standards_meta
+                    ]
+                    self.bm25_standards = BM25Okapi(std_corpus)
+                    logger.info(f"Initialized BM25 index over {len(self.standards_meta)} published standards.")
         except Exception as e:
             logger.warning(f"Could not load standards vector/BM25 index: {e}")
 
@@ -133,12 +137,13 @@ class HybridRetriever:
                 logger.info(f"Loaded {len(self.chunks_meta)} clause chunks vectors into memory.")
 
                 # Build BM25 index for clause chunks
-                chunk_corpus = [
-                    tokenize_text(f"{c.get('standard_number', '')} {c.get('title', '')} {c.get('clause_number', '')} {c.get('content', '')}")
-                    for c in self.chunks_meta
-                ]
-                self.bm25_chunks = BM25Okapi(chunk_corpus)
-                logger.info(f"Initialized BM25 index over {len(self.chunks_meta)} clause chunks.")
+                if BM25Okapi is not None:
+                    chunk_corpus = [
+                        tokenize_text(f"{c.get('standard_number', '')} {c.get('title', '')} {c.get('clause_number', '')} {c.get('content', '')}")
+                        for c in self.chunks_meta
+                    ]
+                    self.bm25_chunks = BM25Okapi(chunk_corpus)
+                    logger.info(f"Initialized BM25 index over {len(self.chunks_meta)} clause chunks.")
         except Exception as e:
             logger.warning(f"Could not load chunks vector/BM25 index: {e}")
 
