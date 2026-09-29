@@ -279,7 +279,13 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   }`}
                 >
                   {/* Markdown Body */}
-                  <div className="prose prose-sm max-w-none text-slate-800 prose-headings:font-bold prose-headings:text-blue-950 prose-a:text-blue-600 prose-strong:text-slate-900 prose-ul:my-2 prose-li:my-0.5">
+                  <div
+                    className={`prose prose-sm max-w-none ${
+                      msg.sender === "user"
+                        ? "text-white [&_*]:!text-white [&_a]:!text-amber-300 [&_code]:!bg-blue-900/60 [&_code]:!text-amber-200"
+                        : "text-slate-800 prose-headings:font-bold prose-headings:text-[#0B2545] prose-a:text-blue-600 prose-strong:text-slate-900"
+                    } prose-ul:my-2 prose-li:my-0.5`}
+                  >
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
 
