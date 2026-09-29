@@ -63,7 +63,7 @@ export const AdminPortalView: React.FC = () => {
       formData.append("version", ingestVersion);
       formData.append("content", ingestContent);
 
-      const res = await fetch("http://127.0.0.1:8000/api/admin/documents/upload", {
+      const res = await fetch("/api/admin/documents/upload", {
         method: "POST",
         body: formData,
       });
