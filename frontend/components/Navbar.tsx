@@ -17,7 +17,8 @@ import {
   Sparkles,
   Command,
   ChevronRight,
-  Shield
+  Shield,
+  FileCheck2
 } from "lucide-react";
 import { EmblemOfIndia, BisEmblem } from "./GovEmblem";
 import { demoLogin } from "../lib/api";
@@ -68,6 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: "verify", label: "Verify Mark", labelHi: "सत्यापन", icon: ShieldCheck },
     { id: "services", label: "Schemes", labelHi: "योजनाएं", icon: BookOpen },
     { id: "labs", label: "Labs", labelHi: "लैब्स", icon: FlaskConical },
+    { id: "inspector", label: "MTC Inspector", labelHi: "रिपोर्ट जांच", icon: FileCheck2, badge: "NEW" },
     { id: "admin", label: "Admin", labelHi: "प्रशासन", icon: BarChart3 },
   ];
 

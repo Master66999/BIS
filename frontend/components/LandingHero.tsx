@@ -288,8 +288,41 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
           </div>
         </div>
 
+        {/* Feature 1 Spotlight Banner: AI Lab Test Report & MTC Inspector */}
+        <div
+          onClick={() => onNavigateTab("inspector")}
+          className="mt-8 max-w-4xl mx-auto p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-[#0B2545] via-blue-950 to-slate-900 text-white border-2 border-amber-400/40 shadow-lg hover:border-amber-400 transition-all cursor-pointer group flex flex-col sm:flex-row items-center justify-between gap-4"
+        >
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 group-hover:scale-105 transition-transform">
+              <FileCheck2 className="w-6 h-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="bg-amber-400 text-slate-950 font-black text-[10px] uppercase font-mono px-2 py-0.5 rounded-full">
+                  NEW AI AUDIT
+                </span>
+                <span className="text-xs text-amber-300 font-semibold font-mono">
+                  SIH26107 Highlight
+                </span>
+              </div>
+              <h3 className="font-extrabold text-sm sm:text-base text-white mt-0.5">
+                AI Lab Test Report & Mill Test Certificate (MTC) Inspector
+              </h3>
+              <p className="text-xs text-slate-300 mt-0.5 line-clamp-1">
+                Instantly audit steel, concrete, and water test reports with automated clause-by-clause pass/fail verification.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0 bg-white/10 group-hover:bg-white/20 px-4 py-2 rounded-xl text-xs font-bold text-amber-300 transition">
+            <span>Launch Inspector</span>
+            <ArrowRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+          </div>
+        </div>
+
         {/* 4. THE BENTO GRID COMMAND CENTER */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-12 gap-5">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-12 gap-5">
           
           {/* Bento Tile 1: Live Interactive Standard Radar (Span 7 cols) */}
           <div className="md:col-span-7 bg-white rounded-3xl p-6 border border-slate-200/90 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-slate-300 transition-all">

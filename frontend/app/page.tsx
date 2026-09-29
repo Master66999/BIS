@@ -59,6 +59,11 @@ const AdminPortalView = dynamic(
   { loading: ViewLoadingSkeleton, ssr: false }
 );
 
+const ReportInspectorView = dynamic(
+  () => import("../components/ReportInspectorView").then((m) => m.ReportInspectorView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
 const CommandPalette = dynamic(
   () => import("../components/CommandPalette").then((m) => m.CommandPalette),
   { ssr: false }
@@ -142,6 +147,10 @@ export default function Home() {
         {activeTab === "labs" && <LaboratoriesView />}
 
         {activeTab === "admin" && <AdminPortalView />}
+
+        {activeTab === "inspector" && (
+          <ReportInspectorView onAskAI={handleStartChat} />
+        )}
       </main>
 
       {/* Official Government Footer */}

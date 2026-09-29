@@ -181,3 +181,35 @@ export async function fetchSystemDesignTelemetry(): Promise<any> {
   return res.json();
 }
 
+export async function fetchAuditSamples(): Promise<any[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/audit/samples`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.samples || [];
+  } catch (e) {
+    console.error("fetchAuditSamples error", e);
+    return [];
+  }
+}
+
+export async function inspectTestReport(payload: {
+  sample_id?: string;
+  standard_code?: string;
+  sample_metadata?: any;
+  parameters?: any[];
+  raw_text?: string;
+}): Promise<any> {
+  const res = await fetch(`${BASE_URL}/audit/inspect`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || "Failed to inspect test certificate");
+  }
+  return res.json();
+}
+
+
