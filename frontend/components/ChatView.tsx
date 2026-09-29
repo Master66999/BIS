@@ -177,7 +177,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
           {/* New Chat Button */}
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-[#0A2540] hover:bg-[#16385C] text-white font-semibold rounded-xl text-xs transition-colors shadow-sm"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-[#0B2545] hover:bg-[#133E68] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4 text-amber-400" />
             <span>New BIS Query</span>
@@ -231,8 +231,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
           {messages.length === 0 ? (
             <div className="max-w-2xl mx-auto my-auto text-center py-10 space-y-6">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-500 to-[#0A2540] flex items-center justify-center text-white mx-auto shadow-xl">
-                <Bot className="w-8 h-8 text-amber-400" />
+              <div className="w-14 h-14 rounded-xl bg-[#0B2545] flex items-center justify-center text-white mx-auto shadow-md border border-slate-700">
+                <Bot className="w-7 h-7 text-amber-400" />
               </div>
               <div className="space-y-2">
                 <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
@@ -266,16 +266,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 }`}
               >
                 {msg.sender === "assistant" && (
-                  <div className="w-8 h-8 rounded-lg bg-[#0A2540] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
+                  <div className="w-8 h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
                     <Bot className="w-4 h-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-2xl rounded-2xl p-4 sm:p-5 text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-2xl rounded-lg p-4 sm:p-5 text-xs sm:text-sm leading-relaxed ${
                     msg.sender === "user"
-                      ? "bg-[#0A2540] text-white shadow-md ml-12"
-                      : "bg-white border border-slate-200/90 text-slate-800 shadow-sm"
+                      ? "bg-[#0B2545] text-white shadow-md ml-12"
+                      : "bg-white border border-slate-300 text-slate-800 shadow-sm"
                   }`}
                 >
                   {/* Markdown Body */}
@@ -400,10 +400,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
           {/* Loading indicator */}
           {isLoading && (
             <div className="flex gap-3 max-w-4xl mx-auto justify-start animate-pulse">
-              <div className="w-8 h-8 rounded-lg bg-[#0A2540] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
+              <div className="w-8 h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
                 <Bot className="w-4 h-4" />
               </div>
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2 max-w-md">
+              <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm space-y-2 max-w-md">
                 <div className="flex items-center gap-2 text-xs font-semibold text-blue-900">
                   <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" />
                   <span>Searching 23,866 Indian Standards & verifying clauses...</span>
@@ -465,7 +465,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 disabled={isLoading || !inputText.trim()}
                 className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${
                   inputText.trim() && !isLoading
-                    ? "bg-[#0A2540] hover:bg-[#16385C] text-amber-400 shadow"
+                    ? "bg-[#0B2545] hover:bg-[#133E68] text-amber-300 shadow"
                     : "bg-slate-200 text-slate-400 cursor-not-allowed"
                 }`}
               >

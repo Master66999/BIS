@@ -98,7 +98,7 @@ export const LaboratoriesView: React.FC = () => {
 
         <button
           type="submit"
-          className="px-5 py-2 bg-[#0A2540] hover:bg-[#16385C] text-amber-400 font-semibold rounded-lg text-xs shadow transition-colors"
+          className="px-5 py-2 bg-[#0B2545] hover:bg-[#133E68] text-amber-300 font-semibold rounded-lg text-xs shadow transition-colors"
         >
           Search Laboratories
         </button>

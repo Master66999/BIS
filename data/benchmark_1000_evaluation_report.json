@@ -1,0 +1,990 @@
+{
+  "dataset": "benchmark_1000_questions.json",
+  "total_questions": 1000,
+  "overall_hit_rate_pct": 75.9,
+  "overall_top1_hit_rate_pct": 72.6,
+  "average_latency_ms": 57.08,
+  "converged_policy_weights": {
+    "STANDARD_LOOKUP": {
+      "dense_weight": 0.15,
+      "bm25_weight": 0.85,
+      "exact_boost": 0.6,
+      "top_k": 3
+    },
+    "CERTIFICATION": {
+      "dense_weight": 0.158,
+      "bm25_weight": 0.842,
+      "exact_boost": 0.6,
+      "top_k": 4
+    },
+    "TESTING": {
+      "dense_weight": 0.161,
+      "bm25_weight": 0.839,
+      "exact_boost": 0.6,
+      "top_k": 4
+    },
+    "HALLMARKING": {
+      "dense_weight": 0.224,
+      "bm25_weight": 0.776,
+      "exact_boost": 0.6,
+      "top_k": 3
+    },
+    "LABORATORY": {
+      "dense_weight": 0.15,
+      "bm25_weight": 0.85,
+      "exact_boost": 0.598,
+      "top_k": 4
+    },
+    "CONSUMER_QUERY": {
+      "dense_weight": 0.65,
+      "bm25_weight": 0.35,
+      "exact_boost": 0.242,
+      "top_k": 4
+    },
+    "GENERAL": {
+      "dense_weight": 0.161,
+      "bm25_weight": 0.839,
+      "exact_boost": 0.6,
+      "top_k": 4
+    }
+  },
+  "category_performance": {
+    "Cement": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Electric Fan": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Packaged Drinking Water": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Steel Rebar": {
+      "total": 4,
+      "hits": 4,
+      "top1": 3
+    },
+    "Helmet": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Gold Hallmarking": {
+      "total": 3,
+      "hits": 3,
+      "top1": 3
+    },
+    "Toys": {
+      "total": 3,
+      "hits": 3,
+      "top1": 3
+    },
+    "Certification": {
+      "total": 1,
+      "hits": 1,
+      "top1": 1
+    },
+    "Licensing": {
+      "total": 5,
+      "hits": 5,
+      "top1": 5
+    },
+    "Surveillance": {
+      "total": 1,
+      "hits": 1,
+      "top1": 1
+    },
+    "Electronics CRS": {
+      "total": 2,
+      "hits": 2,
+      "top1": 2
+    },
+    "Consumer Services": {
+      "total": 4,
+      "hits": 2,
+      "top1": 2
+    },
+    "Pressure Cooker": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Concrete": {
+      "total": 4,
+      "hits": 4,
+      "top1": 4
+    },
+    "Regulatory": {
+      "total": 3,
+      "hits": 3,
+      "top1": 3
+    },
+    "FMCS": {
+      "total": 3,
+      "hits": 3,
+      "top1": 3
+    },
+    "Laboratories": {
+      "total": 2,
+      "hits": 0,
+      "top1": 0
+    },
+    "Food & Agriculture": {
+      "total": 179,
+      "hits": 144,
+      "top1": 140
+    },
+    "Consumer Goods & Safety": {
+      "total": 5,
+      "hits": 4,
+      "top1": 4
+    },
+    "Civil & Construction": {
+      "total": 206,
+      "hits": 129,
+      "top1": 116
+    },
+    "Chemicals & Petrochemicals": {
+      "total": 266,
+      "hits": 200,
+      "top1": 189
+    },
+    "Mechanical & Metallurgy": {
+      "total": 69,
+      "hits": 60,
+      "top1": 60
+    },
+    "Cement & Concrete": {
+      "total": 34,
+      "hits": 25,
+      "top1": 24
+    },
+    "General Engineering & Technical": {
+      "total": 47,
+      "hits": 31,
+      "top1": 30
+    },
+    "Electrical & Electronics": {
+      "total": 134,
+      "hits": 110,
+      "top1": 108
+    },
+    "Medical & Healthcare": {
+      "total": 3,
+      "hits": 3,
+      "top1": 3
+    },
+    "Textiles": {
+      "total": 2,
+      "hits": 2,
+      "top1": 2
+    }
+  },
+  "sample_evaluations": [
+    {
+      "id": 1,
+      "query": "Which Indian Standard applies to Ordinary Portland Cement?",
+      "persona": "Manufacturer",
+      "category": "Cement",
+      "expected_standard": "IS 269:2015",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 26.4
+    },
+    {
+      "id": 2,
+      "query": "Is BIS certification or ISI mark mandatory for Ordinary Portland Cement under Government QCOs?",
+      "persona": "Consumer",
+      "category": "Cement",
+      "expected_standard": "IS 269:2015",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 20.1
+    },
+    {
+      "id": 3,
+      "query": "What should I do if I purchased sub-standard or counterfeit Ordinary Portland Cement bearing a fake ISI mark?",
+      "persona": "Quality Engineer",
+      "category": "Cement",
+      "expected_standard": "IS 269:2015",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.8
+    },
+    {
+      "id": 4,
+      "query": "Which physical and chemical tests must Ordinary Portland Cement undergo as per IS 269:2015?",
+      "persona": "Lab Technician",
+      "category": "Cement",
+      "expected_standard": "IS 269:2015",
+      "retrieved_standards": [
+        "IS 269:2015",
+        "IS 269:2015",
+        "IS 269:2015"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 33.2
+    },
+    {
+      "id": 5,
+      "query": "What is the official BIS standard number for Electric Ceiling Type Fans?",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Electric Fan",
+      "expected_standard": "IS 374:2019",
+      "retrieved_standards": [
+        "IS 374:2019",
+        "IS 374:2019",
+        "IS 374:2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 13.6
+    },
+    {
+      "id": 6,
+      "query": "Does Electric Ceiling Type Fans require mandatory Scheme I ISI mark certification before selling in India?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Electric Fan",
+      "expected_standard": "IS 374:2019",
+      "retrieved_standards": [
+        "IS 374:2019",
+        "IS 374:2019",
+        "IS 374:2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 22.3
+    },
+    {
+      "id": 7,
+      "query": "How can a consumer verify if the ISI mark on Electric Ceiling Type Fans is genuine or fake?",
+      "persona": "Student / Citizen",
+      "category": "Electric Fan",
+      "expected_standard": "IS 374:2019",
+      "retrieved_standards": [
+        "IS 374:2019",
+        "IS 374:2019",
+        "IS 374:2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 23.9
+    },
+    {
+      "id": 8,
+      "query": "What is the sampling frequency and test procedure for Electric Ceiling Type Fans under IS 374:2019?",
+      "persona": "MSME Applicant",
+      "category": "Electric Fan",
+      "expected_standard": "IS 374:2019",
+      "retrieved_standards": [
+        "IS 374:2019",
+        "IS 374:2019",
+        "IS 374:2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 20.1
+    },
+    {
+      "id": 9,
+      "query": "Which Indian Standard applies to Packaged Drinking Water?",
+      "persona": "Manufacturer",
+      "category": "Packaged Drinking Water",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 15.7
+    },
+    {
+      "id": 10,
+      "query": "What is the licensing procedure and mandatory status for Packaged Drinking Water according to BIS?",
+      "persona": "Consumer",
+      "category": "Packaged Drinking Water",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 13.8
+    },
+    {
+      "id": 11,
+      "query": "Is it legal for a retailer to sell Packaged Drinking Water without an ISI mark in India?",
+      "persona": "Quality Engineer",
+      "category": "Packaged Drinking Water",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 22.2
+    },
+    {
+      "id": 12,
+      "query": "What are the mandatory laboratory testing parameters and requirements for Packaged Drinking Water?",
+      "persona": "Lab Technician",
+      "category": "Packaged Drinking Water",
+      "expected_standard": "IS 14543:2024",
+      "retrieved_standards": [
+        "IS 14543:2024",
+        "IS 14543:2024",
+        "IS 14543:2024"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 24.4
+    },
+    {
+      "id": 13,
+      "query": "Which Indian Standard applies to High Strength Deformed Steel?",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Steel Rebar",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.3
+    },
+    {
+      "id": 14,
+      "query": "Is BIS certification or ISI mark mandatory for High Strength Deformed Steel under Government QCOs?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Steel Rebar",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 19.1
+    },
+    {
+      "id": 15,
+      "query": "How do I check the 7-digit CM/L licence number printed on High Strength Deformed Steel using the BIS CARE app?",
+      "persona": "Student / Citizen",
+      "category": "Steel Rebar",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "IS 1417:2016"
+      ],
+      "hit": true,
+      "top1_hit": false,
+      "confidence": 0.96,
+      "latency_ms": 19.3
+    },
+    {
+      "id": 16,
+      "query": "Which physical and chemical tests must High Strength Deformed Steel undergo as per IS 1786:2008?",
+      "persona": "MSME Applicant",
+      "category": "Steel Rebar",
+      "expected_standard": "IS 1786:2008",
+      "retrieved_standards": [
+        "IS 1786:2008",
+        "IS 1786:2008",
+        "IS 1786:2008"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 14.6
+    },
+    {
+      "id": 17,
+      "query": "What standard should I refer to for manufacturing and quality control of Protective Helmets For Riders?",
+      "persona": "Manufacturer",
+      "category": "Helmet",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 14.2
+    },
+    {
+      "id": 18,
+      "query": "What is the licensing procedure and mandatory status for Protective Helmets For Riders according to BIS?",
+      "persona": "Consumer",
+      "category": "Helmet",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.7
+    },
+    {
+      "id": 19,
+      "query": "How can a consumer verify if the ISI mark on Protective Helmets For Riders is genuine or fake?",
+      "persona": "Quality Engineer",
+      "category": "Helmet",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 31.6
+    },
+    {
+      "id": 20,
+      "query": "What is the sampling frequency and test procedure for Protective Helmets For Riders under IS 4151:2020?",
+      "persona": "Lab Technician",
+      "category": "Helmet",
+      "expected_standard": "IS 4151:2020",
+      "retrieved_standards": [
+        "IS 4151:2020",
+        "IS 4151:2020",
+        "IS 4151:2020"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 27.7
+    },
+    {
+      "id": 21,
+      "query": "What is the official BIS standard number for Gold And Gold Alloys?",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Gold Hallmarking",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.9
+    },
+    {
+      "id": 22,
+      "query": "What is the licensing procedure and mandatory status for Gold And Gold Alloys according to BIS?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Gold Hallmarking",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 17.9
+    },
+    {
+      "id": 23,
+      "query": "Is it legal for a retailer to sell Gold And Gold Alloys without an ISI mark in India?",
+      "persona": "Student / Citizen",
+      "category": "Gold Hallmarking",
+      "expected_standard": "IS 1417:2016",
+      "retrieved_standards": [
+        "IS 1417:2016",
+        "IS 1417:2016",
+        "IS 1417:2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 20.4
+    },
+    {
+      "id": 24,
+      "query": "Which physical and chemical tests must Safety Of Toys undergo as per IS 9873 (Part 1):2019?",
+      "persona": "MSME Applicant",
+      "category": "Toys",
+      "expected_standard": "IS 9873 (Part 1):2019",
+      "retrieved_standards": [
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 29.5
+    },
+    {
+      "id": 25,
+      "query": "I am looking for the applicable Bureau of Indian Standards document for Safety Of Toys.",
+      "persona": "Manufacturer",
+      "category": "Toys",
+      "expected_standard": "IS 9873 (Part 1):2019",
+      "retrieved_standards": [
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 28.6
+    },
+    {
+      "id": 26,
+      "query": "What is the licensing procedure and mandatory status for Safety Of Toys according to BIS?",
+      "persona": "Consumer",
+      "category": "Toys",
+      "expected_standard": "IS 9873 (Part 1):2019",
+      "retrieved_standards": [
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019",
+        "IS 9873 (Part 1):2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 36.7
+    },
+    {
+      "id": 27,
+      "query": "What should I do if I purchased sub-standard or counterfeit Bis Conformity Assessment Regulations bearing a fake ISI mark?",
+      "persona": "Quality Engineer",
+      "category": "Certification",
+      "expected_standard": "Scheme I",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I",
+        "Scheme I"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 31.2
+    },
+    {
+      "id": 28,
+      "query": "What are the mandatory laboratory testing parameters and requirements for Bis Conformity Assessment Regulations?",
+      "persona": "Lab Technician",
+      "category": "Licensing",
+      "expected_standard": "Scheme I",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I",
+        "Scheme I"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 34.6
+    },
+    {
+      "id": 29,
+      "query": "What is the official BIS standard number for Bis Conformity Assessment Regulations?",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Surveillance",
+      "expected_standard": "Scheme I",
+      "retrieved_standards": [
+        "Scheme I",
+        "Scheme I",
+        "Scheme I"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 38.6
+    },
+    {
+      "id": 30,
+      "query": "What certification scheme does Compulsory Registration Scheme fall under, and is a Quality Control Order active for it?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Electronics CRS",
+      "expected_standard": "Scheme II (CRS)",
+      "retrieved_standards": [
+        "Scheme II (CRS)",
+        "Scheme II (CRS)",
+        "IS 9873 (Part 1):2019"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 17.2
+    },
+    {
+      "id": 31,
+      "query": "What should I do if I purchased sub-standard or counterfeit Compulsory Registration Scheme bearing a fake ISI mark?",
+      "persona": "Student / Citizen",
+      "category": "Electronics CRS",
+      "expected_standard": "Scheme II (CRS)",
+      "retrieved_standards": [
+        "Scheme II (CRS)",
+        "Scheme II (CRS)",
+        "Scheme I"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.3
+    },
+    {
+      "id": 32,
+      "query": "What testing protocol and tolerance limits are specified in BIS-CARE-GUIDE for Bis Consumer Services?",
+      "persona": "MSME Applicant",
+      "category": "Consumer Services",
+      "expected_standard": "BIS-CARE-GUIDE",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "FMCS Scheme"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 24.0
+    },
+    {
+      "id": 33,
+      "query": "What is the official BIS standard number for Bis Consumer Services?",
+      "persona": "Manufacturer",
+      "category": "Consumer Services",
+      "expected_standard": "BIS-CARE-GUIDE",
+      "retrieved_standards": [
+        "BIS-CARE-GUIDE",
+        "BIS-CARE-GUIDE",
+        "IS 1417:2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 12.4
+    },
+    {
+      "id": 34,
+      "query": "Does Domestic Pressure Cookers require mandatory Scheme I ISI mark certification before selling in India?",
+      "persona": "Consumer",
+      "category": "Pressure Cooker",
+      "expected_standard": "IS 2347:2023",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 16.9
+    },
+    {
+      "id": 35,
+      "query": "What should I do if I purchased sub-standard or counterfeit Domestic Pressure Cookers bearing a fake ISI mark?",
+      "persona": "Quality Engineer",
+      "category": "Pressure Cooker",
+      "expected_standard": "IS 2347:2023",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 20.4
+    },
+    {
+      "id": 36,
+      "query": "What are the mandatory laboratory testing parameters and requirements for Domestic Pressure Cookers?",
+      "persona": "Lab Technician",
+      "category": "Pressure Cooker",
+      "expected_standard": "IS 2347:2023",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.3
+    },
+    {
+      "id": 37,
+      "query": "Which Indian Standard applies to Domestic Pressure Cookers?",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Pressure Cooker",
+      "expected_standard": "IS 2347:2023",
+      "retrieved_standards": [
+        "IS 2347:2023",
+        "IS 2347:2023",
+        "IS 2347:2023"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 19.8
+    },
+    {
+      "id": 38,
+      "query": "What certification scheme does Plain And Reinforced Concrete fall under, and is a Quality Control Order active for it?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Concrete",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 19.0
+    },
+    {
+      "id": 39,
+      "query": "How can a consumer verify if the ISI mark on Plain And Reinforced Concrete is genuine or fake?",
+      "persona": "Student / Citizen",
+      "category": "Concrete",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 16.5
+    },
+    {
+      "id": 40,
+      "query": "What testing protocol and tolerance limits are specified in IS 456:2000 for Plain And Reinforced Concrete?",
+      "persona": "MSME Applicant",
+      "category": "Concrete",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 13.3
+    },
+    {
+      "id": 41,
+      "query": "Could you tell me the IS specification code for Plain And Reinforced Concrete in India?",
+      "persona": "Manufacturer",
+      "category": "Concrete",
+      "expected_standard": "IS 456:2000",
+      "retrieved_standards": [
+        "IS 456:2000",
+        "IS 456:2000",
+        "IS 456:2000"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 16.9
+    },
+    {
+      "id": 42,
+      "query": "What is the licensing procedure and mandatory status for Bureau Of Indian Standards Act according to BIS?",
+      "persona": "Consumer",
+      "category": "Regulatory",
+      "expected_standard": "BIS Act 2016",
+      "retrieved_standards": [
+        "BIS Act 2016",
+        "BIS Act 2016",
+        "BIS Act 2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 19.3
+    },
+    {
+      "id": 43,
+      "query": "What should I do if I purchased sub-standard or counterfeit Bureau Of Indian Standards Act bearing a fake ISI mark?",
+      "persona": "Quality Engineer",
+      "category": "Regulatory",
+      "expected_standard": "BIS Act 2016",
+      "retrieved_standards": [
+        "BIS Act 2016",
+        "BIS Act 2016",
+        "BIS Act 2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 19.9
+    },
+    {
+      "id": 44,
+      "query": "What are the mandatory laboratory testing parameters and requirements for Bureau Of Indian Standards Act?",
+      "persona": "Lab Technician",
+      "category": "Regulatory",
+      "expected_standard": "BIS Act 2016",
+      "retrieved_standards": [
+        "BIS Act 2016",
+        "BIS Act 2016",
+        "BIS Act 2016"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.2
+    },
+    {
+      "id": 45,
+      "query": "I am looking for the applicable Bureau of Indian Standards document for Bis Conformity Assessment Regulations 2018.",
+      "persona": "Importer / Foreign Manufacturer",
+      "category": "Licensing",
+      "expected_standard": "Scheme I (ISI Mark)",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 17.8
+    },
+    {
+      "id": 46,
+      "query": "What is the licensing procedure and mandatory status for Bis Conformity Assessment Regulations 2018 according to BIS?",
+      "persona": "BIS Enforcement Officer",
+      "category": "Licensing",
+      "expected_standard": "Scheme I (ISI Mark)",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 16.4
+    },
+    {
+      "id": 47,
+      "query": "How can a consumer verify if the ISI mark on Bis Conformity Assessment Regulations 2018 is genuine or fake?",
+      "persona": "Student / Citizen",
+      "category": "Licensing",
+      "expected_standard": "Scheme I (ISI Mark)",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 18.3
+    },
+    {
+      "id": 48,
+      "query": "How is compliance verified and what are the performance test limits for Bis Conformity Assessment Regulations 2018?",
+      "persona": "MSME Applicant",
+      "category": "Licensing",
+      "expected_standard": "Scheme I (ISI Mark)",
+      "retrieved_standards": [
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)",
+        "Scheme I (ISI Mark)"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 17.6
+    },
+    {
+      "id": 49,
+      "query": "Which Indian Standard applies to Foreign Manufacturers Certification Scheme?",
+      "persona": "Manufacturer",
+      "category": "FMCS",
+      "expected_standard": "FMCS Scheme",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "FMCS Scheme",
+        "FMCS Scheme"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 15.9
+    },
+    {
+      "id": 50,
+      "query": "What is the licensing procedure and mandatory status for Foreign Manufacturers Certification Scheme according to BIS?",
+      "persona": "Consumer",
+      "category": "FMCS",
+      "expected_standard": "FMCS Scheme",
+      "retrieved_standards": [
+        "FMCS Scheme",
+        "FMCS Scheme",
+        "FMCS Scheme"
+      ],
+      "hit": true,
+      "top1_hit": true,
+      "confidence": 0.96,
+      "latency_ms": 16.7
+    }
+  ]
+}

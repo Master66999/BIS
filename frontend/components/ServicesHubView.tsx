@@ -83,7 +83,7 @@ export const ServicesHubView: React.FC = () => {
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0A2540] to-blue-800 text-amber-400 flex items-center justify-center shadow">
+                  <div className="w-10 h-10 rounded-lg bg-[#0B2545] text-amber-300 flex items-center justify-center shadow">
                     <Icon className="w-5 h-5" />
                   </div>
                   <a

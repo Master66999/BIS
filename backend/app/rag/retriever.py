@@ -30,14 +30,12 @@ def tokenize_text(text: str) -> List[str]:
     return re.findall(r'\b\w+\b', text.lower())
 
 def extract_std_components(std_str: str) -> Tuple[str, Optional[str], Optional[str]]:
-    """Extracts (base_number, part, year) from a standard string like 'IS 1786 (Part 1):2008'"""
+    """Extracts (digits_id, part, year) from a standard string like 'IS 1786 (Part 1):2008' or 'IS/IEC 60898'"""
     if not std_str:
         return ("", None, None)
     clean = std_str.strip().upper()
-    m_base = re.search(r'IS(?:\/([A-Z]+))?\s*(\d+)', clean)
-    if not m_base:
-        return (clean.replace(" ", ""), None, None)
-    base = f"{m_base.group(1) or ''}{m_base.group(2)}"
+    m_num = re.search(r'\b(\d{2,6})\b', clean)
+    base = m_num.group(1) if m_num else clean.replace(" ", "")
     m_part = re.search(r'\(PART\s*(\d+)\)', clean)
     part = m_part.group(1) if m_part else None
     m_year = re.search(r':(\d{4})', clean)
@@ -47,6 +45,9 @@ def extract_std_components(std_str: str) -> Tuple[str, Optional[str], Optional[s
 def standards_match(std1: str, std2: str) -> bool:
     if not std1 or not std2:
         return False
+    s1, s2 = std1.strip().upper(), std2.strip().upper()
+    if s1 == s2:
+        return True
     b1, p1, y1 = extract_std_components(std1)
     b2, p2, y2 = extract_std_components(std2)
     if not b1 or not b2 or b1 != b2:
@@ -213,10 +214,10 @@ class HybridRetriever:
         rrf_scored.sort(key=lambda x: x[0], reverse=True)
         top_matches = rrf_scored[:top_k]
 
-        max_possible = (w_dense / k_rrf) + (w_bm25 / k_rrf)
+        max_possible = (eff_dense / k_rrf) + (eff_bm25 / k_rrf)
         results = []
         for s, idx in top_matches:
-            normalized_score = round(s / max_possible, 3)
+            normalized_score = round(s / max_possible, 3) if max_possible > 0 else 0.0
             item = dict(self.standards_meta[idx])
             item["semantic_score"] = normalized_score
             results.append(item)
@@ -311,9 +312,13 @@ class HybridRetriever:
                 if target_product and (target_product in chunk_prod_lower or target_product in chunk_content_lower):
                     boost += 0.25
 
-                # Boost clause match
-                if target_clause and target_clause in chunk_clause_lower:
-                    boost += 0.30
+                # Boost clause / section match
+                if target_clause:
+                    cl_num = re.search(r'\d+', target_clause)
+                    if cl_num and cl_num.group(0) in chunk_clause_lower:
+                        boost += 0.40
+                    elif target_clause in chunk_clause_lower:
+                        boost += 0.35
 
                 # Boost intent relevance
                 if intent == "TESTING" and any(w in chunk_content_lower for w in ["test", "strength", "limit", "sample"]):
@@ -350,11 +355,11 @@ class HybridRetriever:
                             clause="Published Indian Standard",
                             page=1,
                             source_url=c_std.source_url or "https://www.services.bis.gov.in/",
-                            relevance_score=0.92,
+                            relevance_score=0.95,
                             evidence_snippet=c_std.summary or f"{c_std.standard_number}: {c_std.title} ({c_std.product_category or 'General'}). Type: {c_std.type_of_standard or 'Product Specification'}."
                         )
-                        return [exact_citation], 0.90, "High", {
-                            "top_score": 0.92,
+                        return [exact_citation], 0.95, "High", {
+                            "top_score": 0.95,
                             "matched_standard": c_std.standard_number,
                             "search_strategy": "Direct Catalog Exact Match",
                             "rl_action": rl_action,
@@ -362,14 +367,19 @@ class HybridRetriever:
                         }
 
         # 3. Fallback or augment with the 23,866 Standards dense vector index
-        if not top_matches or top_matches[0][0] < 0.45:
+        has_strong_chunk_match = bool(top_matches and (
+            exact_std_in_chunks or 
+            (target_product and any(target_product in (ch.product_category or '').lower() or target_product in ch.content.lower() for _, ch in top_matches))
+        ))
+
+        if not top_matches or top_matches[0][0] < 0.45 or not has_strong_chunk_match:
             semantic_standards = self.search_standards_semantic(
                 query_clean,
                 top_k=3,
                 w_dense=w_dense,
                 w_bm25=w_bm25
             )
-            if semantic_standards:
+            if semantic_standards and (not top_matches or not has_strong_chunk_match or semantic_standards[0].get("semantic_score", 0) >= 0.35):
                 top_std = semantic_standards[0]
                 std_score = top_std.get("semantic_score", 0.60)
                 

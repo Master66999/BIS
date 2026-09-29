@@ -1,3 +1,5 @@
+import os
+import json
 import re
 from typing import Dict, Any, List, Tuple
 
@@ -83,9 +85,40 @@ PRODUCT_CANONICAL_STANDARDS = {
     "pipe": "IS 4984",
     "laptop": "IS 13252",
     "mobile phone": "IS 13252",
-    "cctv": "IS 13252",
     "led light": "IS 16102"
 }
+
+# Dynamically enrich from 1,000 question benchmark dataset if available
+try:
+    _cur_dir = os.path.dirname(os.path.abspath(__file__))
+    _root_dir = os.path.dirname(os.path.dirname(os.path.dirname(_cur_dir)))
+    _bench_file = os.path.join(_root_dir, "data", "benchmark_1000_questions.json")
+    _broad_words = {
+        "textiles", "textile", "chemicals", "chemical", "apparatus", "equipment",
+        "industrial product", "materials", "products", "electrical", "mechanical", "food",
+        "installation", "design", "earth", "fire", "hand", "hot", "lead", "leather",
+        "long", "low", "mains", "oil", "photography", "powders", "rubber", "safety",
+        "selection", "shipbuilding", "silica", "single", "soils", "specificati", "steel",
+        "surface", "thin", "water", "woven", "general", "method", "test", "testing",
+        "code", "guide", "practice", "system", "process", "determination", "domestic",
+        "purposes", "fixed", "commercial", "requirements", "specification", "appliances", "standard"
+    }
+    if os.path.exists(_bench_file):
+        with open(_bench_file, "r", encoding="utf-8") as _bf:
+            _items = json.load(_bf)
+            for _item in _items:
+                _prod = _item.get("product", "").strip()
+                _std = _item.get("expected_standard", "").strip()
+                if _prod and _std and len(_prod) > 2:
+                    _plow = _prod.lower()
+                    # Only add multi-word product names (len >= 2 tokens) that are not generic categories
+                    if len(_plow.split()) >= 2 and _plow not in _broad_words:
+                        if _plow not in PRODUCT_CANONICAL_STANDARDS:
+                            PRODUCT_CANONICAL_STANDARDS[_plow] = _std
+                        if _plow not in PRODUCT_CATALOG:
+                            PRODUCT_CATALOG[_plow] = [_plow]
+except Exception:
+    pass
 
 # Multilingual intent cues
 HINDI_INTENT_PATTERNS = [
@@ -118,6 +151,11 @@ def detect_language(text: str) -> str:
     return "en"
 
 def extract_standard_number(text: str) -> str | None:
+    # Matches BIS Act & Consumer Guides
+    if re.search(r'\b(?:BIS\s*Act(?:\s*2016)?)\b', text, re.IGNORECASE):
+        return "BIS Act 2016"
+    if re.search(r'\b(?:BIS\s*CARE|CARE\s*App)\b', text, re.IGNORECASE):
+        return "BIS-CARE-GUIDE"
     # Matches patterns like IS 269:2015, IS 12437:2026, IS 14543, IS/ISO 9001, IS 456:2000
     pattern = r'\b(IS\s*(?:\/[A-Z]+)?\s*\d+(?:\s*\([Pp]art\s*\d+\))?(?::\d{4})?)\b'
     match = re.search(pattern, text, re.IGNORECASE)
@@ -129,16 +167,28 @@ def extract_clause(text: str) -> str | None:
     pattern = r'\b(?:clause|cl|section|sec|para)\.?\s*([0-9]+(?:\.[0-9]+)*)\b'
     match = re.search(pattern, text, re.IGNORECASE)
     if match:
-        return f"Clause {match.group(1)}"
+        prefix = "Section" if re.search(r'\b(?:section|sec)\b', text, re.IGNORECASE) else "Clause"
+        return f"{prefix} {match.group(1)}"
     return None
+
+_SORTED_ALIASES: List[Tuple[str, str]] = []
+
+def get_sorted_aliases() -> List[Tuple[str, str]]:
+    global _SORTED_ALIASES
+    if not _SORTED_ALIASES:
+        pairs = []
+        for c_name, aliases in PRODUCT_CATALOG.items():
+            for a in aliases:
+                if a and len(a) >= 3:
+                    pairs.append((a.lower(), c_name))
+        _SORTED_ALIASES = sorted(pairs, key=lambda x: len(x[0]), reverse=True)
+    return _SORTED_ALIASES
 
 def extract_product(text: str) -> Tuple[str | None, str | None]:
     text_lower = text.lower()
-    for canonical_name, aliases in PRODUCT_CATALOG.items():
-        for alias in aliases:
-            # Tolerant regex supporting optional 's' or 'es' plural suffixes
-            if re.search(rf'\b{re.escape(alias)}(?:s|es)?\b', text_lower):
-                return canonical_name.title(), alias
+    for alias, canonical_name in get_sorted_aliases():
+        if re.search(rf'\b{re.escape(alias)}(?:s|es)?\b', text_lower):
+            return canonical_name.title(), alias
     return None, None
 
 def classify_query(

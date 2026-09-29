@@ -46,7 +46,7 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden text-slate-800">
-        <div className="bg-[#0A2540] text-white p-4 flex items-center justify-between">
+        <div className="bg-[#0B2545] text-white p-4 flex items-center justify-between">
           <h3 className="font-bold text-sm">Feedback on AI Response</h3>
           <button onClick={onClose} className="p-1 rounded text-slate-300 hover:text-white">
             <X className="w-4 h-4" />

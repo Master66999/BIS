@@ -48,3 +48,61 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.15s ease-out forwards;
 }
+
+/* Indian National Flag Tricolor Bar */
+.tricolor-stripe {
+  background: linear-gradient(
+    to right,
+    #ff9933 0%,
+    #ff9933 33.33%,
+    #ffffff 33.33%,
+    #ffffff 66.66%,
+    #138808 66.66%,
+    #138808 100%
+  );
+  height: 4px;
+  width: 100%;
+}
+
+.tricolor-stripe-thin {
+  background: linear-gradient(
+    to right,
+    #ff9933 0%,
+    #ff9933 33.33%,
+    #ffffff 33.33%,
+    #ffffff 66.66%,
+    #138808 66.66%,
+    #138808 100%
+  );
+  height: 2.5px;
+  width: 100%;
+}
+
+/* Government Ticker animation */
+@keyframes ticker {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+.gov-ticker-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 35s linear infinite;
+}
+
+.gov-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* Official Portal Border & Shadows */
+.gov-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+}
+
+.gov-card:hover {
+  border-color: #0b2545;
+  box-shadow: 0 4px 6px -1px rgba(11, 37, 69, 0.1), 0 2px 4px -2px rgba(11, 37, 69, 0.06);
+}
+

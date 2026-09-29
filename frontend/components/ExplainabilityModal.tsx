@@ -23,7 +23,7 @@ export const ExplainabilityModal: React.FC<ExplainabilityModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
       <div className="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-2xl w-full overflow-hidden text-slate-800">
         {/* Header */}
-        <div className="bg-[#0A2540] text-white p-4 flex items-center justify-between">
+        <div className="bg-[#0B2545] text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="p-1.5 bg-amber-500 rounded-lg text-slate-950">
               <Sparkles className="w-5 h-5 font-bold" />
@@ -185,7 +185,7 @@ export const ExplainabilityModal: React.FC<ExplainabilityModalProps> = ({
         <div className="p-3 bg-slate-100 border-t border-slate-200 flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-md bg-[#0A2540] text-white hover:bg-[#16385C] font-medium text-xs transition-colors"
+            className="px-4 py-1.5 rounded-md bg-[#0B2545] text-white hover:bg-[#133E68] font-medium text-xs transition-colors"
           >
             Close Audit
           </button>

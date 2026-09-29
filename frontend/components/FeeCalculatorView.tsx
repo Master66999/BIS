@@ -428,7 +428,7 @@ export function FeeCalculatorView({ onAskAI }: FeeCalculatorViewProps) {
 
         {/* Right Column: Cost Breakdown & Timeline Card */}
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-gradient-to-br from-[#0A2540] to-[#12365C] text-white rounded-2xl p-6 shadow-xl border border-[#1d4a7a] relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#0B2545] to-[#133E68] text-white rounded-lg p-6 shadow-xl border border-[#163E6E] relative overflow-hidden">
             {/* Background glow */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -z-0 pointer-events-none" />
 

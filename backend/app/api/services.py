@@ -164,6 +164,7 @@ def get_bis_services():
     return BIS_SERVICES_DIRECTORY
 
 @router.get("/laboratories", response_model=List[LaboratoryOut])
+@router.get("/services/laboratories", response_model=List[LaboratoryOut])
 def get_laboratories(
     search: Optional[str] = Query(None, description="Search lab name, city, or standard"),
     state: Optional[str] = Query(None, description="Filter by Indian State"),

@@ -506,29 +506,65 @@ def generate_rag_answer(
 ) -> str:
     # 1. External LLM (Gemini) if configured
     gemini_key = settings.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY")
+    openai_key = settings.OPENAI_API_KEY or os.getenv("OPENAI_API_KEY")
+
+    context_blocks = []
+    for i, src in enumerate(sources, 1):
+        context_blocks.append(
+            f"Source {i}:\n"
+            f"Document: {src.title}\n"
+            f"Standard: {src.standard_number}\n"
+            f"Clause: {src.clause}, Page: {src.page}\n"
+            f"Content: {src.evidence_snippet}\n"
+            f"URL: {src.source_url}\n"
+        )
+    context_str = "\n---\n".join(context_blocks) if context_blocks else "General BIS Knowledge"
+
+    history_str = ""
+    history_messages = []
+    if history:
+        recent_history = history[-6:] # last 6 messages
+        history_lines = [f"{msg.get('role', 'user').capitalize()}: {msg.get('content', '')}" for msg in recent_history]
+        history_str = "Conversation History:\n" + "\n".join(history_lines) + "\n\n"
+        for msg in recent_history:
+            history_messages.append({"role": msg.get("role", "user"), "content": msg.get("content", "")})
+
+    prompt = f"""{history_str}BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}\n\nAnswer the user accurately, maintaining conversational flow and context."""
+
+    # 1a. Try OpenAI API if configured
+    if openai_key and (len(sources) > 0 or intent in ["GREETING", "BOT_CAPABILITIES", "LABORATORY", "HALLMARKING", "LICENSING", "CONSUMER_QUERY"]):
+        try:
+            model_name = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+            api_messages = [{"role": "system", "content": SYSTEM_PROMPT.format(language=language)}]
+            api_messages.extend(history_messages)
+            api_messages.append({
+                "role": "user",
+                "content": f"BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}"
+            })
+            resp = requests.post(
+                "https://api.openai.com/v1/chat/completions",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {openai_key}"
+                },
+                json={
+                    "model": model_name,
+                    "messages": api_messages,
+                    "temperature": 0.2,
+                    "max_tokens": 1000
+                },
+                timeout=12
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                text = data["choices"][0]["message"]["content"]
+                return text.replace("\ufffd", " - ")
+        except Exception:
+            pass
+
+    # 1b. Try Gemini API if configured
     if gemini_key and (len(sources) > 0 or intent in ["GREETING", "BOT_CAPABILITIES", "LABORATORY", "HALLMARKING", "LICENSING", "CONSUMER_QUERY"]):
         try:
-            context_blocks = []
-            for i, src in enumerate(sources, 1):
-                context_blocks.append(
-                    f"Source {i}:\n"
-                    f"Document: {src.title}\n"
-                    f"Standard: {src.standard_number}\n"
-                    f"Clause: {src.clause}, Page: {src.page}\n"
-                    f"Content: {src.evidence_snippet}\n"
-                    f"URL: {src.source_url}\n"
-                )
-            context_str = "\n---\n".join(context_blocks) if context_blocks else "General BIS Knowledge"
-            
-            # Format chat history for context
-            history_str = ""
-            if history:
-                recent_history = history[-6:] # last 6 messages
-                history_lines = [f"{msg.get('role', 'user').capitalize()}: {msg.get('content', '')}" for msg in recent_history]
-                history_str = "Conversation History:\n" + "\n".join(history_lines) + "\n\n"
-
-            prompt = f"""{history_str}BIS Context:\n{context_str}\n\nUser Question: {query}\nDetected Intent: {intent}\nEntities: {entities}\nLanguage requested: {language}\n\nAnswer the user accurately, maintaining conversational flow and context."""
-            
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.LLM_MODEL}:generateContent?key={gemini_key}"
             headers = {"Content-Type": "application/json"}
             payload = {

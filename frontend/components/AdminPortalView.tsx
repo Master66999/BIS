@@ -137,7 +137,7 @@ export const AdminPortalView: React.FC = () => {
               <span className="text-[11px] text-slate-500 font-semibold block uppercase">
                 Published Standards
               </span>
-              <div className="text-2xl sm:text-3xl font-bold text-[#0A2540] mt-1">
+              <div className="text-2xl sm:text-3xl font-bold text-[#0B2545] mt-1">
                 {stats.total_standards.toLocaleString()}
               </div>
               <span className="text-[10px] text-emerald-600 font-medium">Official Manakonline catalogue</span>
@@ -284,7 +284,7 @@ export const AdminPortalView: React.FC = () => {
               <button
                 type="submit"
                 disabled={ingestLoading}
-                className="px-6 py-2.5 bg-[#0A2540] hover:bg-[#16385C] text-amber-400 font-semibold rounded-lg text-xs shadow flex items-center gap-2"
+                className="px-6 py-2.5 bg-[#0B2545] hover:bg-[#133E68] text-amber-300 font-semibold rounded-lg text-xs shadow flex items-center gap-2"
               >
                 <Upload className="w-4 h-4" />
                 <span>{ingestLoading ? "Processing & Vectorizing..." : "Ingest into Knowledge Base"}</span>
