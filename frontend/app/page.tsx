@@ -69,6 +69,11 @@ const ComplianceJourneyView = dynamic(
   { loading: ViewLoadingSkeleton, ssr: false }
 );
 
+const QcoRadarView = dynamic(
+  () => import("../components/QcoRadarView").then((m) => m.QcoRadarView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
 const CommandPalette = dynamic(
   () => import("../components/CommandPalette").then((m) => m.CommandPalette),
   { ssr: false }
@@ -159,6 +164,16 @@ export default function Home() {
 
         {activeTab === "journey" && (
           <ComplianceJourneyView onAskAI={handleStartChat} />
+        )}
+
+        {activeTab === "qco" && (
+          <QcoRadarView
+            onAskAI={handleStartChat}
+            onNavigateTab={(tab) => {
+              setChatInitialQuery("");
+              setActiveTab(tab);
+            }}
+          />
         )}
       </main>
 

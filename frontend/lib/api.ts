@@ -242,5 +242,40 @@ export async function generateComplianceJourney(payload: {
   return res.json();
 }
 
+export async function fetchQcoRadar(params?: {
+  query?: string;
+  status?: string;
+  ministry?: string;
+  category?: string;
+}): Promise<any> {
+  try {
+    const searchParams = new URLSearchParams();
+    if (params?.query) searchParams.append("query", params.query);
+    if (params?.status) searchParams.append("status", params.status);
+    if (params?.ministry) searchParams.append("ministry", params.ministry);
+    if (params?.category) searchParams.append("category", params.category);
+
+    const qs = searchParams.toString();
+    const res = await fetch(`${BASE_URL}/qco/radar${qs ? `?${qs}` : ""}`);
+    if (!res.ok) return { total_qco_indexed: 0, orders: [] };
+    return res.json();
+  } catch (e) {
+    console.error("fetchQcoRadar error", e);
+    return { total_qco_indexed: 0, orders: [] };
+  }
+}
+
+export async function lookupHsnCode(hsn: string): Promise<any> {
+  try {
+    const res = await fetch(`${BASE_URL}/qco/hsn/${encodeURIComponent(hsn)}`);
+    if (!res.ok) return null;
+    return res.json();
+  } catch (e) {
+    console.error("lookupHsnCode error", e);
+    return null;
+  }
+}
+
+
 
 

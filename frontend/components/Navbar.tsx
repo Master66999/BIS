@@ -19,7 +19,8 @@ import {
   ChevronRight,
   Shield,
   FileCheck2,
-  Compass
+  Compass,
+  ShieldAlert
 } from "lucide-react";
 import { EmblemOfIndia, BisEmblem } from "./GovEmblem";
 import { demoLogin } from "../lib/api";
@@ -72,6 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: "labs", label: "Labs", labelHi: "लैब्स", icon: FlaskConical },
     { id: "inspector", label: "MTC Inspector", labelHi: "रिपोर्ट जांच", icon: FileCheck2, badge: "NEW" },
     { id: "journey", label: "MSME Roadmap", labelHi: "रोडमैप", icon: Compass, badge: "50%" },
+    { id: "qco", label: "QCO Radar", labelHi: "क्यूसीओ", icon: ShieldAlert, badge: "LIVE" },
     { id: "admin", label: "Admin", labelHi: "प्रशासन", icon: BarChart3 },
   ];
 

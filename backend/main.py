@@ -19,6 +19,7 @@ from backend.app.api.services import router as services_router
 from backend.app.api.admin import router as admin_router
 from backend.app.api.audit import router as audit_router
 from backend.app.api.journey import router as journey_router
+from backend.app.api.qco import router as qco_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -62,6 +63,7 @@ app.include_router(services_router, prefix=settings.API_V1_STR)
 app.include_router(admin_router, prefix=settings.API_V1_STR)
 app.include_router(audit_router, prefix=settings.API_V1_STR)
 app.include_router(journey_router, prefix=settings.API_V1_STR)
+app.include_router(qco_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
