@@ -212,4 +212,35 @@ export async function inspectTestReport(payload: {
   return res.json();
 }
 
+export async function fetchJourneyProducts(): Promise<any[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/journey/products`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.products || [];
+  } catch (e) {
+    console.error("fetchJourneyProducts error", e);
+    return [];
+  }
+}
+
+export async function generateComplianceJourney(payload: {
+  product_id: string;
+  enterprise_type?: string;
+  is_women_owned?: boolean;
+  procedure_type?: string;
+}): Promise<any> {
+  const res = await fetch(`${BASE_URL}/journey/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || "Failed to generate compliance journey");
+  }
+  return res.json();
+}
+
+
 

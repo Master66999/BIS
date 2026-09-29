@@ -64,6 +64,11 @@ const ReportInspectorView = dynamic(
   { loading: ViewLoadingSkeleton, ssr: false }
 );
 
+const ComplianceJourneyView = dynamic(
+  () => import("../components/ComplianceJourneyView").then((m) => m.ComplianceJourneyView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
 const CommandPalette = dynamic(
   () => import("../components/CommandPalette").then((m) => m.CommandPalette),
   { ssr: false }
@@ -150,6 +155,10 @@ export default function Home() {
 
         {activeTab === "inspector" && (
           <ReportInspectorView onAskAI={handleStartChat} />
+        )}
+
+        {activeTab === "journey" && (
+          <ComplianceJourneyView onAskAI={handleStartChat} />
         )}
       </main>
 

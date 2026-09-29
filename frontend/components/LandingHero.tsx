@@ -495,11 +495,11 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
 
             <button
-              onClick={() => onNavigateTab("calculator")}
-              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5"
+              onClick={() => onNavigateTab("journey")}
+              className="w-full py-2.5 bg-gradient-to-r from-blue-900 to-[#0B2545] hover:from-blue-800 hover:to-blue-900 text-white font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5 shadow-xs"
             >
-              <span>Simulate Detailed Timeline & Fees</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>Generate 5-Stage MSME Roadmap</span>
+              <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
             </button>
           </div>
 
