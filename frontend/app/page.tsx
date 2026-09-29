@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import {
   Home as HomeIcon,
   MessageSquare,
@@ -11,14 +12,57 @@ import {
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { LandingHero } from "../components/LandingHero";
-import { ChatView } from "../components/ChatView";
-import { StandardFinderView } from "../components/StandardFinderView";
-import { ServicesHubView } from "../components/ServicesHubView";
-import { LaboratoriesView } from "../components/LaboratoriesView";
-import { AdminPortalView } from "../components/AdminPortalView";
-import { FeeCalculatorView } from "../components/FeeCalculatorView";
-import { VerifyMarkView } from "../components/VerifyMarkView";
-import { CommandPalette } from "../components/CommandPalette";
+
+// Lightweight loading skeleton for dynamically imported heavy tabs
+const ViewLoadingSkeleton = () => (
+  <div className="max-w-7xl mx-auto px-4 py-24 flex flex-col items-center justify-center space-y-4">
+    <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin" />
+    <span className="text-xs font-mono text-slate-500 tracking-wide">
+      Loading BIS Module...
+    </span>
+  </div>
+);
+
+// Code-split heavy views with next/dynamic to slash initial bundle size and optimize Lighthouse FCP/TBT
+const ChatView = dynamic(
+  () => import("../components/ChatView").then((m) => m.ChatView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const StandardFinderView = dynamic(
+  () => import("../components/StandardFinderView").then((m) => m.StandardFinderView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const FeeCalculatorView = dynamic(
+  () => import("../components/FeeCalculatorView").then((m) => m.FeeCalculatorView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const VerifyMarkView = dynamic(
+  () => import("../components/VerifyMarkView").then((m) => m.VerifyMarkView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const ServicesHubView = dynamic(
+  () => import("../components/ServicesHubView").then((m) => m.ServicesHubView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const LaboratoriesView = dynamic(
+  () => import("../components/LaboratoriesView").then((m) => m.LaboratoriesView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const AdminPortalView = dynamic(
+  () => import("../components/AdminPortalView").then((m) => m.AdminPortalView),
+  { loading: ViewLoadingSkeleton, ssr: false }
+);
+
+const CommandPalette = dynamic(
+  () => import("../components/CommandPalette").then((m) => m.CommandPalette),
+  { ssr: false }
+);
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<string>("home");
@@ -27,7 +71,7 @@ export default function Home() {
   const [isPaletteOpen, setIsPaletteOpen] = useState<boolean>(false);
 
   // Global Cmd+K / Ctrl+K keyboard shortcut
-  React.useEffect(() => {
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
@@ -164,16 +208,18 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Global Cmd+K / Ctrl+K Spotlight Command Palette */}
-      <CommandPalette
-        isOpen={isPaletteOpen}
-        onClose={() => setIsPaletteOpen(false)}
-        onNavigateTab={(tab) => {
-          setChatInitialQuery("");
-          setActiveTab(tab);
-        }}
-        onStartChat={handleStartChat}
-      />
+      {/* Global Cmd+K / Ctrl+K Spotlight Command Palette (Dynamically loaded) */}
+      {isPaletteOpen && (
+        <CommandPalette
+          isOpen={isPaletteOpen}
+          onClose={() => setIsPaletteOpen(false)}
+          onNavigateTab={(tab) => {
+            setChatInitialQuery("");
+            setActiveTab(tab);
+          }}
+          onStartChat={handleStartChat}
+        />
+      )}
     </div>
   );
 }
