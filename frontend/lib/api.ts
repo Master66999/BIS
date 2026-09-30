@@ -276,6 +276,34 @@ export async function lookupHsnCode(hsn: string): Promise<any> {
   }
 }
 
+export async function fetchVerifySamples(): Promise<any[]> {
+  try {
+    const res = await fetch(`${BASE_URL}/verify/samples`);
+    if (!res.ok) return [];
+    return res.json();
+  } catch (e) {
+    console.error("fetchVerifySamples error", e);
+    return [];
+  }
+}
 
-
-
+export async function inspectProductLabel(payload: {
+  sample_id?: string;
+  mark_type?: string;
+  product_name?: string;
+  is_number?: string;
+  cml_number?: string;
+  huid_code?: string;
+  raw_label_text?: string;
+}): Promise<any> {
+  const res = await fetch(`${BASE_URL}/verify/inspect`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || "Failed to inspect product label");
+  }
+  return res.json();
+}

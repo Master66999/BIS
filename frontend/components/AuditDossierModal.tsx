@@ -19,7 +19,7 @@ import { EmblemOfIndia, BisEmblem } from "./GovEmblem";
 export interface DossierModalProps {
   isOpen: boolean;
   onClose: () => void;
-  dossierType?: "chat" | "inspector" | "roadmap" | "fee";
+  dossierType?: "chat" | "inspector" | "roadmap" | "fee" | "verify";
   title?: string;
   data?: any;
 }
@@ -271,6 +271,80 @@ export function AuditDossierModal({
                     ))}
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* TYPE D: FAKE MARK & SCAM INSPECTION RECORD */}
+            {dossierType === "verify" && data && (
+              <div className="space-y-4 text-xs">
+                <div className="p-3.5 rounded-xl border border-slate-300 bg-slate-50 flex items-center justify-between">
+                  <div>
+                    <span className="font-bold text-slate-900 text-sm">{data.product_name}</span>
+                    <span className="text-[11px] font-mono text-blue-900 block mt-0.5">
+                      Standard: {data.standard_applied} • Scheme: {data.mark_type?.toUpperCase()}
+                    </span>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full font-bold font-mono text-xs ${
+                    data.is_genuine
+                      ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                      : "bg-red-100 text-red-800 border border-red-300"
+                  }`}>
+                    VERDICT: {data.verdict} ({data.confidence_score}%)
+                  </span>
+                </div>
+
+                {data.anomalies && data.anomalies.length > 0 && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl space-y-1">
+                    <span className="font-bold text-red-900 text-[11px] uppercase tracking-wider block">
+                      Detected Violations & Red Flags:
+                    </span>
+                    <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-red-800">
+                      {data.anomalies.map((anom: string, i: number) => (
+                        <li key={i}>{anom}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="overflow-x-auto border border-slate-300 rounded-xl">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-100 font-bold border-b border-slate-300">
+                      <tr>
+                        <th className="py-2.5 px-3">Regulatory Check</th>
+                        <th className="py-2.5 px-3">Findings & Evidence</th>
+                        <th className="py-2.5 px-3">Legal Clause</th>
+                        <th className="py-2.5 px-3">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                      {data.detailed_checks?.map((chk: any, idx: number) => (
+                        <tr key={idx}>
+                          <td className="py-2 px-3 font-semibold text-slate-900">{chk.check_name}</td>
+                          <td className="py-2 px-3 text-slate-700">{chk.details}</td>
+                          <td className="py-2 px-3 font-mono text-blue-900 text-[10px]">{chk.law_clause || "—"}</td>
+                          <td className="py-2 px-3 font-bold font-mono">
+                            <span className={
+                              chk.status === "FAIL"
+                                ? "text-red-600"
+                                : chk.status === "WARNING"
+                                ? "text-amber-600"
+                                : "text-emerald-700"
+                            }>
+                              {chk.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {data.legal_warning && (
+                  <div className="p-3 bg-slate-50 border border-slate-300 rounded-xl text-[11px] space-y-1">
+                    <span className="font-bold text-slate-900">{data.legal_warning.act_title}</span>
+                    <p className="text-slate-600 leading-relaxed">{data.legal_warning.penalty_description}</p>
+                  </div>
+                )}
               </div>
             )}
 

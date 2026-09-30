@@ -68,7 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: "chat", label: "AI Co-Pilot", labelHi: "एआई सहायक", icon: Sparkles, badge: "AI" },
     { id: "finder", label: "Standards", labelHi: "मानक खोज", icon: Search },
     { id: "calculator", label: "Fees", labelHi: "शुल्क", icon: Calculator },
-    { id: "verify", label: "Verify Mark", labelHi: "सत्यापन", icon: ShieldCheck },
+    { id: "verify", label: "Verify Mark", labelHi: "सत्यापन", icon: ShieldCheck, badge: "SCAN" },
     { id: "services", label: "Schemes", labelHi: "योजनाएं", icon: BookOpen },
     { id: "labs", label: "Labs", labelHi: "लैब्स", icon: FlaskConical },
     { id: "inspector", label: "MTC Inspector", labelHi: "रिपोर्ट जांच", icon: FileCheck2, badge: "NEW" },
