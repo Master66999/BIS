@@ -8,6 +8,8 @@ import {
   Search,
   Calculator,
   Layers,
+  FileCheck2,
+  ShieldCheck,
 } from "lucide-react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
@@ -219,25 +221,28 @@ export default function Home() {
         </button>
 
         <button
-          onClick={() => setActiveTab("calculator")}
+          onClick={() => setActiveTab("inspector")}
           className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "calculator" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            activeTab === "inspector" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
           }`}
         >
-          <Calculator className={`w-5 h-5 mb-0.5 ${activeTab === "calculator" ? "text-[#0B2545]" : "text-slate-400"}`} />
-          <span>Fees</span>
-          {activeTab === "calculator" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          <div className="relative">
+            <FileCheck2 className={`w-5 h-5 mb-0.5 ${activeTab === "inspector" ? "text-amber-500" : "text-slate-400"}`} />
+            <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-amber-500" />
+          </div>
+          <span>MTC Audit</span>
+          {activeTab === "inspector" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
         </button>
 
         <button
-          onClick={() => setActiveTab("services")}
+          onClick={() => setActiveTab("verify")}
           className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "services" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            activeTab === "verify" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
           }`}
         >
-          <Layers className={`w-5 h-5 mb-0.5 ${activeTab === "services" ? "text-[#0B2545]" : "text-slate-400"}`} />
-          <span>Schemes</span>
-          {activeTab === "services" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          <ShieldCheck className={`w-5 h-5 mb-0.5 ${activeTab === "verify" ? "text-[#0B2545]" : "text-slate-400"}`} />
+          <span>Scanner</span>
+          {activeTab === "verify" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
         </button>
       </nav>
 
