@@ -25,6 +25,7 @@ import {
   Info
 } from "lucide-react";
 import { fetchAuditSamples, inspectTestReport } from "../lib/api";
+import { AuditDossierModal } from "./AuditDossierModal";
 
 interface ReportInspectorViewProps {
   onAskAI?: (query: string) => void;
@@ -35,6 +36,7 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
   const [selectedSampleId, setSelectedSampleId] = useState<string>("sample-tmt-fail");
   const [auditResult, setAuditResult] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
   const [rawText, setRawText] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"preset" | "upload" | "custom">("preset");
   const [customParams, setCustomParams] = useState({
@@ -162,11 +164,11 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
           <div className="flex items-center gap-2.5">
             <button
-              onClick={() => window.print()}
-              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 transition flex items-center gap-1.5 shadow-xs"
+              onClick={() => setIsDossierOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-xs"
             >
-              <Printer className="w-4 h-4 text-slate-500" />
-              <span>Print Dossier</span>
+              <FileCheck2 className="w-4 h-4" />
+              <span>Export Official Dossier</span>
             </button>
             {onAskAI && evalData && (
               <button
@@ -687,6 +689,15 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
           </div>
         )}
+
+        {/* Official BIS Audit Dossier Export Modal */}
+        <AuditDossierModal
+          isOpen={isDossierOpen}
+          onClose={() => setIsDossierOpen(false)}
+          dossierType="inspector"
+          title="Official MTC Lab Test Report Scrutiny Record"
+          data={auditResult}
+        />
 
       </div>
     </div>

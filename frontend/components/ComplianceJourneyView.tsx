@@ -25,6 +25,7 @@ import {
   TrendingDown
 } from "lucide-react";
 import { fetchJourneyProducts, generateComplianceJourney } from "../lib/api";
+import { AuditDossierModal } from "./AuditDossierModal";
 
 interface ComplianceJourneyViewProps {
   onAskAI?: (query: string) => void;
@@ -38,6 +39,7 @@ export function ComplianceJourneyView({ onAskAI }: ComplianceJourneyViewProps) {
   const [procedureType, setProcedureType] = useState<string>("simplified");
   const [journeyData, setJourneyData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isDossierOpen, setIsDossierOpen] = useState<boolean>(false);
   const [activeStageTab, setActiveStageTab] = useState<number>(1);
 
   // Load products on mount
@@ -130,11 +132,11 @@ export function ComplianceJourneyView({ onAskAI }: ComplianceJourneyViewProps) {
 
           <div className="flex items-center gap-2.5">
             <button
-              onClick={() => window.print()}
-              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 transition flex items-center gap-1.5 shadow-xs"
+              onClick={() => setIsDossierOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-xs"
             >
-              <Printer className="w-4 h-4 text-slate-500" />
-              <span>Print Roadmap</span>
+              <FileCheck2 className="w-4 h-4" />
+              <span>Export Official Dossier</span>
             </button>
             {onAskAI && prod && (
               <button
@@ -685,6 +687,15 @@ export function ComplianceJourneyView({ onAskAI }: ComplianceJourneyViewProps) {
           </div>
 
         </div>
+
+        {/* Official BIS Audit Dossier Export Modal */}
+        <AuditDossierModal
+          isOpen={isDossierOpen}
+          onClose={() => setIsDossierOpen(false)}
+          dossierType="roadmap"
+          title="Official MSME Product Compliance & STI Roadmap"
+          data={journeyData}
+        />
 
       </div>
     </div>

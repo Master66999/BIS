@@ -106,3 +106,33 @@ body {
   box-shadow: 0 4px 6px -1px rgba(11, 37, 69, 0.1), 0 2px 4px -2px rgba(11, 37, 69, 0.06);
 }
 
+/* Print Styles for Official BIS Dossier PDF Export */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #printable-dossier,
+  #printable-dossier * {
+    visibility: visible;
+  }
+  #printable-dossier {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    box-shadow: none !important;
+    border: 1px solid #94a3b8 !important;
+    background: #ffffff !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+

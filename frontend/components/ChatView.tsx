@@ -47,6 +47,7 @@ import { ConfidenceBar } from "./ConfidenceBar";
 import { SourceCard } from "./SourceCard";
 import { ExplainabilityModal } from "./ExplainabilityModal";
 import { FeedbackModal } from "./FeedbackModal";
+import { AuditDossierModal } from "./AuditDossierModal";
 import { BisEmblem, EmblemOfIndia } from "./GovEmblem";
 
 interface ChatViewProps {
@@ -89,6 +90,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
     query?: string;
     answer?: string;
   }>({ isOpen: false, messageId: "" });
+
+  const [isDossierOpen, setIsDossierOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -374,6 +377,18 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <span>Voice Auto-Speak</span>
               <span className={`w-1.5 h-1.5 rounded-full ${autoSpeakEnabled ? "bg-emerald-500 animate-ping" : "bg-slate-300"}`} />
             </button>
+
+            {/* One-Click Export Official BIS Dossier Button */}
+            {messages.length > 0 && (
+              <button
+                onClick={() => setIsDossierOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-2xs"
+                title="Export Official Branded BIS Compliance Dossier (PDF)"
+              >
+                <FileCheck className="w-3.5 h-3.5 text-slate-950" />
+                <span className="hidden sm:inline">Export Dossier</span>
+              </button>
+            )}
 
             <button
               onClick={() => setIsInspectorOpen(!isInspectorOpen)}
@@ -1009,6 +1024,19 @@ export const ChatView: React.FC<ChatViewProps> = ({
           <div className="flex-1" onClick={() => setMobileHistoryOpen(false)} />
         </div>
       )}
+
+      {/* Official BIS Audit Dossier Export Modal */}
+      <AuditDossierModal
+        isOpen={isDossierOpen}
+        onClose={() => setIsDossierOpen(false)}
+        dossierType="chat"
+        title="BIS AI Consultation Advisory Record"
+        data={{
+          query: messages[0]?.content || "Indian Standards Compliance Consultation",
+          answer: messages[messages.length - 1]?.content || "",
+          sources: messages[messages.length - 1]?.sources || [],
+        }}
+      />
     </div>
   );
 };
