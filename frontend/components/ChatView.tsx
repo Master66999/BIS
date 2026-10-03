@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import "../app/footer.css";
 import ReactMarkdown from "react-markdown";
 import {
   Send,

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "../app/footer.css";
 import { X, Sparkles, CheckCircle2, Layers, Cpu, Compass } from "lucide-react";
 import { ExplainabilityData, SourceCitation } from "../types";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "../app/footer.css";
 
 export type InfoTopic = "about" | "help" | "privacy" | "terms" | "accessibility";
 

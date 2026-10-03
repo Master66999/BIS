@@ -1,5 +1,6 @@
 import "./globals.css";
 import "./manakai.css";
+import "./footer.css";
 import type { Metadata, Viewport } from "next";
 
 export const viewport: Viewport = {

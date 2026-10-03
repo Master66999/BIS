@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "../app/footer.css";
 import {
   Printer,
   X,

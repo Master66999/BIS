@@ -1271,16 +1271,23 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 
-.mk-root .footer {
+.mk-root .footer,
+footer.footer,
+.footer {
+  position: relative;
+  width: 100%;
+  z-index: 10;
+  background-color: var(--primary-navy, #07172c);
+  color: var(--text-light, #f8fafc);
+  padding: 3.5rem 5% 2rem;
+  box-sizing: border-box;
+}
+
+.mk-root.mk-has-parallax .footer {
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
   z-index: 1;
-  background-color: var(--primary-navy);
-  color: var(--text-light);
-  padding: 4rem 5% 2rem;
-  min-height: 300px;
 }
 
 .mk-root .footer-content {

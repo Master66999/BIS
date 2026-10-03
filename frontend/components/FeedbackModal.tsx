@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import "../app/footer.css";
 import { ThumbsUp, ThumbsDown, CheckCircle, AlertCircle, X } from "lucide-react";
 import { submitFeedback } from "../lib/api";
 

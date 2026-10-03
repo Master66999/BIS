@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import "../app/footer.css";
 import { AlertTriangle, CheckCircle2, Info } from "lucide-react";
 
 interface ConfidenceBarProps {

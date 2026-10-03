@@ -1,4 +1,5 @@
 import React from "react";
+import "../app/footer.css";
 
 /**
  * Official Government of India & Bureau of Indian Standards Emblems

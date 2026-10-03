@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import "../app/footer.css";
 import { FileText, ExternalLink, Bookmark, ChevronDown, ChevronUp } from "lucide-react";
 import { SourceCitation } from "../types";
 

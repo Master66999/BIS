@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import "../app/footer.css";
 
 interface FooterProps {
   onNavigateTab?: (tab: string) => void;
@@ -10,7 +11,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateTab, onOpenInfo }) => {
   return (
-    <footer className="footer">
+    <footer className="footer bg-[#07172c] text-slate-200 border-t border-white/10 w-full relative z-20">
       <div className="footer-content">
         <div className="footer-brand">
           <h2>

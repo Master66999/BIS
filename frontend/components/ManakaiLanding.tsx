@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import "../app/footer.css";
 import { ManakaiLang, MANAKAI_LANGS, getManakaiDict } from "../lib/manakaiI18n";
 
 interface ManakaiLandingProps {

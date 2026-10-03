@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import "../app/footer.css";
 import { demoLogin } from "../lib/api";
 
 interface ManakaiLoginViewProps {
