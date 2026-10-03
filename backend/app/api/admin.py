@@ -202,7 +202,7 @@ def get_system_design_telemetry():
     """
     return {
         "architecture": {
-            "title": "BIS SmartAssist Enterprise RAG Architecture",
+            "title": "MANAKAI Enterprise RAG Architecture",
             "stateless_tier": {
                 "pattern": "Stateless Application Tier",
                 "authentication": "JWT Bearer Tokens (RFC 7519)",

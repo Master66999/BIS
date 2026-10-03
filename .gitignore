@@ -46,6 +46,7 @@ wheels/
 # Vector DB storage & model checkpoints
 data/chroma_db/
 models/**/checkpoints/
+models/bis_cross_encoder_checkpoints/
 
 # Environment variables & secrets
 .env

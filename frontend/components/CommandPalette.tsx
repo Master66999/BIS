@@ -225,15 +225,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-24 px-4 animate-fadeIn">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-24 px-4 animate-fadeIn">
       {/* Spotlight Window */}
       <div
         className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[75vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Bar Input */}
-        <div className="p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50/50">
-          <Search className="w-5 h-5 text-blue-950 shrink-0" />
+        <div className="p-4 border-b border-slate-200 flex items-center gap-3 bg-slate-50">
+          <Search className="w-5 h-5 text-blue-600 shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -244,99 +244,75 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             }}
             onKeyDown={handleKeyDown}
             placeholder="Type standard (e.g. IS 1786), product, scheme, or tool..."
-            className="w-full bg-transparent text-slate-900 placeholder:text-slate-400 text-sm sm:text-base font-medium focus:outline-none"
+            className="w-full bg-transparent text-slate-800 placeholder:text-slate-400 text-sm sm:text-base font-medium focus:outline-none"
           />
           {query ? (
-            <button onClick={() => setQuery("")} className="text-slate-400 hover:text-slate-600">
+            <button onClick={() => setQuery("")} className="text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
           ) : (
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 text-slate-600 font-bold">
+            <kbd className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-mono font-bold bg-white text-slate-500 rounded border border-slate-200">
               ESC
-            </span>
+            </kbd>
           )}
         </div>
 
         {/* Results List */}
-        <div className="flex-1 overflow-y-auto p-2 divide-y divide-slate-100">
+        <div className="flex-1 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
-            <div className="p-8 text-center space-y-2">
-              <p className="text-sm font-semibold text-slate-700">No matching standard or tool found.</p>
-              <button
-                onClick={() => {
-                  onStartChat(query);
-                  onClose();
-                }}
-                className="text-xs text-blue-900 font-bold hover:underline inline-flex items-center gap-1"
-              >
-                <span>Ask AI Co-Pilot: "{query}"</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
+            <div className="p-8 text-center text-slate-500 text-xs">
+              No matching standards or tools found for "{query}".
             </div>
           ) : (
             filtered.map((item, idx) => {
-              const isSelected = selectedIndex === idx;
+              const isSelected = idx === selectedIndex;
+              const isMandatory = item.badge?.includes("Mandatory");
+              const isVerified = item.badge?.includes("Verification") || item.badge?.includes("MSME");
               return (
                 <div
                   key={item.id}
-                  onClick={item.action}
+                  onClick={() => item.action()}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`p-3 rounded-2xl flex items-center justify-between cursor-pointer transition-all ${
-                    isSelected ? "bg-[#0A2540] text-white shadow-xs" : "hover:bg-slate-50 text-slate-800"
+                  className={`p-3 rounded-2xl cursor-pointer transition-all flex items-center justify-between gap-3 ${
+                    isSelected
+                      ? "bg-blue-50/80 border border-blue-200 text-slate-900 shadow-sm"
+                      : "hover:bg-slate-50 text-slate-700"
                   }`}
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 ${
-                        isSelected ? "bg-white/20 text-amber-300" : "bg-blue-50 text-blue-950"
-                      }`}
-                    >
-                      {item.category === "Standards" && <FileText className="w-4 h-4" />}
-                      {item.category === "Tools" && <Calculator className="w-4 h-4" />}
-                      {item.category === "Schemes" && <BookOpen className="w-4 h-4" />}
-                      {item.category === "System" && <Activity className="w-4 h-4" />}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-bold font-mono ${isSelected ? "text-amber-300" : "text-slate-900"}`}>
-                          {item.title}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-sm text-slate-900">{item.title}</span>
+                      {item.badge && (
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${
+                          isMandatory
+                            ? "bg-red-50 text-red-700 border-red-200"
+                            : isVerified
+                            ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                            : "bg-blue-50 text-blue-700 border-blue-200"
+                        }`}>
+                          {item.badge}
                         </span>
-                        {item.badge && (
-                          <span
-                            className={`text-[9px] font-bold px-1.5 py-0.2 rounded border ${
-                              isSelected
-                                ? "bg-white/10 text-white border-white/20"
-                                : "bg-emerald-50 text-emerald-800 border-emerald-200"
-                            }`}
-                          >
-                            {item.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p className={`text-[11px] truncate mt-0.5 ${isSelected ? "text-slate-200" : "text-slate-500"}`}>
-                        {item.subtitle}
-                      </p>
+                      )}
                     </div>
+                    <p className="text-xs text-slate-500 truncate mt-0.5">{item.subtitle}</p>
                   </div>
-
-                  <ArrowRight className={`w-4 h-4 shrink-0 transition ${isSelected ? "text-amber-400 translate-x-1" : "text-slate-300"}`} />
+                  <div className="shrink-0 flex items-center gap-1.5 text-xs text-slate-500">
+                    <span className="text-[10px] font-mono font-bold text-blue-600">{item.category}</span>
+                    <ArrowRight className={`w-3.5 h-3.5 ${isSelected ? "text-blue-600" : "text-slate-400"}`} />
+                  </div>
                 </div>
               );
             })
           )}
         </div>
 
-        {/* Footer Shortcut Bar */}
-        <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-          <div className="flex items-center gap-3">
-            <span>↑↓ Navigate</span>
-            <span>↵ Select</span>
-            <span>ESC Close</span>
-          </div>
-          <span className="hidden sm:inline text-blue-950 font-bold">23,866 Indian Standards Spotlight</span>
+        {/* Footer */}
+        <div className="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500 px-4 font-mono">
+          <span>Navigate with ↑ ↓ and Enter</span>
+          <span className="text-blue-600 font-bold">MANAKAI Spotlight</span>
         </div>
       </div>
-      <div className="fixed inset-0 -z-10" onClick={onClose} />
     </div>
   );
 };
+

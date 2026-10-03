@@ -1,0 +1,37 @@
+{
+  "file_path": "C:\\Users\\aditya pavashe\\Downloads\\BIS\\BIS\\data\\raw\\bis_standards.csv",
+  "detected_header_row_index": 1,
+  "total_rows": 23866,
+  "number_of_columns": 6,
+  "columns_found": [
+    "Sl#",
+    "Standard Number",
+    "Date of Publish",
+    "Title",
+    "Type of Standard",
+    "Degree of Equivalence"
+  ],
+  "mapped_columns": [
+    "serial_number",
+    "standard_number",
+    "publication_date",
+    "title",
+    "standard_type",
+    "degree_of_equivalence"
+  ],
+  "valid_standards": 23866,
+  "duplicate_standards": 0,
+  "missing_standard_numbers": 0,
+  "missing_titles": 0,
+  "missing_publication_dates": 382,
+  "empty_rows": 0,
+  "encoding_issues_detected": true,
+  "clean_dataset_summary": {
+    "total_clean_records": 23866,
+    "unique_standard_numbers": 23866,
+    "records_with_publication_date": 23484,
+    "records_without_publication_date": 382,
+    "removed_records_count": 0,
+    "output_clean_csv": "C:\\Users\\aditya pavashe\\Downloads\\BIS\\BIS\\data\\processed\\bis_standards_clean.csv"
+  }
+}

@@ -72,33 +72,33 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
   const orders = qcoData.orders || [];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-800 py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-red-500/10 text-red-800 border border-red-500/30 flex items-center gap-1">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-1 rounded-full text-xs font-bold font-mono bg-red-50 text-red-700 border border-red-200 flex items-center gap-1.5 shadow-xs">
                 <ShieldAlert className="w-3.5 h-3.5 text-red-600 animate-pulse" />
                 Live Regulatory Radar
               </span>
-              <span className="text-xs text-slate-500 font-medium">
+              <span className="text-xs text-slate-500 font-medium hidden sm:inline">
                 Official Gazette Orders issued under Section 16 of BIS Act, 2016
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B2545] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Quality Control Orders (QCO) & Gazette Radar
             </h1>
-            <p className="text-sm text-slate-600 mt-1 max-w-3xl">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
               Track mandatory ISI Mark enforcement deadlines across India. Search by product name, Indian Standard, or 4-digit HSN customs classification to verify statutory deadlines and legal penalties.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => window.print()}
-              className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-xs font-semibold text-slate-700 transition flex items-center gap-1.5 shadow-xs"
+              className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 transition flex items-center gap-2 shadow-xs"
             >
               <Printer className="w-4 h-4 text-slate-500" />
               <span>Print Bulletin</span>
@@ -110,9 +110,9 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                     "What are the newly notified Quality Control Orders (QCOs) in 2026 and what are the penalties for selling non-ISI goods under Section 29?"
                   )
                 }
-                className="px-4 py-2 rounded-xl bg-[#0B2545] hover:bg-[#133E68] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+                className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-sm active:scale-95"
               >
-                <Sparkles className="w-4 h-4 text-amber-400" />
+                <Sparkles className="w-4 h-4" />
                 <span>Ask AI Co-Pilot</span>
               </button>
             )}
@@ -120,21 +120,21 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
         </div>
 
         {/* 1. Omni-Search Bar & Quick HSN Chips */}
-        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
+        <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
           <form onSubmit={handleSearchSubmit} className="relative flex items-center">
             <div className="absolute left-4 text-slate-400">
-              <Search className="w-5 h-5 text-blue-950" />
+              <Search className="w-5 h-5 text-blue-600" />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by Product (Footwear, Steel, Plywood), Standard (IS 15844), or HSN Code (6403, 7214)..."
-              className="w-full pl-12 pr-28 py-3.5 bg-slate-50 border-2 border-slate-300 rounded-2xl text-xs sm:text-sm font-medium focus:outline-none focus:border-[#0B2545] text-slate-900 shadow-inner"
+              className="w-full pl-12 pr-32 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white text-slate-900 placeholder-slate-400 transition"
             />
             <button
               type="submit"
-              className="absolute right-2.5 px-4 py-2 rounded-xl bg-[#0B2545] hover:bg-blue-950 text-white font-bold text-xs transition shadow-xs"
+              className="absolute right-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition shadow-sm active:scale-95"
             >
               Search Radar
             </button>
@@ -142,18 +142,18 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
 
           {/* Quick Clickable HSN Chips */}
           <div>
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 mb-2 font-medium">
-              <Hash className="w-3.5 h-3.5 text-blue-900" />
+            <div className="flex items-center gap-1.5 text-xs text-slate-700 mb-2 font-medium">
+              <Hash className="w-3.5 h-3.5 text-blue-600" />
               <span>Quick HSN Customs Classification Lookup:</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {[
-                { hsn: "7214", label: "HSN 7214: TMT Steel", status: "Enforced", color: "bg-red-50 text-red-800 border-red-200" },
+                { hsn: "7214", label: "HSN 7214: TMT Steel", status: "Enforced", color: "bg-red-50 text-red-700 border-red-200" },
                 { hsn: "6403", label: "HSN 6403: Footwear", status: "Imminent", color: "bg-amber-50 text-amber-800 border-amber-200" },
-                { hsn: "9503", label: "HSN 9503: Toys", status: "Enforced", color: "bg-red-50 text-red-800 border-red-200" },
+                { hsn: "9503", label: "HSN 9503: Toys", status: "Enforced", color: "bg-red-50 text-red-700 border-red-200" },
                 { hsn: "8504", label: "HSN 8504: Solar Inverters", status: "Imminent", color: "bg-amber-50 text-amber-800 border-amber-200" },
                 { hsn: "4412", label: "HSN 4412: Plywood", status: "Imminent", color: "bg-amber-50 text-amber-800 border-amber-200" },
-                { hsn: "7318", label: "HSN 7318: Fasteners & Bolts", status: "Upcoming", color: "bg-blue-50 text-blue-800 border-blue-200" },
+                { hsn: "7318", label: "HSN 7318: Fasteners & Bolts", status: "Upcoming", color: "bg-blue-50 text-blue-700 border-blue-200" },
               ].map((chip, idx) => (
                 <button
                   key={idx}
@@ -169,9 +169,9 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
 
           {/* Filter Pills */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
-            <div className="flex flex-wrap items-center gap-1.5 text-xs">
-              <span className="text-slate-400 font-semibold mr-1 flex items-center gap-1">
-                <Filter className="w-3.5 h-3.5" /> Status:
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              <span className="text-slate-500 font-semibold mr-1 flex items-center gap-1">
+                <Filter className="w-3.5 h-3.5 text-blue-600" /> Status:
               </span>
               {[
                 { id: "all", label: "All QCOs" },
@@ -182,10 +182,10 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                 <button
                   key={st.id}
                   onClick={() => setStatusFilter(st.id)}
-                  className={`px-3 py-1 rounded-lg font-bold transition text-xs ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition text-xs ${
                     statusFilter === st.id
-                      ? "bg-[#0B2545] text-white shadow-2xs"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      ? "bg-blue-600 text-white shadow-xs font-extrabold"
+                      : "bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100"
                   }`}
                 >
                   {st.label}
@@ -193,12 +193,12 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
               ))}
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-400 font-semibold mr-1">Ministry:</span>
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-slate-500 font-semibold mr-1">Ministry:</span>
               <select
                 value={ministryFilter}
                 onChange={(e) => setMinistryFilter(e.target.value)}
-                className="bg-slate-100 text-slate-800 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none border border-slate-200"
+                className="bg-slate-50 text-slate-800 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none border border-slate-200 focus:border-blue-600"
               >
                 <option value="all">All Ministries</option>
                 <option value="DPIIT">DPIIT (Commerce & Industry)</option>
@@ -210,23 +210,23 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
         </div>
 
         {/* 2. Statutory Legal Warning Banner */}
-        <div className="p-4 rounded-2xl bg-red-950 text-white border-2 border-red-500/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
-          <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center shrink-0 text-red-400">
+        <div className="p-5 rounded-2xl bg-red-50 text-slate-900 border-2 border-red-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-start gap-3.5">
+            <div className="w-11 h-11 rounded-xl bg-red-100 border border-red-300 flex items-center justify-center shrink-0 text-red-700">
               <Scale className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-red-200 flex items-center gap-1.5">
+              <h3 className="font-extrabold text-sm text-red-950 flex items-center gap-1.5">
                 <span>Statutory Mandate under Section 16 & Section 29 (BIS Act, 2016)</span>
               </h3>
-              <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
+              <p className="text-xs text-slate-700 mt-1 leading-relaxed">
                 Manufacturing, importing, storing, or selling goods without mandatory Standard Mark (ISI) after the notification date constitutes a criminal offence. Penalties include seizure of entire consignment and fine up to <strong>₹5,00,000</strong> or value of goods.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
-            <span className="text-xs font-mono font-bold text-red-400 bg-red-500/10 px-3 py-1.5 rounded-lg border border-red-500/20">
+            <span className="text-xs font-mono font-bold text-red-700 bg-red-100 px-3 py-1.5 rounded-full border border-red-300">
               Strict Liability Enforced
             </span>
           </div>
@@ -238,7 +238,7 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
             <h2 className="text-lg font-bold text-slate-900">
               Active Gazette Notifications ({orders.length} Orders Found)
             </h2>
-            <span className="text-xs font-mono text-slate-500">
+            <span className="text-xs font-mono text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
               Live Enforcement Synchronized
             </span>
           </div>
@@ -250,63 +250,63 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
               return (
                 <div
                   key={qco.id}
-                  className={`bg-white rounded-3xl p-6 border-2 transition-all shadow-xs flex flex-col justify-between hover:shadow-md ${
+                  className={`bg-white rounded-3xl p-6 border-2 transition-all shadow-sm flex flex-col justify-between hover:border-blue-400 ${
                     isCrit
-                      ? "border-red-200 hover:border-red-400"
+                      ? "border-red-300"
                       : isHigh
-                      ? "border-amber-300 hover:border-amber-500"
-                      : "border-slate-200 hover:border-blue-400"
+                      ? "border-amber-300"
+                      : "border-slate-200"
                   }`}
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     
                     {/* Top Status & Urgency Bar */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span
                           className={`px-3 py-1 rounded-full text-xs font-black font-mono tracking-wider uppercase border flex items-center gap-1.5 ${
                             isCrit
-                              ? "bg-red-100 text-red-800 border-red-300"
+                              ? "bg-red-50 text-red-700 border-red-200"
                               : isHigh
-                              ? "bg-amber-100 text-amber-900 border-amber-300 animate-pulse"
-                              : "bg-blue-100 text-blue-900 border-blue-300"
+                              ? "bg-amber-50 text-amber-800 border-amber-200 animate-pulse"
+                              : "bg-blue-50 text-blue-700 border-blue-200"
                           }`}
                         >
                           <Clock className="w-3.5 h-3.5" />
                           <span>{qco.countdown_display}</span>
                         </span>
 
-                        <span className="text-xs text-slate-500 font-mono font-bold">
+                        <span className="text-xs text-slate-600 font-mono font-bold">
                           Order: {qco.order_number}
                         </span>
                       </div>
 
-                      <span className="text-xs font-semibold text-blue-950 font-mono bg-slate-100 px-2.5 py-0.5 rounded-lg self-start sm:self-auto">
+                      <span className="text-xs font-semibold text-blue-700 font-mono bg-blue-50 px-3 py-1 rounded-lg border border-blue-200 self-start sm:self-auto">
                         {qco.ministry}
                       </span>
                     </div>
 
                     {/* Title & Category */}
                     <div>
-                      <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider block">
+                      <span className="text-[10px] font-mono font-bold text-blue-600 uppercase tracking-wider block">
                         Category: {qco.product_categories}
                       </span>
-                      <h3 className="text-lg font-bold text-slate-900 mt-0.5">{qco.title}</h3>
+                      <h3 className="text-lg font-bold text-slate-900 mt-1">{qco.title}</h3>
                       <p className="text-xs text-slate-600 mt-1 leading-relaxed">{qco.description}</p>
                     </div>
 
                     {/* HSN Codes & Standards Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
                       
                       {/* Covered Standards */}
-                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
-                        <span className="text-[11px] font-bold text-slate-700 block uppercase tracking-wider">
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+                        <span className="text-[11px] font-bold text-slate-900 block uppercase tracking-wider">
                           Mandated Indian Standards:
                         </span>
-                        <div className="space-y-1 pt-0.5">
+                        <div className="space-y-1.5 pt-0.5">
                           {qco.standards.map((s: any, idx: number) => (
-                            <div key={idx} className="text-xs flex items-center justify-between text-slate-800">
-                              <span className="font-mono font-bold text-blue-950">{s.code}</span>
+                            <div key={idx} className="text-xs flex items-center justify-between text-slate-700">
+                              <span className="font-mono font-bold text-blue-700">{s.code}</span>
                               <span className="text-slate-500 text-[11px] truncate max-w-[200px]">{s.title}</span>
                             </div>
                           ))}
@@ -314,23 +314,23 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                       </div>
 
                       {/* HSN Codes & MSME Special Grace */}
-                      <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
+                      <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                          <span className="text-[11px] font-bold text-slate-900 block uppercase tracking-wider">
                             Covered HSN Codes:
                           </span>
-                          <span className="text-[10px] font-mono font-bold text-blue-900">
+                          <span className="text-[10px] font-mono font-bold text-blue-700">
                             Customs Classification
                           </span>
                         </div>
-                        <div className="flex flex-wrap gap-1.5 pt-0.5">
+                        <div className="flex flex-wrap gap-1.5 pt-1">
                           {qco.hsn_codes.map((h: string, idx: number) => (
-                            <span key={idx} className="px-2 py-0.5 bg-white border border-slate-300 rounded font-mono text-xs font-bold text-slate-800">
+                            <span key={idx} className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-mono text-xs font-bold text-slate-800">
                               {h}
                             </span>
                           ))}
                         </div>
-                        <div className="pt-2 text-[11px] text-amber-900 font-medium">
+                        <div className="pt-2 text-[11px] text-emerald-700 font-medium">
                           <strong>MSME Transition:</strong> {qco.msme_provisions}
                         </div>
                       </div>
@@ -342,7 +342,7 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                   {/* Actions Strip */}
                   <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
                     <div className="text-slate-500 font-mono text-[11px]">
-                      Enforcement Date: <strong>{qco.enforcement_date}</strong> • MSME Grace: <strong>{qco.msme_grace_date}</strong>
+                      Enforcement Date: <strong className="text-slate-800">{qco.enforcement_date}</strong> • MSME Grace: <strong className="text-blue-600">{qco.msme_grace_date}</strong>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -350,19 +350,19 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                         href={qco.gazette_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3 py-1.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-700 font-semibold transition flex items-center gap-1"
+                        className="px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 font-semibold transition flex items-center gap-1.5"
                       >
                         <span>Official Gazette</span>
-                        <ExternalLink className="w-3 h-3 text-slate-400" />
+                        <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                       </a>
 
                       {onNavigateTab && (
                         <button
                           onClick={() => onNavigateTab("journey")}
-                          className="px-3.5 py-1.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold transition flex items-center gap-1 shadow-2xs"
+                          className="px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 font-bold transition flex items-center gap-1.5 shadow-xs"
                         >
                           <span>Generate MSME Roadmap</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
+                          <ArrowRight className="w-3.5 h-3.5 text-blue-600" />
                         </button>
                       )}
 
@@ -373,7 +373,7 @@ export function QcoRadarView({ onAskAI, onNavigateTab }: QcoRadarViewProps) {
                               `Explain the mandatory requirements, test protocols and transition deadlines under the ${qco.title} (${qco.order_number}).`
                             )
                           }
-                          className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center gap-1 shadow-2xs"
+                          className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold transition flex items-center gap-1.5 shadow-sm active:scale-95"
                         >
                           <Sparkles className="w-3.5 h-3.5" />
                           <span>Ask AI</span>

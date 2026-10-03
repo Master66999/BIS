@@ -44,63 +44,63 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden text-slate-800">
-        <div className="bg-[#0B2545] text-white p-4 flex items-center justify-between">
-          <h3 className="font-bold text-sm">Feedback on AI Response</h3>
-          <button onClick={onClose} className="p-1 rounded text-slate-300 hover:text-white">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-white rounded-3xl shadow-2xl border border-slate-200 max-w-md w-full overflow-hidden text-slate-800">
+        <div className="bg-slate-50 text-slate-900 p-5 flex items-center justify-between border-b border-slate-200">
+          <h3 className="font-bold text-sm text-slate-900">Feedback on AI Response</h3>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {submitted ? (
-          <div className="p-6 text-center space-y-2">
-            <CheckCircle className="w-10 h-10 text-emerald-600 mx-auto" />
-            <h4 className="font-semibold text-slate-800 text-sm">Thank You!</h4>
-            <p className="text-xs text-slate-500">Your feedback helps improve BIS SmartAssist retrieval accuracy.</p>
+          <div className="p-8 text-center space-y-2">
+            <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto" />
+            <h4 className="font-bold text-slate-900 text-base">Thank You!</h4>
+            <p className="text-xs text-slate-500">Your feedback helps improve MANAKAI retrieval accuracy.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-5 space-y-4 text-xs">
-            <div>
-              <label className="font-semibold text-slate-700 block mb-2">Was this answer accurate & helpful?</label>
-              <div className="flex gap-3">
+          <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
+            <div className="space-y-1.5">
+              <label className="font-bold text-slate-700 block">Rating</label>
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setRating(1)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border transition-all ${
+                  className={`flex-1 py-2.5 px-3 rounded-xl border flex items-center justify-center gap-1.5 font-bold transition ${
                     rating === 1
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-500 font-semibold"
-                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                      ? "bg-emerald-50 border-emerald-300 text-emerald-800 shadow-sm"
+                      : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  <ThumbsUp className="w-4 h-4" />
-                  <span>Yes, Helpful</span>
+                  <ThumbsUp className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Accurate</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setRating(-1)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg border transition-all ${
+                  className={`flex-1 py-2.5 px-3 rounded-xl border flex items-center justify-center gap-1.5 font-bold transition ${
                     rating === -1
-                      ? "bg-rose-50 text-rose-800 border-rose-500 font-semibold"
-                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                      ? "bg-red-50 border-red-300 text-red-700 shadow-sm"
+                      : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
                   }`}
                 >
-                  <ThumbsDown className="w-4 h-4" />
-                  <span>Needs Improvement</span>
+                  <ThumbsDown className="w-3.5 h-3.5 text-red-600" />
+                  <span>Needs Fix</span>
                 </button>
               </div>
             </div>
 
-            <div>
-              <label className="font-semibold text-slate-700 block mb-1">
-                Additional Comments or Specific Clause Correction (Optional):
+            <div className="space-y-1.5">
+              <label className="font-bold text-slate-700 block">
+                Technical Feedback / Discrepancy details
               </label>
               <textarea
+                rows={3}
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="Mention any missing standard, inaccurate clause, or improvement suggestion..."
-                rows={3}
-                className="w-full p-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs"
+                placeholder="Mention any missing clauses, incorrect tolerances, or citation mismatches..."
+                className="w-full p-3 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -108,14 +108,14 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-3 py-1.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium"
+                className="px-4 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 font-semibold"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-1.5 rounded bg-amber-500 hover:bg-amber-600 text-slate-950 font-semibold"
+                className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md shadow-blue-500/20 disabled:opacity-50 transition"
               >
                 {loading ? "Submitting..." : "Submit Feedback"}
               </button>
@@ -126,3 +126,4 @@ export const FeedbackModal: React.FC<FeedbackModalProps> = ({
     </div>
   );
 };
+

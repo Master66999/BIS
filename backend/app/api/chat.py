@@ -191,10 +191,14 @@ def handle_chat(
         retrieved_documents_count=len(sources),
         confidence_level=conf_level,
         confidence_score=confidence,
-        search_strategy=search_meta.get("search_strategy", "Hybrid RAG"),
-        reasoning_summary=f"Context: {active_std or active_prod or 'General'}. Query matched intent '{intent}' with {len(sources)} verified clause citations.",
-        rl_action=search_meta.get("rl_action")
+        search_strategy=search_meta.get("search_strategy", "Hybrid (BM25 + Dense Vectors + Cross-Encoder Reranker)"),
+        reasoning_summary=f"Context: {active_std or active_prod or 'General'}. Query matched intent '{intent}' with {len(sources)} verified citations.",
+        rl_action=search_meta.get("rl_action"),
+        timing_ms=search_meta.get("timing_ms"),
+        confidence_breakdown=search_meta.get("confidence_breakdown"),
+        reranker_applied=search_meta.get("reranker_applied", True)
     )
+
 
     # 6. Save User & Assistant Messages
     user_msg = Message(

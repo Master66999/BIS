@@ -56,7 +56,6 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
           setSamples(data);
           runInspection(data[0].id);
         } else {
-          // Fallback initial inspection
           runInspection("sample-tmt-fail");
         }
       } catch (e) {
@@ -126,7 +125,6 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
     try {
       const res = await inspectTestReport({
         raw_text: rawText,
-        standard_code: "IS 1786",
       });
       setAuditResult(res);
     } catch (e) {
@@ -137,35 +135,35 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
   };
 
   const evalData = auditResult?.evaluation;
-  const metaData = auditResult?.metadata;
+  const metaData = auditResult?.sample_metadata;
   const isPassed = evalData?.overall_verdict === "PASS";
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 text-slate-800 py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-500/10 text-amber-800 border border-amber-500/30 flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-amber-600" />
+            <div className="flex items-center gap-2 mb-2">
+              <span className="px-3 py-1 rounded-full text-xs font-bold font-mono bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1.5 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                 SIH26107 AI Innovation
               </span>
-              <span className="text-xs text-slate-500 font-medium">Automated Regulatory Scrutiny Engine</span>
+              <span className="text-xs text-slate-500 font-medium hidden sm:inline">Automated Regulatory Scrutiny Engine</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0B2545] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               AI Lab Test Report & MTC Inspector
             </h1>
-            <p className="text-sm text-slate-600 mt-1 max-w-3xl">
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
               Upload or test factory Mill Test Certificates (MTC) and laboratory reports. The AI cross-examines measured values against published Indian Standards clauses in real-time, detecting sub-standard batches before dispatch.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => setIsDossierOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-xs"
+              className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition flex items-center gap-2 shadow-sm active:scale-95"
             >
               <FileCheck2 className="w-4 h-4" />
               <span>Export Official Dossier</span>
@@ -177,9 +175,9 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                     `Explain why this test report for ${evalData.standard_title} received a ${evalData.overall_verdict} verdict and detail the non-conforming clauses.`
                   )
                 }
-                className="px-4 py-2 rounded-xl bg-[#0B2545] hover:bg-[#133E68] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-300 transition flex items-center gap-2 shadow-xs active:scale-95"
               >
-                <Sparkles className="w-4 h-4 text-amber-400" />
+                <Sparkles className="w-4 h-4 text-blue-600" />
                 <span>Ask AI Co-Pilot</span>
               </button>
             )}
@@ -187,25 +185,25 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
         </div>
 
         {/* Input Selector Tabs */}
-        <div className="bg-white rounded-2xl p-2 border border-slate-200 shadow-xs flex flex-wrap gap-2">
+        <div className="bg-white rounded-2xl p-2 border border-slate-200 shadow-sm flex flex-wrap gap-2">
           <button
             onClick={() => setActiveTab("preset")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
               activeTab === "preset"
-                ? "bg-[#0B2545] text-white shadow-xs"
+                ? "bg-blue-600 text-white shadow-xs font-extrabold"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
             <FlaskConical className="w-4 h-4" />
             <span>Preset Authentic Test Reports</span>
-            <span className="ml-1 px-1.5 py-0.2 bg-amber-400 text-slate-950 rounded text-[10px]">1-Click Demo</span>
+            <span className="ml-1 px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded text-[10px] font-mono font-bold">1-Click Demo</span>
           </button>
 
           <button
             onClick={() => setActiveTab("custom")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
               activeTab === "custom"
-                ? "bg-[#0B2545] text-white shadow-xs"
+                ? "bg-blue-600 text-white shadow-xs font-extrabold"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -215,9 +213,9 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
           <button
             onClick={() => setActiveTab("upload")}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
               activeTab === "upload"
-                ? "bg-[#0B2545] text-white shadow-xs"
+                ? "bg-blue-600 text-white shadow-xs font-extrabold"
                 : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
             }`}
           >
@@ -235,8 +233,8 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                 title: "Fe 500D TMT Rebar (IS 1786)",
                 subtitle: "Sub-Standard Heat Lot (Violates YS & Sulphur)",
                 verdict: "FAIL",
-                accent: "border-red-300 hover:border-red-500 bg-red-50/30",
-                badgeColor: "bg-red-100 text-red-800 border-red-200",
+                accent: "border-red-200 bg-red-50/40",
+                badgeColor: "bg-red-50 text-red-700 border-red-200",
                 icon: AlertTriangle,
                 desc: "Demonstrates high sulphur and low proof stress in structural construction steel.",
               },
@@ -245,8 +243,8 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                 title: "M25 Grade Concrete (IS 456)",
                 subtitle: "28-Day Hydraulic Compression Cube Test",
                 verdict: "PASS",
-                accent: "border-emerald-300 hover:border-emerald-500 bg-emerald-50/30",
-                badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                accent: "border-emerald-200 bg-emerald-50/40",
+                badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
                 icon: CheckCircle2,
                 desc: "Validates 28.4 MPa characteristic strength against 25 MPa requirement.",
               },
@@ -255,8 +253,8 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                 title: "Packaged Water (IS 14543)",
                 subtitle: "Pre-Dispatch Physical, Chemical & Lead Analysis",
                 verdict: "PASS",
-                accent: "border-emerald-300 hover:border-emerald-500 bg-emerald-50/30",
-                badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+                accent: "border-emerald-200 bg-emerald-50/40",
+                badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
                 icon: CheckCircle2,
                 desc: "Verifies pH, TDS, Turbidity and heavy metal limits for ISI Mark compliance.",
               },
@@ -270,26 +268,28 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                     setSelectedSampleId(s.id);
                     runInspection(s.id);
                   }}
-                  className={`p-4 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${s.accent} ${
-                    isSelected ? "ring-2 ring-[#0B2545] shadow-md border-transparent bg-white" : "bg-white"
+                  className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${s.accent} ${
+                    isSelected
+                      ? "ring-2 ring-blue-600 border-blue-600 bg-blue-50/40 shadow-sm"
+                      : "bg-white hover:border-slate-300 hover:shadow-xs"
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${s.badgeColor}`}>
+                    <div className="flex items-center justify-between gap-2 mb-2.5">
+                      <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold border font-mono ${s.badgeColor}`}>
                         Expected: {s.verdict}
                       </span>
                       {isSelected && (
-                        <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+                        <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-ping" />
                       )}
                     </div>
                     <h3 className="font-bold text-sm text-slate-900">{s.title}</h3>
-                    <p className="text-xs text-slate-500 font-medium mt-0.5">{s.subtitle}</p>
+                    <p className="text-xs text-blue-600 font-medium mt-0.5">{s.subtitle}</p>
                     <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">{s.desc}</p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-blue-900">
-                    <span>{isSelected ? "Currently Auditing" : "Run Audit"}</span>
+                  <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs font-semibold text-blue-600">
+                    <span>{isSelected ? "Currently Auditing ✓" : "Run Audit"}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 </div>
@@ -300,22 +300,22 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
         {/* Tab 2: Interactive Parameter Sliders */}
         {activeTab === "custom" && (
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-6">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-6">
             <div className="border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900">
                 Interactive TMT Rebar Fe 500D (IS 1786:2008) Scrutiny Simulator
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Adjust values to observe how the AI flags borderline compliance and critical clause violations.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Proof Stress */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <label className="font-bold text-slate-800">0.2% Proof Stress (Yield)</label>
-                  <span className="font-mono font-extrabold text-blue-900">{customParams.yield_strength} MPa</span>
+                  <label className="font-bold text-slate-900">0.2% Proof Stress (Yield)</label>
+                  <span className="font-mono font-extrabold text-blue-600">{customParams.yield_strength} MPa</span>
                 </div>
                 <input
                   type="range"
@@ -327,15 +327,15 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   className="w-full accent-blue-600"
                 />
                 <span className="text-[10px] text-slate-500 block">
-                  Mandatory Limit: <strong>Min 500 MPa</strong> (Clause 8.1, Table 3)
+                  Mandatory Limit: <strong className="text-slate-800">Min 500 MPa</strong> (Clause 8.1, Table 3)
                 </span>
               </div>
 
               {/* Tensile Strength */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <label className="font-bold text-slate-800">Tensile Strength (UTS)</label>
-                  <span className="font-mono font-extrabold text-blue-900">{customParams.tensile_strength} MPa</span>
+                  <label className="font-bold text-slate-900">Tensile Strength (UTS)</label>
+                  <span className="font-mono font-extrabold text-blue-600">{customParams.tensile_strength} MPa</span>
                 </div>
                 <input
                   type="range"
@@ -347,15 +347,15 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   className="w-full accent-blue-600"
                 />
                 <span className="text-[10px] text-slate-500 block">
-                  Mandatory Limit: <strong>Min 565 MPa</strong>
+                  Mandatory Limit: <strong className="text-slate-800">Min 565 MPa</strong>
                 </span>
               </div>
 
               {/* Elongation */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <label className="font-bold text-slate-800">Total Elongation</label>
-                  <span className="font-mono font-extrabold text-blue-900">{customParams.elongation}%</span>
+                  <label className="font-bold text-slate-900">Total Elongation</label>
+                  <span className="font-mono font-extrabold text-blue-600">{customParams.elongation}%</span>
                 </div>
                 <input
                   type="range"
@@ -367,15 +367,15 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   className="w-full accent-blue-600"
                 />
                 <span className="text-[10px] text-slate-500 block">
-                  Mandatory Limit: <strong>Min 16.0%</strong>
+                  Mandatory Limit: <strong className="text-slate-800">Min 16.0%</strong>
                 </span>
               </div>
 
               {/* Carbon */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <label className="font-bold text-slate-800">Carbon Content (C)</label>
-                  <span className="font-mono font-extrabold text-blue-900">{customParams.carbon}%</span>
+                  <label className="font-bold text-slate-900">Carbon Content (C)</label>
+                  <span className="font-mono font-extrabold text-blue-600">{customParams.carbon}%</span>
                 </div>
                 <input
                   type="range"
@@ -387,15 +387,15 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   className="w-full accent-blue-600"
                 />
                 <span className="text-[10px] text-slate-500 block">
-                  Mandatory Limit: <strong>Max 0.25%</strong> (Clause 4.2)
+                  Mandatory Limit: <strong className="text-slate-800">Max 0.25%</strong> (Clause 4.2)
                 </span>
               </div>
 
               {/* Sulphur */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                 <div className="flex justify-between items-center text-xs">
-                  <label className="font-bold text-slate-800">Sulphur Content (S)</label>
-                  <span className="font-mono font-extrabold text-blue-900">{customParams.sulphur}%</span>
+                  <label className="font-bold text-slate-900">Sulphur Content (S)</label>
+                  <span className="font-mono font-extrabold text-blue-600">{customParams.sulphur}%</span>
                 </div>
                 <input
                   type="range"
@@ -407,16 +407,16 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   className="w-full accent-blue-600"
                 />
                 <span className="text-[10px] text-slate-500 block">
-                  Mandatory Limit: <strong>Max 0.040%</strong>
+                  Mandatory Limit: <strong className="text-slate-800">Max 0.040%</strong>
                 </span>
               </div>
 
               <div className="flex items-end">
                 <button
                   onClick={handleCustomSubmit}
-                  className="w-full py-3 px-4 rounded-xl bg-blue-950 hover:bg-blue-900 text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-sm active:scale-95"
                 >
-                  <RefreshCw className="w-4 h-4 text-amber-400" />
+                  <RefreshCw className="w-4 h-4 text-white" />
                   <span>Execute Parameter Audit</span>
                 </button>
               </div>
@@ -426,24 +426,24 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
         {/* Tab 3: Raw Text & File Upload */}
         {activeTab === "upload" && (
-          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
             <h3 className="text-base font-bold text-slate-900">Paste Mill Certificate or Lab Report Text</h3>
             <textarea
               rows={4}
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
               placeholder="e.g. Mill Test Certificate No: MTC-8891. Grade: Fe 500D. Yield Strength: 494 MPa. Tensile: 570 MPa. Carbon: 0.24%..."
-              className="w-full p-3.5 border border-slate-300 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 focus:bg-white"
             />
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <span className="text-[11px] text-slate-500">
                 The AI text parser will automatically extract parameters and match with IS 1786 / IS 456 limits.
               </span>
               <button
                 onClick={handleRawTextSubmit}
-                className="px-5 py-2.5 rounded-xl bg-[#0B2545] hover:bg-[#133E68] text-white text-xs font-bold transition flex items-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition flex items-center gap-2 shadow-sm active:scale-95"
               >
-                <Sparkles className="w-4 h-4 text-amber-400" />
+                <Sparkles className="w-4 h-4" />
                 <span>Parse & Evaluate Report</span>
               </button>
             </div>
@@ -456,10 +456,10 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
             
             {/* Top Verdict Banner */}
             <div
-              className={`rounded-3xl p-6 border-2 transition-all shadow-md ${
+              className={`rounded-3xl p-6 border-2 transition-all shadow-sm ${
                 isPassed
-                  ? "bg-gradient-to-r from-emerald-950 via-slate-950 to-emerald-900 text-white border-emerald-500/50"
-                  : "bg-gradient-to-r from-red-950 via-slate-950 to-red-900 text-white border-red-500/50"
+                  ? "bg-emerald-50 text-slate-900 border-emerald-300"
+                  : "bg-red-50 text-slate-900 border-red-300"
               }`}
             >
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -469,8 +469,8 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   <div
                     className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border ${
                       isPassed
-                        ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/40"
-                        : "bg-red-500/20 text-red-400 border-red-500/40"
+                        ? "bg-emerald-100 text-emerald-700 border-emerald-300"
+                        : "bg-red-100 text-red-700 border-red-300"
                     }`}
                   >
                     {isPassed ? <CheckCircle2 className="w-8 h-8" /> : <XCircle className="w-8 h-8" />}
@@ -479,24 +479,24 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <span
-                        className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold uppercase font-mono tracking-wider ${
-                          isPassed ? "bg-emerald-500 text-slate-950" : "bg-red-500 text-white animate-pulse"
+                        className={`px-3 py-1 rounded-full text-xs font-black uppercase font-mono tracking-wider ${
+                          isPassed ? "bg-emerald-600 text-white" : "bg-red-600 text-white animate-pulse"
                         }`}
                       >
                         {evalData.overall_verdict === "PASS" ? "CONFORMING (PASS)" : "NON-CONFORMING (REJECTED)"}
                       </span>
-                      <span className="text-xs text-slate-300 font-mono">
-                        Standard: <strong>{evalData.standard_code}</strong> ({evalData.grade})
+                      <span className="text-xs text-slate-600 font-mono">
+                        Standard: <strong className="text-slate-800">{evalData.standard_code}</strong> ({evalData.grade})
                       </span>
                     </div>
 
-                    <h2 className="text-xl sm:text-2xl font-black tracking-tight mt-1.5">
+                    <h2 className="text-xl sm:text-2xl font-black tracking-tight mt-1.5 text-slate-900">
                       {isPassed
                         ? "Sample Satisfies All Mandatory Indian Standard Clauses"
                         : `Critical Non-Conformance Detected: ${evalData.failed_count} Parameters Failed`}
                     </h2>
 
-                    <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+                    <p className="text-xs text-slate-600 mt-1 max-w-2xl">
                       {isPassed
                         ? "Batch conforms with the Scheme of Testing & Inspection (STI). Lot is approved for ISI Mark stamping."
                         : "Sub-standard test results violate statutory limits under Bureau of Indian Standards Act, 2016. Do NOT dispatch."}
@@ -505,32 +505,32 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                 </div>
 
                 {/* Right: Key Audit Metrics Grid */}
-                <div className="flex items-center gap-4 sm:gap-6 bg-black/30 p-4 rounded-2xl border border-white/10 shrink-0 self-stretch sm:self-auto justify-around">
+                <div className="flex items-center gap-4 sm:gap-6 bg-white p-4 rounded-2xl border border-slate-200 shadow-xs shrink-0 self-stretch sm:self-auto justify-around">
                   <div className="text-center">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Score</span>
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Score</span>
                     <span
                       className={`text-2xl font-black font-mono ${
-                        evalData.compliance_score >= 80 ? "text-emerald-400" : "text-red-400"
+                        evalData.compliance_score >= 80 ? "text-emerald-600" : "text-red-600"
                       }`}
                     >
                       {evalData.compliance_score}%
                     </span>
                   </div>
 
-                  <div className="h-8 w-[1px] bg-white/10" />
+                  <div className="h-8 w-[1px] bg-slate-200" />
 
                   <div className="text-center">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Audited</span>
-                    <span className="text-2xl font-black font-mono text-white">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Audited</span>
+                    <span className="text-2xl font-black font-mono text-slate-900">
                       {evalData.total_parameters_audited}
                     </span>
                   </div>
 
-                  <div className="h-8 w-[1px] bg-white/10" />
+                  <div className="h-8 w-[1px] bg-slate-200" />
 
                   <div className="text-center">
-                    <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block">Failed</span>
-                    <span className="text-2xl font-black font-mono text-red-400">
+                    <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Failed</span>
+                    <span className="text-2xl font-black font-mono text-red-600">
                       {evalData.failed_count}
                     </span>
                   </div>
@@ -540,17 +540,17 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
               {/* Sample Meta Ribbon */}
               {metaData && (
-                <div className="mt-5 pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
+                <div className="mt-5 pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-600">
                   <div className="flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-amber-400" />
+                    <Building2 className="w-3.5 h-3.5 text-blue-600" />
                     <span><strong>Facility:</strong> {metaData.manufacturer}</span>
                   </div>
                   <div className="flex items-center gap-1.5 font-mono">
-                    <Layers className="w-3.5 h-3.5 text-blue-400" />
+                    <Layers className="w-3.5 h-3.5 text-blue-600" />
                     <span><strong>Heat/Batch:</strong> {metaData.heat_no}</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+                    <Calendar className="w-3.5 h-3.5 text-emerald-600" />
                     <span><strong>Test Date:</strong> {metaData.test_date}</span>
                   </div>
                 </div>
@@ -559,13 +559,13 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
             {/* Critical Legal Warning if Failed */}
             {!isPassed && (
-              <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 text-amber-900 flex items-start gap-3.5 text-xs shadow-xs">
-                <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-2xl bg-red-50 border-2 border-red-200 text-red-900 flex items-start gap-3.5 text-xs shadow-xs">
+                <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div className="space-y-1">
-                  <h4 className="font-bold text-amber-950">
+                  <h4 className="font-bold text-red-950">
                     Statutory Compliance Warning (Section 29, BIS Act, 2016)
                   </h4>
-                  <p className="text-amber-800 leading-relaxed">
+                  <p className="text-red-800 leading-relaxed">
                     Applying an ISI Mark to non-conforming goods is a cognizable legal offence punishable with imprisonment up to 2 years or fine not less than ₹2,00,000. Immediate lot quarantine and recalibration of in-house testing equipment is required.
                   </p>
                 </div>
@@ -573,20 +573,20 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
             )}
 
             {/* Detailed Parameter Scrutiny Table */}
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-5 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <h3 className="font-bold text-slate-900 text-base">Comprehensive Clause-by-Clause Scrutiny</h3>
                   <p className="text-xs text-slate-500">Every parameter cross-referenced with official standard tolerances</p>
                 </div>
-                <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
                   {evalData.passed_count} Passed • {evalData.failed_count} Failed • {evalData.warning_count} Warning
                 </span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                  <thead className="bg-slate-100 text-slate-700 font-semibold border-b border-slate-200">
                     <tr>
                       <th className="py-3 px-4">Parameter & Test Method</th>
                       <th className="py-3 px-4">Measured Value</th>
@@ -603,31 +603,31 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                       return (
                         <tr
                           key={idx}
-                          className={`hover:bg-slate-50/80 transition-colors ${
-                            isFail ? "bg-red-50/30" : isWarn ? "bg-amber-50/20" : ""
+                          className={`hover:bg-slate-50 transition-colors ${
+                            isFail ? "bg-red-50/50" : isWarn ? "bg-amber-50/50" : ""
                           }`}
                         >
                           <td className="py-3.5 px-4 font-semibold text-slate-900">
                             <div className="flex items-center gap-1.5">
                               {param.critical && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" title="Critical Parameter" />
+                                <span className="w-2 h-2 rounded-full bg-red-600 shrink-0" title="Critical Parameter" />
                               )}
                               <span>{param.name}</span>
                             </div>
-                            <span className="text-[10px] text-slate-400 font-normal block mt-0.5">
+                            <span className="text-[10px] text-slate-500 font-normal block mt-0.5">
                               Method: {param.test_method}
                             </span>
                           </td>
 
-                          <td className="py-3.5 px-4 font-mono font-bold text-slate-800">
+                          <td className="py-3.5 px-4 font-mono font-bold text-blue-600">
                             {param.measured_value} {param.unit}
                           </td>
 
-                          <td className="py-3.5 px-4 font-mono text-slate-600">
+                          <td className="py-3.5 px-4 font-mono text-slate-700">
                             {param.required_limit}
                           </td>
 
-                          <td className="py-3.5 px-4 font-mono text-blue-900 text-[11px] font-medium">
+                          <td className="py-3.5 px-4 font-mono text-blue-700 text-[11px] font-medium">
                             {param.clause}
                           </td>
 
@@ -645,10 +645,10 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                             <span
                               className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-bold text-[10px] font-mono ${
                                 isFail
-                                  ? "bg-red-100 text-red-800 border border-red-300"
+                                  ? "bg-red-50 text-red-700 border border-red-200"
                                   : isWarn
-                                  ? "bg-amber-100 text-amber-800 border border-amber-300"
-                                  : "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                  ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                  : "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               }`}
                             >
                               {isFail ? <XCircle className="w-3 h-3" /> : <CheckCircle2 className="w-3 h-3" />}
@@ -665,9 +665,9 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
 
             {/* Actionable Engineering & Corrective Guidance */}
             {evalData.corrective_actions && evalData.corrective_actions.length > 0 && (
-              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center font-bold">
+              <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold border border-blue-200">
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
@@ -679,7 +679,7 @@ export function ReportInspectorView({ onAskAI }: ReportInspectorViewProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                   {evalData.corrective_actions.map((action: string, i: number) => (
                     <div key={i} className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5">
-                      <ChevronRight className="w-4 h-4 text-blue-900 shrink-0 mt-0.5" />
+                      <ChevronRight className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                       <span className="text-xs text-slate-700 leading-relaxed font-medium">{action}</span>
                     </div>
                   ))}

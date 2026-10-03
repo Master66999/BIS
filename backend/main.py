@@ -25,7 +25,7 @@ from backend.app.api.verify import router as verify_router
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Pre-warm hybrid retriever corpus
-    print("Pre-warming BIS SmartAssist RAG vector index...")
+    print("Pre-warming MANAKAI RAG vector index...")
     db = SessionLocal()
     try:
         chunks = db.query(DocumentChunk).all()
@@ -70,17 +70,28 @@ app.include_router(verify_router, prefix=settings.API_V1_STR)
 @app.get("/")
 def root():
     return {
-        "message": "Welcome to BIS SmartAssist API",
+        "message": "Welcome to MANAKAI API",
         "description": "AI-powered Intelligent Assistant for Indian Standards and BIS Services",
         "version": settings.VERSION,
         "docs_url": "/docs",
         "api_prefix": settings.API_V1_STR
     }
 
+@app.get("/api/health")
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy",
+        "version": settings.VERSION,
+        "message": "MANAKAI API is running smoothly"
+    }
+
 @app.get("/api")
 def api_status():
     return {
         "status": "online",
+        "version": settings.VERSION,
+
         "endpoints": [
             "/api/auth/demo",
             "/api/chat",

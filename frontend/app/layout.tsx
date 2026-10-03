@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./manakai.css";
 import type { Metadata, Viewport } from "next";
 
 export const viewport: Viewport = {
@@ -9,12 +10,12 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "BIS SmartAssist — AI Assistant for Indian Standards & BIS Services",
+  title: "MANAKAI | Bureau of Indian Standards Intelligence",
   description:
-    "AI-powered Intelligent Assistant for Indian Standards and BIS Services (SIH26107). Traceable citations, clause verification, product compliance finder, and official Indian Standards knowledge base.",
+    "AI-powered assistant to navigate Bureau of Indian Standards (BIS) confidently. Instant verification, standards discovery, compliance tracking, and laboratory directory.",
   robots: "index, follow",
   openGraph: {
-    title: "BIS SmartAssist — Bureau of Indian Standards",
+    title: "MANAKAI — Indian Standards Intelligence",
     description: "Official National Standards Body Intelligent Regulatory Assistant",
     type: "website",
     locale: "en_IN",
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link
           rel="preconnect"
@@ -38,8 +39,16 @@ export default function RootLayout({
           rel="dns-prefetch"
           href="https://bis-production-fd54.up.railway.app"
         />
+        {/* FontAwesome for MANAKAI icons */}
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
       </head>
-      <body className="min-h-screen flex flex-col bg-slate-50 antialiased text-slate-900">
+      <body className="min-h-screen flex flex-col bg-slate-50 antialiased text-slate-900" suppressHydrationWarning>
         {children}
       </body>
     </html>

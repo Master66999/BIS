@@ -155,3 +155,20 @@ def product_standard_finder(req: ProductFinderRequest, db: Session = Depends(get
         overview=overview,
         standards=results
     )
+
+@router.get("/booklets/search")
+def search_booklets(
+    q: str = Query(..., description="Search query for BIS Departmental Resource Booklets"),
+    top_k: int = Query(5, ge=1, le=20)
+):
+    """
+    Searches across all 17 official BIS Departmental Resource Handouts & Technical Booklets
+    (e.g., Automotive Braking, Building Materials, Machine Safety, Medical Textiles, Petroleum).
+    """
+    results = hybrid_retriever.search_booklets(query=q, top_k=top_k)
+    return {
+        "query": q,
+        "total_results": len(results),
+        "results": results
+    }
+

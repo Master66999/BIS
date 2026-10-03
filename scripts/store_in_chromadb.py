@@ -111,8 +111,18 @@ def store_data_in_chromadb():
         )
         print(f"[OK] Collection 'bis_clauses' now has {chunk_collection.count()} clause vectors.")
 
-    # 3. Test ChromaDB Query with Metadata Filtering
-    print("\n[3/3] Testing ChromaDB query with metadata filter...")
+    # 3. Store Booklet Collections if available
+    booklets_dir = os.path.join(PROJECT_ROOT, "data", "raw", "booklets")
+    if os.path.exists(booklets_dir) and any(f.endswith(".pdf") for f in os.listdir(booklets_dir)):
+        try:
+            from scripts.ingest_booklets import ingest_booklets_into_chromadb
+            print("\n[3/4] Ingesting BIS Departmental Booklets into ChromaDB...")
+            ingest_booklets_into_chromadb()
+        except Exception as e:
+            print(f"Booklet ingestion notice: {e}")
+
+    # 4. Test ChromaDB Query with Metadata Filtering
+    print("\n[4/4] Testing ChromaDB query with metadata filter...")
     test_query_embedding = vectors[0].tolist() # Vector representation
     
     # Query with filter: is_mandatory == True
@@ -128,8 +138,9 @@ def store_data_in_chromadb():
         print(f"  {idx+1}. [Similarity: {similarity}] {meta['standard_number']} — {meta['title']} ({meta['product_category']})")
 
     print("\n" + "=" * 65)
-    print("  ChromaDB Vector Database Ingestion Successful!")
+    print("  ChromaDB Vector Database Ingestion & Verification Successful!")
     print("=" * 65)
 
 if __name__ == "__main__":
     store_data_in_chromadb()
+

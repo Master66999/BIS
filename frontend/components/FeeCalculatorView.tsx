@@ -113,35 +113,35 @@ const PRODUCT_PRESETS: ProductPreset[] = [
     baseAuditFee: 7000,
     labTestFee: 32000,
     annualFee: 1000,
-    minMarkingFee: 84000,
-    normalDays: "60-90 days",
+    minMarkingFee: 86000,
+    normalDays: "60-80 days",
     simplifiedDays: "30 days"
   },
   {
-    id: "laptop_tablet",
-    name: "Laptops, Notebooks & Tablets",
-    category: "Electronics (CRS)",
-    standard: "IS 13252 (Part 1)",
-    scheme: "crs",
-    baseAppFee: 1000,
-    baseAuditFee: 0,
-    labTestFee: 45000,
-    annualFee: 1000,
-    minMarkingFee: 0,
-    normalDays: "15-20 days",
-    simplifiedDays: "15 days"
-  },
-  {
-    id: "helmets",
-    name: "Protective Helmets for Two-Wheelers",
-    category: "Safety Equipment",
+    id: "helmet",
+    name: "Two-Wheeler Protective Helmet",
+    category: "Automotive Safety",
     standard: "IS 4151:2020",
     scheme: "scheme1_normal",
     baseAppFee: 1000,
     baseAuditFee: 7000,
     labTestFee: 22000,
     annualFee: 1000,
-    minMarkingFee: 45000,
+    minMarkingFee: 64000,
+    normalDays: "60-75 days",
+    simplifiedDays: "30 days"
+  },
+  {
+    id: "toys",
+    name: "Safety of Children Toys (Mechanical)",
+    category: "Consumer Goods",
+    standard: "IS 9873:Part 1:2019",
+    scheme: "scheme1_normal",
+    baseAppFee: 1000,
+    baseAuditFee: 7000,
+    labTestFee: 12000,
+    annualFee: 1000,
+    minMarkingFee: 38000,
     normalDays: "60-75 days",
     simplifiedDays: "30 days"
   }
@@ -151,45 +151,45 @@ interface EnterpriseType {
   id: string;
   name: string;
   discountPct: number;
-  description: string;
   badge: string;
+  description: string;
 }
 
 const ENTERPRISE_TYPES: EnterpriseType[] = [
   {
     id: "micro",
-    name: "Micro Enterprise",
-    discountPct: 20,
-    description: "Investment in P&M ≤ ₹1 Cr & Annual Turnover ≤ ₹5 Cr (Udyam Certificate required)",
-    badge: "20% Concession"
+    name: "Micro Enterprise (Udyam)",
+    discountPct: 50,
+    badge: "50% Fee Concession",
+    description: "Investment < ₹1 Cr & Turnover < ₹5 Cr. 50% concession on Application, Licence & Minimum Marking Fees."
   },
   {
     id: "startup",
     name: "DPIIT Recognized Startup",
-    discountPct: 20,
-    description: "Startup registered with DPIIT within 10 years of incorporation",
-    badge: "20% Concession"
+    discountPct: 50,
+    badge: "50% Startup Incentive",
+    description: "Recognized by DPIIT (under 10 years from incorporation). 50% fee concession under Startup India initiative."
+  },
+  {
+    id: "women_led",
+    name: "Women-Led MSME",
+    discountPct: 50,
+    badge: "50% + Fast-Track Priority",
+    description: "Enterprise with 51%+ shareholding by women entrepreneurs. Entitled to 50% fee concession and fast-track processing."
   },
   {
     id: "small",
     name: "Small Enterprise",
-    discountPct: 10,
-    description: "Investment in P&M ≤ ₹10 Cr & Annual Turnover ≤ ₹50 Cr",
-    badge: "10% Concession"
+    discountPct: 20,
+    badge: "20% Fee Concession",
+    description: "Investment < ₹10 Cr & Turnover < ₹50 Cr. 20% concession on standard BIS fees."
   },
   {
-    id: "women_ne",
-    name: "Women-led Unit / North Eastern Region",
-    discountPct: 50,
-    description: "Micro enterprises operated by women entrepreneurs or located in North Eastern Region",
-    badge: "50% Special Concession"
-  },
-  {
-    id: "medium_large",
+    id: "standard",
     name: "Medium / Large Enterprise",
     discountPct: 0,
-    description: "Standard statutory fees per Bureau of Indian Standards Regulations",
-    badge: "Standard Rates"
+    badge: "Standard Rates",
+    description: "Investment > ₹10 Cr or Turnover > ₹50 Cr. Standard statutory fees apply in full."
   }
 ];
 
@@ -218,10 +218,10 @@ export function FeeCalculatorView({ onAskAI }: FeeCalculatorViewProps) {
 
   // Discount applies to: Application Fee, Annual Licence Fee, Minimum Marking Fee
   const appFee = Math.round(rawAppFee * discountMultiplier);
-  const auditFee = rawAuditFee; // Inspection fee not discounted
+  const auditFee = rawAuditFee;
   const annualFee = Math.round(rawAnnualFee * discountMultiplier);
   const minMarkingFee = Math.round(rawMinMarkingFee * discountMultiplier);
-  const labFee = rawLabFee; // Lab testing paid to testing laboratory
+  const labFee = rawLabFee;
 
   const totalYearOne = appFee + auditFee + annualFee + minMarkingFee + labFee;
   const fullRateTotal = rawAppFee + rawAuditFee + rawAnnualFee + rawMinMarkingFee + rawLabFee;
@@ -246,322 +246,324 @@ export function FeeCalculatorView({ onAskAI }: FeeCalculatorViewProps) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="bg-amber-500/10 text-amber-700 dark:text-amber-300 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-amber-500/20">
-            Official BIS Fee Estimator
-          </span>
-          <span className="text-xs text-slate-500">
-            Per BIS Conformity Assessment Regulations, 2018
-          </span>
+    <div className="min-h-screen bg-slate-50 text-slate-800 py-8 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Header */}
+        <div className="border-b border-slate-200 pb-6">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-200 flex items-center gap-1.5 shadow-xs">
+              <Calculator className="w-3.5 h-3.5 text-blue-600" />
+              Official BIS Fee Estimator
+            </span>
+            <span className="text-xs text-slate-500 hidden sm:inline">
+              Per BIS Conformity Assessment Regulations, 2018
+            </span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            BIS Licence Cost & Timeline Calculator
+          </h1>
+          <p className="mt-1 text-xs sm:text-sm text-slate-600 max-w-3xl leading-relaxed">
+            Estimate statutory fees, testing expenses, and exact processing timelines for obtaining a BIS ISI Mark or CRS licence, with automatic MSME & Startup concession deductions.
+          </p>
         </div>
-        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          BIS Licence Cost & Timeline Calculator
-        </h1>
-        <p className="mt-2 text-base text-slate-600 dark:text-slate-300 max-w-3xl">
-          Estimate statutory fees, testing expenses, and exact processing timelines for obtaining a BIS ISI Mark or CRS licence, with automatic MSME & Startup concession deductions.
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Interactive Inputs */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* Card 1: Product Selection */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <label className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <Tag className="w-4 h-4 text-blue-600" />
-                1. Select Product Category
-              </label>
-              <span className="text-xs text-blue-600 dark:text-blue-400 font-semibold">
-                Applicable Standard: {product.standard}
-              </span>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Column: Interactive Inputs */}
+          <div className="lg:col-span-7 space-y-6">
+            
+            {/* Card 1: Product Selection */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <label className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-blue-600" />
+                  1. Select Product Category
+                </label>
+                <span className="text-xs text-blue-700 font-mono font-bold bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                  {product.standard}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {PRODUCT_PRESETS.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedProduct(p.id)}
+                    className={`text-left p-4 rounded-2xl border transition-all ${
+                      selectedProduct === p.id
+                        ? "border-blue-600 bg-blue-50/70 text-slate-900 ring-2 ring-blue-500/20 shadow-xs"
+                        : "border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="font-bold text-sm text-slate-900">{p.name}</div>
+                    <div className="flex items-center justify-between mt-1.5 text-xs text-slate-500">
+                      <span>{p.category}</span>
+                      <span className="font-mono text-[11px] font-bold text-blue-600">
+                        {p.standard}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {PRODUCT_PRESETS.map((p) => (
+            {/* Card 2: Enterprise Classification */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <label className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-emerald-600" />
+                  2. Enterprise Scale & Concession Category
+                </label>
+                <span className="text-xs bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full font-bold border border-emerald-200">
+                  {enterprise.badge}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {ENTERPRISE_TYPES.map((e) => (
+                  <div
+                    key={e.id}
+                    onClick={() => setEnterpriseType(e.id)}
+                    className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start justify-between gap-3 ${
+                      enterpriseType === e.id
+                        ? "border-emerald-600 bg-emerald-50/70 text-slate-900 ring-2 ring-emerald-500/20 shadow-xs"
+                        : "border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div>
+                      <div className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                        {e.name}
+                        {e.discountPct > 0 && (
+                          <span className="text-[10px] font-black bg-emerald-600 text-white px-2 py-0.5 rounded-full font-mono">
+                            {e.discountPct}% OFF
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                        {e.description}
+                      </p>
+                    </div>
+                    <div
+                      className={`w-4 h-4 rounded-full border mt-1 flex items-center justify-center shrink-0 ${
+                        enterpriseType === e.id
+                          ? "border-emerald-600 bg-emerald-600"
+                          : "border-slate-400"
+                      }`}
+                    >
+                      {enterpriseType === e.id && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Card 3: Procedure Option */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+              <label className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                <Clock className="w-4 h-4 text-blue-600" />
+                3. Certification Procedure & Timeline
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <button
-                  key={p.id}
-                  onClick={() => setSelectedProduct(p.id)}
-                  className={`text-left p-3.5 rounded-xl border transition-all ${
-                    selectedProduct === p.id
-                      ? "border-blue-600 bg-blue-50/60 dark:bg-blue-950/40 text-blue-900 dark:text-blue-200 ring-2 ring-blue-500/20"
-                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/40 dark:bg-slate-800/40"
+                  type="button"
+                  onClick={() => setProcedureOption("option2_simplified")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    procedureOption === "option2_simplified"
+                      ? "border-blue-600 bg-blue-50/70 text-slate-900 ring-2 ring-blue-500/20 shadow-xs"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
                   }`}
                 >
-                  <div className="font-semibold text-sm">{p.name}</div>
-                  <div className="flex items-center justify-between mt-1 text-xs text-slate-500 dark:text-slate-400">
-                    <span>{p.category}</span>
-                    <span className="font-mono text-[11px] font-medium text-slate-700 dark:text-slate-300">
-                      {p.standard}
-                    </span>
+                  <div className="font-extrabold text-xs uppercase text-blue-700">
+                    Recommended
+                  </div>
+                  <div className="font-bold text-sm text-slate-900 mt-1">
+                    Option 2 (Simplified)
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">
+                    Licence within <strong className="text-slate-900">30 days</strong> with pre-test report.
                   </div>
                 </button>
-              ))}
+
+                <button
+                  type="button"
+                  onClick={() => setProcedureOption("option1_normal")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    procedureOption === "option1_normal"
+                      ? "border-blue-600 bg-blue-50/70 text-slate-900 ring-2 ring-blue-500/20 shadow-xs"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                  }`}
+                >
+                  <div className="font-bold text-xs uppercase text-slate-500">
+                    Standard
+                  </div>
+                  <div className="font-bold text-sm text-slate-900 mt-1">
+                    Option 1 (Normal)
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">
+                    Preliminary factory inspection first (<strong className="text-slate-900">60-90 days</strong>).
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setProcedureOption("fmcs")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    procedureOption === "fmcs"
+                      ? "border-blue-600 bg-blue-50/70 text-slate-900 ring-2 ring-blue-500/20 shadow-xs"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:border-slate-300"
+                  }`}
+                >
+                  <div className="font-bold text-xs uppercase text-slate-500">
+                    Overseas
+                  </div>
+                  <div className="font-bold text-sm text-slate-900 mt-1">
+                    FMCS (Foreign Unit)
+                  </div>
+                  <div className="text-xs text-slate-600 mt-1">
+                    AIR mandatory, foreign plant audit (<strong className="text-slate-900">3-6 months</strong>).
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Card 2: Enterprise Classification */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-emerald-600" />
-                2. Enterprise Scale & Concession Category
-              </label>
-              <span className="text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium border border-emerald-500/20">
-                {enterprise.badge}
-              </span>
-            </div>
-
-            <div className="space-y-2.5">
-              {ENTERPRISE_TYPES.map((e) => (
-                <div
-                  key={e.id}
-                  onClick={() => setEnterpriseType(e.id)}
-                  className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-start justify-between gap-3 ${
-                    enterpriseType === e.id
-                      ? "border-emerald-600 bg-emerald-50/60 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-100 ring-2 ring-emerald-500/20"
-                      : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/40 dark:bg-slate-800/40"
-                  }`}
-                >
+          {/* Right Column: Cost Breakdown & Timeline Card */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white text-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 relative overflow-hidden">
+              <div className="relative z-10">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
                   <div>
-                    <div className="font-semibold text-sm flex items-center gap-2">
-                      {e.name}
-                      {e.discountPct > 0 && (
-                        <span className="text-[10px] font-bold bg-emerald-500 text-white px-2 py-0.5 rounded-full">
-                          {e.discountPct}% OFF
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-mono">
+                      Statutory Fee Estimate (Year 1)
+                    </span>
+                    <h3 className="text-3xl font-black text-blue-700 mt-1 font-mono">
+                      ₹{totalYearOne.toLocaleString("en-IN")}
+                    </h3>
+                  </div>
+
+                  {totalSavings > 0 && (
+                    <div className="text-right">
+                      <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200 flex items-center gap-1 font-mono">
+                        <TrendingDown className="w-3.5 h-3.5" /> Save ₹
+                        {totalSavings.toLocaleString("en-IN")}
+                      </span>
+                      <span className="text-[11px] text-emerald-800 font-semibold block mt-1">
+                        {enterprise.name} Concession
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Breakdown List */}
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Application Fee:</span>
+                    <div className="text-right">
+                      <span className="font-bold text-slate-900 font-mono">
+                        ₹{appFee.toLocaleString("en-IN")}
+                      </span>
+                      {rawAppFee > appFee && (
+                        <span className="line-through text-xs text-slate-400 ml-2 font-mono">
+                          ₹{rawAppFee}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      {e.description}
-                    </p>
                   </div>
-                  <div
-                    className={`w-4 h-4 rounded-full border mt-1 flex items-center justify-center ${
-                      enterpriseType === e.id
-                        ? "border-emerald-600 bg-emerald-600"
-                        : "border-slate-300 dark:border-slate-600"
-                    }`}
+
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Preliminary Audit / Inspection:</span>
+                    <span className="font-bold text-slate-900 font-mono">
+                      ₹{auditFee.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Independent Lab Testing (Est.):</span>
+                    <span className="font-bold text-slate-900 font-mono">
+                      ₹{labFee.toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Annual Licence Fee:</span>
+                    <div className="text-right">
+                      <span className="font-bold text-slate-900 font-mono">
+                        ₹{annualFee.toLocaleString("en-IN")}
+                      </span>
+                      {rawAnnualFee > annualFee && (
+                        <span className="line-through text-xs text-slate-400 ml-2 font-mono">
+                          ₹{rawAnnualFee}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-slate-700">
+                    <span>Minimum Marking Fee (Year 1):</span>
+                    <div className="text-right">
+                      <span className="font-bold text-slate-900 font-mono">
+                        ₹{minMarkingFee.toLocaleString("en-IN")}
+                      </span>
+                      {rawMinMarkingFee > minMarkingFee && (
+                        <span className="line-through text-xs text-slate-400 ml-2 font-mono">
+                          ₹{rawMinMarkingFee.toLocaleString("en-IN")}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Timeline Strip */}
+                <div className="mt-6 pt-4 border-t border-slate-100 bg-slate-50 -mx-6 -mb-6 p-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase font-bold text-blue-700 tracking-wider font-mono">
+                        Statutory Turnaround
+                      </div>
+                      <div className="text-base font-bold text-slate-900">
+                        {estimatedTimeline}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Consult AI Button */}
+                  <button
+                    type="button"
+                    onClick={handleConsultAI}
+                    className="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-3.5 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 group active:scale-95"
                   >
-                    {enterpriseType === e.id && (
-                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Card 3: Procedure Option */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
-            <label className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2 mb-3">
-              <Clock className="w-4 h-4 text-purple-600" />
-              3. Certification Procedure & Timeline
-            </label>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <button
-                type="button"
-                onClick={() => setProcedureOption("option2_simplified")}
-                className={`p-3.5 rounded-xl border text-left transition-all ${
-                  procedureOption === "option2_simplified"
-                    ? "border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 text-purple-950 dark:text-purple-100 ring-2 ring-purple-500/20"
-                    : "border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/40"
-                }`}
-              >
-                <div className="font-bold text-xs uppercase text-purple-600 dark:text-purple-400">
-                  Recommended
-                </div>
-                <div className="font-semibold text-sm mt-0.5">
-                  Option 2 (Simplified)
-                </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Licence within <strong>30 days</strong> with pre-test report.
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setProcedureOption("option1_normal")}
-                className={`p-3.5 rounded-xl border text-left transition-all ${
-                  procedureOption === "option1_normal"
-                    ? "border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 text-purple-950 dark:text-purple-100 ring-2 ring-purple-500/20"
-                    : "border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/40"
-                }`}
-              >
-                <div className="font-bold text-xs uppercase text-slate-400">
-                  Standard
-                </div>
-                <div className="font-semibold text-sm mt-0.5">
-                  Option 1 (Normal)
-                </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Preliminary factory inspection first (<strong>60-90 days</strong>).
-                </div>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setProcedureOption("fmcs")}
-                className={`p-3.5 rounded-xl border text-left transition-all ${
-                  procedureOption === "fmcs"
-                    ? "border-purple-600 bg-purple-50/60 dark:bg-purple-950/40 text-purple-950 dark:text-purple-100 ring-2 ring-purple-500/20"
-                    : "border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-800/40"
-                }`}
-              >
-                <div className="font-bold text-xs uppercase text-slate-400">
-                  Overseas
-                </div>
-                <div className="font-semibold text-sm mt-0.5">
-                  FMCS (Foreign Unit)
-                </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  AIR mandatory, foreign plant audit (<strong>3-6 months</strong>).
-                </div>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: Cost Breakdown & Timeline Card */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="bg-gradient-to-br from-[#0B2545] to-[#133E68] text-white rounded-lg p-6 shadow-xl border border-[#163E6E] relative overflow-hidden">
-            {/* Background glow */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -z-0 pointer-events-none" />
-
-            <div className="relative z-10">
-              <div className="flex items-center justify-between border-b border-blue-400/20 pb-4 mb-4">
-                <div>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-blue-300">
-                    Statutory Fee Estimate (Year 1)
-                  </span>
-                  <h3 className="text-2xl font-black text-white mt-1">
-                    ₹{totalYearOne.toLocaleString("en-IN")}
-                  </h3>
-                </div>
-
-                {totalSavings > 0 && (
-                  <div className="text-right">
-                    <span className="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1">
-                      <TrendingDown className="w-3.5 h-3.5" /> Save ₹
-                      {totalSavings.toLocaleString("en-IN")}
-                    </span>
-                    <span className="text-[11px] text-blue-200 block mt-1">
-                      {enterprise.name} Concession
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Breakdown List */}
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between text-blue-100">
-                  <span>Application Fee:</span>
-                  <div className="text-right">
-                    <span className="font-semibold text-white">
-                      ₹{appFee.toLocaleString("en-IN")}
-                    </span>
-                    {rawAppFee > appFee && (
-                      <span className="line-through text-xs text-blue-300 ml-2">
-                        ₹{rawAppFee}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-blue-100">
-                  <span>Preliminary Audit / Inspection:</span>
-                  <span className="font-semibold text-white">
-                    ₹{auditFee.toLocaleString("en-IN")}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between text-blue-100">
-                  <span>Independent Lab Testing (Est.):</span>
-                  <span className="font-semibold text-white">
-                    ₹{labFee.toLocaleString("en-IN")}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between text-blue-100">
-                  <span>Annual Licence Fee:</span>
-                  <div className="text-right">
-                    <span className="font-semibold text-white">
-                      ₹{annualFee.toLocaleString("en-IN")}
-                    </span>
-                    {rawAnnualFee > annualFee && (
-                      <span className="line-through text-xs text-blue-300 ml-2">
-                        ₹{rawAnnualFee}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-blue-100">
-                  <span>Minimum Marking Fee (Year 1):</span>
-                  <div className="text-right">
-                    <span className="font-semibold text-white">
-                      ₹{minMarkingFee.toLocaleString("en-IN")}
-                    </span>
-                    {rawMinMarkingFee > minMarkingFee && (
-                      <span className="line-through text-xs text-blue-300 ml-2">
-                        ₹{rawMinMarkingFee.toLocaleString("en-IN")}
-                      </span>
-                    )}
-                  </div>
+                    <Sparkles className="w-4 h-4" />
+                    Ask AI to Prepare Audit Checklist
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
               </div>
+            </div>
 
-              {/* Timeline Strip */}
-              <div className="mt-6 pt-4 border-t border-blue-400/20 bg-blue-900/30 -mx-6 -mb-6 p-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/30 flex items-center justify-center text-amber-300">
-                    <Clock className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="text-xs uppercase font-bold text-amber-300 tracking-wider">
-                      Statutory Turnaround
-                    </div>
-                    <div className="text-base font-bold text-white">
-                      {estimatedTimeline}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Consult AI Button */}
-                <button
-                  type="button"
-                  onClick={handleConsultAI}
-                  className="mt-4 w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold py-3 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 group"
-                >
-                  <Sparkles className="w-4 h-4 text-slate-950" />
-                  Ask AI to Prepare Audit Checklist
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
+            {/* Guidelines Box */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 text-xs text-slate-600 space-y-2.5 shadow-sm">
+              <div className="font-bold text-slate-900 flex items-center gap-2 text-sm">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                BIS Licensing Rules & Notes
               </div>
+              <ul className="list-disc list-inside space-y-1.5 pl-1 text-slate-600">
+                <li>
+                  <strong className="text-slate-800">GST Notice:</strong> All BIS fees are subject to 18% GST payable at time of Manakonline submission.
+                </li>
+                <li>
+                  <strong className="text-slate-800">Concession Eligibility:</strong> Valid Udyam Registration Certificate is mandatory to claim MSME concession benefits.
+                </li>
+                <li>
+                  <strong className="text-slate-800">Testing Charges:</strong> Testing charges vary depending on whether testing is conducted at BIS Central Laboratory (Sahibabad) or recognized external NABL labs.
+                </li>
+              </ul>
             </div>
-          </div>
-
-          {/* Guidelines Box */}
-          <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 text-xs text-slate-600 dark:text-slate-400 space-y-2">
-            <div className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 text-sm">
-              <ShieldCheck className="w-4 h-4 text-blue-600" />
-              BIS Licensing Rules & Notes
-            </div>
-            <ul className="list-disc list-inside space-y-1 pl-1">
-              <li>
-                <strong>GST Notice:</strong> All BIS fees are subject to 18% GST payable at time of Manakonline submission.
-              </li>
-              <li>
-                <strong>Concession Eligibility:</strong> Valid Udyam Registration Certificate is mandatory to claim MSME concession benefits.
-              </li>
-              <li>
-                <strong>Testing Charges:</strong> Testing charges vary depending on whether testing is conducted at BIS Central Laboratory (Sahibabad) or recognized external NABL labs.
-              </li>
-            </ul>
           </div>
         </div>
       </div>

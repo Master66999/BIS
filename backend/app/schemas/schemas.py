@@ -43,8 +43,13 @@ class SourceCitation(BaseModel):
     clause: Optional[str] = None
     sub_clause: Optional[str] = None
     page: Optional[int] = None
+    booklet_name: Optional[str] = None
+    department: Optional[str] = None
+    source_type: Optional[str] = "standard"  # 'standard', 'clause', 'booklet', 'catalog'
     source_url: Optional[str] = None
     relevance_score: Optional[float] = None
+    rerank_score: Optional[float] = None
+    final_score: Optional[float] = None
     evidence_snippet: Optional[str] = None
 
 class ExplainabilityData(BaseModel):
@@ -52,11 +57,15 @@ class ExplainabilityData(BaseModel):
     detected_entities: Dict[str, Any] = {}
     query_language: str = "en"
     retrieved_documents_count: int = 0
-    confidence_level: str = "High" # "High", "Medium", "Low"
+    confidence_level: str = "High" # "VERY_HIGH", "High", "Medium", "Low"
     confidence_score: float = 0.85
-    search_strategy: str = "Hybrid (Semantic + Keyword + Reranker)"
+    search_strategy: str = "Hybrid (BM25 + Dense Vector + Cross-Encoder Reranker)"
     reasoning_summary: Optional[str] = None
     rl_action: Optional[Dict[str, Any]] = None
+    timing_ms: Optional[Dict[str, float]] = None
+    confidence_breakdown: Optional[Dict[str, Any]] = None
+    reranker_applied: bool = True
+
 
 class ChatRequest(BaseModel):
     message: str

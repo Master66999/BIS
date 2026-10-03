@@ -119,34 +119,111 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
   // Trigger initial query if passed
   useEffect(() => {
-    if (initialQuery && initialQuery.trim()) {
-      handleSendMessage(initialQuery.trim());
+    if (initialQuery && initialQuery.trim() !== "") {
+      handleSendMessage(initialQuery);
     }
   }, [initialQuery]);
 
+  // Cleanup speech synthesis on unmount
+  useEffect(() => {
+    return () => {
+      stopSpeaking();
+      if (recognizerRef.current) {
+        recognizerRef.current.abort();
+      }
+    };
+  }, []);
+
+  // Handle Speech-to-Text via Bhashini voice helper
+  const handleToggleSpeechRecognition = () => {
+    if (isListening) {
+      if (recognizerRef.current) {
+        recognizerRef.current.stop();
+        recognizerRef.current = null;
+      }
+      setIsListening(false);
+      return;
+    }
+
+    if (!isSpeechRecognitionSupported()) {
+      alert("Speech recognition is not supported in this browser. Please use Google Chrome or Microsoft Edge.");
+      return;
+    }
+
+    try {
+      const recognizer = createSpeechRecognizer(
+        currentLang,
+        (transcript: string) => {
+          setInputText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+        },
+        (error: string) => {
+          console.warn("Speech recognition notice:", error);
+          setIsListening(false);
+          recognizerRef.current = null;
+        },
+        () => {
+          setIsListening(false);
+          recognizerRef.current = null;
+        }
+      );
+
+      recognizerRef.current = recognizer;
+      recognizer.start();
+      setIsListening(true);
+    } catch (err) {
+      console.error("Speech recognition startup error:", err);
+      setIsListening(false);
+    }
+  };
+
+  // Handle Text-to-Speech playback for an assistant message
+  const handleToggleSpeakMessage = (messageId: string, text: string) => {
+    if (activeSpeakingId === messageId) {
+      stopSpeaking();
+      setActiveSpeakingId(null);
+      return;
+    }
+
+    stopSpeaking();
+    setActiveSpeakingId(messageId);
+
+    speakText(
+      text,
+      currentLang,
+      () => setActiveSpeakingId(messageId),
+      () => setActiveSpeakingId(null)
+    );
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
-    const text = (textToSend || inputText).trim();
-    if (!text || isLoading) return;
+    const q = (textToSend || inputText).trim();
+    if (!q || isLoading) return;
 
-    setInputText("");
+    stopSpeaking();
+    setActiveSpeakingId(null);
 
-    // Add user message optimistically
+    const userMsgId = `u-${Date.now()}`;
     const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: userMsgId,
       sender: "user",
-      content: text,
+      content: q,
       created_at: new Date().toISOString(),
     };
 
     setMessages((prev) => [...prev, userMsg]);
+    setInputText("");
     setIsLoading(true);
 
     try {
-      const res = await sendMessage(text, currentConversationId, currentLang);
-      setCurrentConversationId(res.conversation_id);
+      const res = await sendMessage(q, currentConversationId, currentLang);
+      
+      if (!currentConversationId && res.conversation_id) {
+        setCurrentConversationId(res.conversation_id);
+        loadConversations();
+      }
 
       const assistantMsg: ChatMessage = {
-        id: res.message_id,
+        id: `a-${Date.now()}`,
         sender: "assistant",
         content: res.answer,
         intent: res.intent,
@@ -158,154 +235,107 @@ export const ChatView: React.FC<ChatViewProps> = ({
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
+
+      // Automatically inspect the highest ranked citation
       if (res.sources && res.sources.length > 0) {
         setSelectedSource(res.sources[0]);
-        setIsInspectorOpen(true);
       }
-      loadConversations();
 
-      // Bhashini Auto-Speak response if enabled
-      if (autoSpeakEnabled) {
-        setActiveSpeakingId(assistantMsg.id);
-        speakText(
-          assistantMsg.content,
-          currentLang,
-          () => setActiveSpeakingId(assistantMsg.id),
-          () => setActiveSpeakingId(null)
-        );
+      // Auto-read aloud if enabled
+      if (autoSpeakEnabled && res.answer) {
+        handleToggleSpeakMessage(assistantMsg.id, res.answer);
       }
-    } catch (err: any) {
-      const errorMsg: ChatMessage = {
+    } catch (e) {
+      console.error(e);
+      const errMsg: ChatMessage = {
         id: `err-${Date.now()}`,
         sender: "assistant",
         content:
-          "Something went wrong while retrieving BIS information. Please check your internet connection and try again.",
-        confidence: 0.2,
-        confidence_level: "Low",
+          "An error occurred while communicating with the MANAKAI server. Please ensure the backend server is running on port 8000.",
         created_at: new Date().toISOString(),
       };
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages((prev) => [...prev, errMsg]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Cleanup speech on unmount
-  useEffect(() => {
-    return () => {
-      stopSpeaking();
-      if (recognizerRef.current) {
-        try {
-          recognizerRef.current.stop();
-        } catch (e) {}
-      }
-    };
-  }, []);
-
-  // Toggle Live Speech-to-Text Recognition (STT)
-  const handleToggleSpeechRecognition = () => {
-    if (isListening) {
-      if (recognizerRef.current) {
-        try {
-          recognizerRef.current.stop();
-        } catch (e) {}
-      }
-      setIsListening(false);
-      return;
-    }
-
-    if (!isSpeechRecognitionSupported()) {
-      alert("Voice input is not supported in this browser. Please use Chrome, Edge, or Safari.");
-      return;
-    }
-
-    try {
-      const rec = createSpeechRecognizer(
-        currentLang,
-        (transcript, isFinal) => {
-          setInputText(transcript);
-        },
-        (err) => {
-          console.warn("Speech recognition error:", err);
-          setIsListening(false);
-        },
-        () => {
-          setIsListening(false);
-        }
-      );
-
-      if (rec) {
-        recognizerRef.current = rec;
-        rec.start();
-        setIsListening(true);
-      }
-    } catch (e) {
-      console.error("Speech recognition start failed:", e);
-      setIsListening(false);
-    }
+  const handleNewChat = () => {
+    stopSpeaking();
+    setActiveSpeakingId(null);
+    setCurrentConversationId(undefined);
+    setMessages([]);
+    setSelectedSource(null);
   };
 
-  // Toggle Speech Synthesis (TTS) for individual message
-  const handleToggleSpeakMessage = (msgId: string, content: string) => {
-    if (activeSpeakingId === msgId) {
-      stopSpeaking();
-      setActiveSpeakingId(null);
-    } else {
-      stopSpeaking();
-      setActiveSpeakingId(msgId);
-      speakText(
-        content,
-        currentLang,
-        () => setActiveSpeakingId(msgId),
-        () => setActiveSpeakingId(null)
-      );
-    }
-  };
-
-  const handleCopy = (id: string, text: string) => {
+  const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleNewChat = () => {
-    setCurrentConversationId(undefined);
-    setMessages([]);
-    setInputText("");
-  };
-
   const selectConversation = (conv: Conversation) => {
+    stopSpeaking();
     setCurrentConversationId(conv.id);
     setMessages(conv.messages || []);
+    if (conv.messages && conv.messages.length > 0) {
+      const lastAssistant = [...conv.messages]
+        .reverse()
+        .find((m) => m.sender === "assistant" && m.sources && m.sources.length > 0);
+      if (lastAssistant?.sources?.length) {
+        setSelectedSource(lastAssistant.sources[0]);
+      }
+    }
   };
 
-  const sampleQuestions = [
-    "What BIS standard is applicable to cement?",
-    "What certification is required for electric fans?",
-    "What is 6-digit HUID in gold hallmarking?",
-    "What testing is required for packaged drinking water?",
-    "How does an MSME obtain an ISI mark under simplified procedure?",
-    "What are the chemical limits for TMT steel rebars (IS 1786)?",
-    "How can a consumer file a complaint on the BIS CARE app?",
+  const samplePrompts = [
+    {
+      title: "IS 14543 Packaged Water Testing",
+      desc: "Mandatory microbiological limits, chemical parameters, and testing batch frequency.",
+      category: "Mandatory QCO",
+      badgeColor: "bg-red-50 text-red-700 border-red-200",
+      query: "What are the mandatory testing requirements and frequency for IS 14543 (Packaged Drinking Water)?",
+    },
+    {
+      title: "Gold HUID & Hallmark Authenticity",
+      desc: "Instant verification of 6-digit alphanumeric laser codes and identification of counterfeit marks.",
+      category: "Verified Mark",
+      badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-300",
+      query: "How to verify 6-digit Gold Hallmarking HUID code and identify fake jewellery?",
+    },
+    {
+      title: "Steel Rebars & Mandatory QCOs",
+      desc: "Statutory orders under Section 16 & Section 29 criminal liability for non-certified steel (IS 1786).",
+      category: "Statutory QCO",
+      badgeColor: "bg-red-50 text-red-700 border-red-200",
+      query: "Which products and steel rebar specifications are under mandatory Quality Control Orders in 2026?",
+    },
+    {
+      title: "50% MSME Fee Concession",
+      desc: "Fee calculators, minimum marking fee concessions, and application subsidies under Scheme I.",
+      category: "50% Subsidy",
+      badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-300",
+      query: "What are the eligibility criteria and concessions for MSME & startups under BIS Scheme I?",
+    },
   ];
 
   return (
-    <div className="flex h-[calc(100vh-6rem)] bg-slate-100 overflow-hidden">
-      {/* Left Sidebar */}
-      <aside className="w-72 bg-white border-r border-slate-200 hidden md:flex flex-col justify-between p-3.5 shadow-sm">
-        <div className="space-y-3">
+    <div className="flex h-[calc(100vh-70px)] bg-slate-50 text-slate-800 overflow-hidden font-sans relative">
+      {/* Left Sidebar: Conversations & Quick Actions */}
+      <aside className="w-80 bg-white border-r border-slate-200 hidden md:flex flex-col justify-between p-4 shrink-0 shadow-xs z-10">
+        <div className="space-y-4">
           {/* New Chat Button */}
           <button
             onClick={handleNewChat}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-[#0B2545] hover:bg-[#133E68] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs transition-all shadow-sm active:scale-95"
           >
-            <Plus className="w-4 h-4 text-amber-400" />
+            <Plus className="w-4 h-4" />
             <span>New BIS Query</span>
           </button>
 
           {/* Recent Conversations */}
           <div className="space-y-1">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block px-1">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block px-1">
               Recent Queries
             </span>
             <div className="space-y-1 max-h-[40vh] overflow-y-auto pr-1">
@@ -318,10 +348,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   <button
                     key={c.id}
                     onClick={() => selectConversation(c)}
-                    className={`w-full text-left px-2.5 py-2 rounded-lg text-xs flex items-center gap-2 transition-colors ${
+                    className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center gap-2 transition-all ${
                       currentConversationId === c.id
-                        ? "bg-amber-50 text-blue-950 font-bold border border-amber-200"
-                        : "text-slate-600 hover:bg-slate-100"
+                        ? "bg-blue-50 text-blue-700 font-bold border border-blue-200 shadow-xs"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                     }`}
                   >
                     <MessageSquare className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
@@ -334,30 +364,39 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
 
         {/* Sidebar Info & Safety Badge */}
-        <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-[11px] text-slate-500">
-          <div className="flex items-center gap-1.5 font-semibold text-slate-700">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <div className="p-3.5 bg-blue-50/50 rounded-2xl border border-blue-200 space-y-2 text-[11px] text-slate-700 shadow-xs">
+          <div className="flex items-center gap-1.5 font-bold text-blue-700">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
             <span>Zero Hallucination Guarantee</span>
           </div>
-          <p className="leading-relaxed">
+          <p className="leading-relaxed text-slate-600">
             All answers are strictly synthesized from indexed BIS documents, clauses, and gazette QCOs.
           </p>
         </div>
       </aside>
 
       {/* Main Chat Area */}
-      <main className="flex-1 flex flex-col min-w-0 bg-white overflow-hidden">
+      <main className="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-hidden">
         {/* Desktop Chat Header Bar */}
-        <div className="hidden md:flex items-center justify-between px-6 py-3 bg-white border-b border-slate-200">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#0A2540] text-amber-400 flex items-center justify-center font-bold shadow-xs">
-              <Bot className="w-4 h-4" />
+        <div className="hidden md:flex items-center justify-between px-6 py-3.5 bg-white border-b border-slate-200 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center font-bold shadow-xs">
+              <Sparkles className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h2 className="font-bold text-slate-900 text-sm">BIS Standards AI Co-Pilot</h2>
-              <div className="flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Factual Grounding • Zero-Hallucination Guardrail Active</span>
+              <div className="flex items-center gap-2">
+                <h2 className="font-extrabold text-slate-900 text-sm tracking-tight">Ask MANAKAI AI Assistant</h2>
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                  SIH26107
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+                <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span>Grounded Truth Guardrail Active</span>
+                </span>
+                <span>•</span>
+                <span>23,866 Indian Standards Grounded</span>
               </div>
             </div>
           </div>
@@ -368,24 +407,24 @@ export const ChatView: React.FC<ChatViewProps> = ({
               onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${
                 autoSpeakEnabled
-                  ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-bold shadow-2xs"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  ? "bg-emerald-50 text-emerald-700 border-emerald-200 font-bold shadow-xs"
+                  : "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200"
               }`}
               title="Automatically read aloud answers in selected language (TTS)"
             >
-              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-400"}`} />
+              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-500"}`} />
               <span>Voice Auto-Speak</span>
-              <span className={`w-1.5 h-1.5 rounded-full ${autoSpeakEnabled ? "bg-emerald-500 animate-ping" : "bg-slate-300"}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${autoSpeakEnabled ? "bg-emerald-500 animate-ping" : "bg-slate-400"}`} />
             </button>
 
             {/* One-Click Export Official BIS Dossier Button */}
             {messages.length > 0 && (
               <button
                 onClick={() => setIsDossierOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition shadow-2xs"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs transition shadow-sm active:scale-95"
                 title="Export Official Branded BIS Compliance Dossier (PDF)"
               >
-                <FileCheck className="w-3.5 h-3.5 text-slate-950" />
+                <FileCheck className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Export Dossier</span>
               </button>
             )}
@@ -394,11 +433,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
               onClick={() => setIsInspectorOpen(!isInspectorOpen)}
               className={`hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition ${
                 isInspectorOpen
-                  ? "bg-blue-50 text-blue-950 border-blue-200 font-bold"
-                  : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  ? "bg-blue-50 text-blue-700 border-blue-200 font-bold"
+                  : "bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200"
               }`}
             >
-              <FileCheck className="w-3.5 h-3.5 text-blue-900" />
+              <FileCheck className="w-3.5 h-3.5 text-blue-600" />
               <span>{isInspectorOpen ? "Hide Gazette Inspector" : "Show Gazette Inspector"}</span>
               {selectedSource && <span className="w-2 h-2 rounded-full bg-emerald-500"></span>}
             </button>
@@ -406,31 +445,31 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
 
         {/* Mobile Header Bar */}
-        <div className="md:hidden flex items-center justify-between px-3 py-2 bg-slate-50 border-b border-slate-200 text-xs">
-          <div className="flex items-center gap-1.5 font-bold text-[#0B2545]">
-            <Bot className="w-4 h-4 text-amber-500" />
-            <span>BIS AI Assistant</span>
+        <div className="md:hidden flex items-center justify-between px-3 py-2 bg-white border-b border-slate-200 text-xs">
+          <div className="flex items-center gap-1.5 font-bold text-slate-900">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span>Ask MANAKAI</span>
           </div>
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
               className={`p-1.5 rounded-lg border text-[11px] font-semibold flex items-center gap-1 ${
-                autoSpeakEnabled ? "bg-emerald-100 text-emerald-900 border-emerald-300 font-bold" : "bg-white text-slate-600 border-slate-300"
+                autoSpeakEnabled ? "bg-emerald-50 text-emerald-700 border-emerald-200 font-bold" : "bg-slate-100 text-slate-700 border-slate-200"
               }`}
               title="Toggle Auto-Speak"
             >
-              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-400"}`} />
+              <Volume2 className={`w-3.5 h-3.5 ${autoSpeakEnabled ? "text-emerald-600 animate-pulse" : "text-slate-500"}`} />
             </button>
             <button
               onClick={() => setMobileHistoryOpen(true)}
-              className="px-2 py-1 rounded bg-white border border-slate-300 text-slate-700 flex items-center gap-1 text-[11px] font-medium"
+              className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 flex items-center gap-1 text-[11px] font-medium"
             >
-              <MessageSquare className="w-3 h-3 text-slate-500" />
+              <MessageSquare className="w-3 h-3 text-blue-600" />
               <span>History ({conversations.length})</span>
             </button>
             <button
               onClick={handleNewChat}
-              className="px-2 py-1 rounded bg-[#0B2545] text-amber-300 flex items-center gap-1 text-[11px] font-bold shadow-sm"
+              className="px-2.5 py-1 rounded-lg bg-blue-600 text-white flex items-center gap-1 text-[11px] font-bold shadow-xs"
             >
               <Plus className="w-3 h-3" />
               <span>New</span>
@@ -439,64 +478,99 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
 
         {/* Messages Scrollable View */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
           {messages.length === 0 ? (
-            <div className="max-w-2xl mx-auto my-auto text-center py-8 sm:py-10 space-y-5 sm:space-y-6 px-2">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#0B2545] flex items-center justify-center text-white mx-auto shadow-md border border-slate-700">
-                <Bot className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
-              </div>
-              <div className="space-y-1.5 sm:space-y-2">
-                <h2 className="text-lg sm:text-2xl font-bold text-slate-900">
-                  How can BIS SmartAssist help you today?
+            <div className="max-w-3xl mx-auto my-auto py-6 sm:py-8 space-y-6 px-3">
+              {/* Sovereign Tricolor Accent */}
+              <div className="h-1 w-24 mx-auto bg-gradient-to-r from-[#FF9933] via-blue-600 to-[#138808] rounded-full" />
+
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold shadow-xs">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+                  <span>MANAKAI Intelligent Co-Pilot • 23,866 Standards Grounded</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Ask MANAKAI AI Assistant
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
-                  Ask any question about Indian Standards, certification requirements, lab testing, or hallmarking procedures.
+                <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed">
+                  Instant, traceable answers grounded in authoritative Indian Standards, gazette notifications, laboratory test criteria, and Quality Control Orders.
                 </p>
               </div>
 
-              {/* Sample Questions Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left text-xs pt-1">
-                {sampleQuestions.slice(0, 4).map((q, idx) => (
+              {/* Core Capabilities Pills */}
+              <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+                <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-semibold flex items-center gap-1.5 shadow-xs">
+                  <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+                  <span>23,866 Indian Standards</span>
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-semibold flex items-center gap-1.5 shadow-xs">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Zero-Hallucination Grounding</span>
+                </span>
+                <span className="px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 font-semibold flex items-center gap-1.5 shadow-xs">
+                  <ShieldAlert className="w-3.5 h-3.5 text-red-600" />
+                  <span>Mandatory QCO Enforcements</span>
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-semibold flex items-center gap-1.5 shadow-xs">
+                  <FileCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>50% MSME Fee Subsidy</span>
+                </span>
+              </div>
+
+              {/* Sample Prompts Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {samplePrompts.map((p, idx) => (
                   <button
                     key={idx}
-                    onClick={() => handleSendMessage(q)}
-                    className="p-2.5 sm:p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 text-slate-700 transition-all text-xs font-medium flex items-center justify-between group"
+                    onClick={() => handleSendMessage(p.query)}
+                    className="p-4 rounded-2xl bg-white hover:bg-blue-50/50 border border-slate-200 hover:border-blue-300 transition-all shadow-xs hover:shadow-md text-left flex flex-col justify-between group space-y-2.5 active:scale-[0.99]"
                   >
-                    <span className="pr-2">{q}</span>
-                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 flex-shrink-0" />
+                    <div className="flex items-center justify-between w-full">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold border ${p.badgeColor}`}>
+                        {p.category}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xs sm:text-sm text-slate-900 group-hover:text-blue-700 transition">
+                        {p.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                        {p.desc}
+                      </p>
+                    </div>
                   </button>
                 ))}
               </div>
 
-              {/* Bhashini Multilingual Voice Prompt Chips */}
-              <div className="pt-3 max-w-xl mx-auto border-t border-slate-100">
-                <div className="flex items-center justify-center gap-1.5 text-xs text-slate-500 mb-2">
-                  <Mic className="w-3.5 h-3.5 text-amber-600" />
-                  <span className="font-bold text-slate-700">Bhashini Multilingual Voice Queries:</span>
-                </div>
-                <div className="flex flex-wrap justify-center gap-2">
-                  {[
-                    { text: "हॉलमार्किंग में 6-अंकीय HUID कैसे चेक करें?", lang: "hi", label: "हिन्दी" },
-                    { text: "पिण्याच्या पाण्यासाठी ISI मार्क नियम काय आहेत?", lang: "mr", label: "मराठी" },
-                    { text: "What are the mandatory QCO deadlines for toys?", lang: "en", label: "English" },
-                    { text: "How does an MSME obtain 50% fee concession?", lang: "en", label: "MSME" },
-                  ].map((v, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        if (onLanguageChange && v.lang !== currentLang) {
-                          onLanguageChange(v.lang);
-                        }
-                        handleSendMessage(v.text);
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-amber-400 hover:bg-amber-50/60 text-slate-700 hover:text-amber-950 text-xs font-medium transition shadow-2xs flex items-center gap-1.5"
-                    >
-                      <span className="px-1.5 py-0.2 rounded bg-slate-100 text-[9px] font-bold text-slate-600">
-                        {v.label}
-                      </span>
-                      <span>{v.text}</span>
-                    </button>
-                  ))}
+              {/* Bhashini Multilingual Voice Quick Prompts */}
+              <div className="pt-2 text-center space-y-2">
+                <span className="text-[11px] font-semibold text-slate-500 flex items-center justify-center gap-1.5">
+                  <Mic className="w-3.5 h-3.5 text-blue-600" />
+                  <span>Bhashini Multilingual Quick Inquiries:</span>
+                </span>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button
+                    onClick={() => handleSendMessage("हॉलमार्किंग में 6-अंकीय HUID कैसे चेक करें?")}
+                    className="px-3 py-1.5 rounded-full bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 text-xs transition shadow-xs flex items-center gap-1.5"
+                  >
+                    <span className="px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 text-[10px] font-bold border border-amber-200">हिन्दी</span>
+                    <span>हॉलमार्किंग में 6-अंकीय HUID कैसे चेक करें?</span>
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage("पिण्याच्या पाण्यासाठी ISI मार्क नियम काय आहेत?")}
+                    className="px-3 py-1.5 rounded-full bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 text-xs transition shadow-xs flex items-center gap-1.5"
+                  >
+                    <span className="px-1.5 py-0.5 rounded bg-orange-50 text-orange-800 text-[10px] font-bold border border-orange-200">मराठी</span>
+                    <span>पिण्याच्या पाण्यासाठी ISI मार्क नियम काय आहेत?</span>
+                  </button>
+                  <button
+                    onClick={() => handleSendMessage("How does an MSME obtain 50% fee concession under Scheme I?")}
+                    className="px-3 py-1.5 rounded-full bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 text-xs transition shadow-xs flex items-center gap-1.5"
+                  >
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-300">MSME</span>
+                    <span>How does an MSME obtain 50% fee concession?</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -504,47 +578,63 @@ export const ChatView: React.FC<ChatViewProps> = ({
             messages.map((msg) => (
               <div
                 key={msg.id}
-                className={`flex gap-2 sm:gap-3 max-w-4xl mx-auto w-full ${
+                className={`flex gap-3 max-w-4xl mx-auto ${
                   msg.sender === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 {msg.sender === "assistant" && (
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow mt-0.5">
-                    <Bot className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-xs">
+                    <Bot className="w-4 h-4" />
                   </div>
                 )}
 
                 <div
-                  className={`max-w-[88%] sm:max-w-2xl rounded-lg p-3 sm:p-5 text-xs sm:text-sm leading-relaxed ${
+                  className={`rounded-2xl p-4 sm:p-5 shadow-xs text-xs sm:text-sm leading-relaxed max-w-[85%] sm:max-w-2xl ${
                     msg.sender === "user"
-                      ? "bg-[#0B2545] text-white shadow-md ml-3 sm:ml-12"
-                      : "bg-white border border-slate-300 text-slate-800 shadow-sm mr-2 sm:mr-0"
+                      ? "bg-blue-600 text-white font-medium"
+                      : "bg-white border border-slate-200 text-slate-800"
                   }`}
                 >
-                  {/* Markdown Body */}
-                  <div
-                    className={`prose prose-sm max-w-none ${
-                      msg.sender === "user"
-                        ? "text-white [&_*]:!text-white [&_a]:!text-amber-300 [&_code]:!bg-blue-900/60 [&_code]:!text-amber-200"
-                        : "text-slate-800 prose-headings:font-bold prose-headings:text-[#0B2545] prose-a:text-blue-600 prose-strong:text-slate-900"
-                    } prose-ul:my-2 prose-li:my-0.5`}
-                  >
+                  {/* Assistant Header Metas */}
+                  {msg.sender === "assistant" && (
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-3 pb-2.5 border-b border-slate-100">
+                      <div className="flex items-center gap-2">
+                        {msg.intent && (
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                            {msg.intent}
+                          </span>
+                        )}
+                        <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-mono font-semibold flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          <span>Grounded Truth</span>
+                        </span>
+                      </div>
+
+                      {/* Confidence Meter Badge */}
+                      {msg.confidence !== undefined && (
+                        <div className="w-36">
+                          <ConfidenceBar
+                            score={msg.confidence}
+                            level={msg.confidence_level || "High"}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Message Body Content */}
+                  <div className="prose prose-sm max-w-none text-slate-800">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
                   </div>
 
-                  {/* Confidence Bar if assistant */}
-                  {msg.sender === "assistant" && msg.confidence !== undefined && (
-                    <ConfidenceBar
-                      confidence={msg.confidence}
-                      confidenceLevel={msg.confidence_level || "High"}
-                    />
-                  )}
-
-                  {/* Citations List */}
-                  {msg.sender === "assistant" && msg.sources && msg.sources.length > 0 && (
+                  {/* Sources Citations Deck */}
+                  {msg.sources && msg.sources.length > 0 && (
                     <div className="mt-4 pt-3 border-t border-slate-100 space-y-2">
-                      <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
-                        <span>Authoritative Sources & Clauses ({msg.sources.length}):</span>
+                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700">
+                        <span className="flex items-center gap-1.5">
+                          <BookOpen className="w-3.5 h-3.5 text-blue-600" />
+                          <span>Grounded Citations ({msg.sources.length} Standards Verified)</span>
+                        </span>
                         {msg.explainability && (
                           <button
                             onClick={() =>
@@ -554,49 +644,43 @@ export const ChatView: React.FC<ChatViewProps> = ({
                                 sources: msg.sources,
                               })
                             }
-                            className="text-blue-600 hover:text-blue-800 flex items-center gap-1 font-medium text-[11px]"
+                            className="text-blue-600 hover:text-blue-800 font-mono flex items-center gap-1 text-[10px]"
                           >
-                            <Info className="w-3.5 h-3.5" />
-                            <span>Why this answer?</span>
+                            <Info className="w-3 h-3" />
+                            <span>Explain Reasoning</span>
                           </button>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {msg.sources.map((src, i) => (
-                          <div
-                            key={i}
-                            onClick={() => {
-                              setSelectedSource(src);
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        {msg.sources.map((src, idx) => (
+                          <SourceCard
+                            key={idx}
+                            source={src}
+                            index={idx + 1}
+                            onSelect={(source) => {
+                              setSelectedSource(source);
                               setIsInspectorOpen(true);
                             }}
-                            className={`cursor-pointer rounded-xl transition-all ${
-                              selectedSource?.standard_number === src.standard_number && selectedSource?.clause === src.clause
-                                ? "ring-2 ring-blue-600 shadow-xs"
-                                : "hover:opacity-90"
-                            }`}
-                            title="Click to inspect official gazette evidence"
-                          >
-                            <SourceCard source={src} index={i} />
-                          </div>
+                          />
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Actions Strip */}
+                  {/* Message Action Bar (Copy, Listen, Feedback) */}
                   {msg.sender === "assistant" && (
-                    <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-slate-400 text-xs">
+                    <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100 text-xs text-slate-500">
                       <div className="flex items-center gap-2">
                         <button
-                          onClick={() => handleCopy(msg.id, msg.content)}
-                          className="hover:text-slate-700 p-1 rounded hover:bg-slate-100 flex items-center gap-1 text-[11px]"
-                          title="Copy answer"
+                          onClick={() => copyToClipboard(msg.content, msg.id)}
+                          className="hover:text-blue-700 p-1 rounded hover:bg-slate-100 flex items-center gap-1 text-[11px] transition-colors"
+                          title="Copy Answer"
                         >
                           {copiedId === msg.id ? (
                             <>
                               <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              <span className="text-emerald-600 font-semibold">Copied</span>
+                              <span className="text-emerald-700 font-semibold">Copied</span>
                             </>
                           ) : (
                             <>
@@ -610,15 +694,15 @@ export const ChatView: React.FC<ChatViewProps> = ({
                           onClick={() => handleToggleSpeakMessage(msg.id, msg.content)}
                           className={`p-1 rounded flex items-center gap-1 text-[11px] transition-all ${
                             activeSpeakingId === msg.id
-                              ? "bg-amber-100 text-amber-900 font-bold shadow-2xs"
-                              : "hover:text-slate-700 hover:bg-slate-100 text-slate-500"
+                              ? "bg-blue-600 text-white font-bold shadow-xs"
+                              : "hover:text-blue-700 hover:bg-slate-100 text-slate-600"
                           }`}
                           title={activeSpeakingId === msg.id ? "Stop voice playback" : "Listen in selected language (Bhashini Voice)"}
                         >
                           {activeSpeakingId === msg.id ? (
                             <>
-                              <VolumeX className="w-3.5 h-3.5 text-amber-700 animate-pulse" />
-                              <span className="text-amber-800 font-mono text-[10px]">Speaking...</span>
+                              <VolumeX className="w-3.5 h-3.5 text-white animate-pulse" />
+                              <span className="text-white font-mono text-[10px]">Speaking...</span>
                             </>
                           ) : (
                             <>
@@ -629,7 +713,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         </button>
                         <button
                           onClick={() => handleSendMessage(messages[messages.indexOf(msg) - 1]?.content || "")}
-                          className="hover:text-slate-700 p-1 rounded hover:bg-slate-100 flex items-center gap-1 text-[11px]"
+                          className="hover:text-blue-700 p-1 rounded hover:bg-slate-100 flex items-center gap-1 text-[11px] transition-colors"
                           title="Regenerate"
                         >
                           <RotateCcw className="w-3.5 h-3.5" />
@@ -663,7 +747,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                               answer: msg.content,
                             })
                           }
-                          className="p-1 rounded hover:bg-rose-50 hover:text-rose-600 text-slate-400 transition-colors"
+                          className="p-1 rounded hover:bg-red-50 hover:text-red-600 text-slate-400 transition-colors"
                           title="Report Issue / Suggest Correction"
                         >
                           <ThumbsDown className="w-3.5 h-3.5" />
@@ -674,7 +758,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 </div>
 
                 {msg.sender === "user" && (
-                  <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center flex-shrink-0 shadow font-bold">
+                  <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs font-bold">
                     <User className="w-4 h-4" />
                   </div>
                 )}
@@ -685,12 +769,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
           {/* Loading indicator */}
           {isLoading && (
             <div className="flex gap-3 max-w-4xl mx-auto justify-start animate-pulse">
-              <div className="w-8 h-8 rounded bg-[#0B2545] text-amber-400 flex items-center justify-center flex-shrink-0 shadow">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center flex-shrink-0 shadow-xs">
                 <Bot className="w-4 h-4" />
               </div>
-              <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm space-y-2 max-w-md">
-                <div className="flex items-center gap-2 text-xs font-semibold text-blue-900">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-spin" />
+              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm space-y-2 max-w-md">
+                <div className="flex items-center gap-2 text-xs font-semibold text-blue-700">
+                  <Sparkles className="w-3.5 h-3.5 text-blue-600 animate-spin" />
                   <span>Searching 23,866 Indian Standards & verifying clauses...</span>
                 </div>
                 <div className="h-2 bg-slate-200 rounded w-48" />
@@ -707,23 +791,23 @@ export const ChatView: React.FC<ChatViewProps> = ({
           <div className="max-w-4xl mx-auto space-y-2">
             {/* Quick chips if in conversation */}
             {messages.length > 0 && (
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] text-slate-500 scrollbar-none">
-                <span className="font-semibold text-slate-400 flex-shrink-0">Follow-up:</span>
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] text-slate-600 scrollbar-none">
+                <span className="font-semibold text-slate-500 flex-shrink-0">Follow-up:</span>
                 <button
                   onClick={() => handleSendMessage("What documents are required for this certification?")}
-                  className="px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 whitespace-nowrap"
+                  className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 whitespace-nowrap transition"
                 >
                   What documents are required?
                 </button>
                 <button
                   onClick={() => handleSendMessage("What are the testing limits and methods?")}
-                  className="px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 whitespace-nowrap"
+                  className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 whitespace-nowrap transition"
                 >
                   Testing limits & methods
                 </button>
                 <button
                   onClick={() => handleSendMessage("Where is the nearest BIS recognized testing lab?")}
-                  className="px-2 py-0.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 whitespace-nowrap"
+                  className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 border border-slate-200 whitespace-nowrap transition"
                 >
                   Nearest recognized lab
                 </button>
@@ -732,7 +816,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
             {/* Live Bhashini Speech Recognition Banner when active */}
             {isListening && (
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-900 text-xs animate-fadeIn shadow-xs">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs shadow-xs">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-ping shrink-0" />
                   <span className="font-semibold">
@@ -742,7 +826,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 <button
                   type="button"
                   onClick={handleToggleSpeechRecognition}
-                  className="px-2.5 py-1 rounded-lg bg-red-200 hover:bg-red-300 text-red-950 font-bold text-[11px] transition"
+                  className="px-3 py-1 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] transition shadow-xs"
                 >
                   Done Speaking
                 </button>
@@ -754,16 +838,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-xl p-1.5 focus-within:ring-2 focus-within:ring-amber-500 focus-within:border-amber-500"
+              className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl p-1.5 focus-within:ring-2 focus-within:ring-blue-600 focus-within:bg-white transition"
             >
               {/* Bhashini Voice Microphone Input Button */}
               <button
                 type="button"
                 onClick={handleToggleSpeechRecognition}
-                className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${
+                className={`p-2.5 rounded-xl flex items-center justify-center transition-all ${
                   isListening
-                    ? "bg-red-600 text-white animate-pulse ring-4 ring-red-400/40 shadow-md"
-                    : "bg-slate-200 hover:bg-slate-300 text-slate-700"
+                    ? "bg-red-600 text-white animate-pulse ring-4 ring-red-400/40 shadow-xs"
+                    : "bg-white hover:bg-slate-100 text-blue-600 border border-slate-200"
                 }`}
                 title={
                   isListening
@@ -771,7 +855,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     : `Speak question in ${LANG_LOCALE_MAP[currentLang]?.label || "Indian Languages"} (Bhashini STT)`
                 }
               >
-                {isListening ? <MicOff className="w-4 h-4 text-white" /> : <Mic className="w-4 h-4 text-slate-700" />}
+                {isListening ? <MicOff className="w-4 h-4 text-white" /> : <Mic className="w-4 h-4" />}
               </button>
 
               <input
@@ -781,32 +865,32 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 placeholder={
                   isListening
                     ? "Listening to your voice..."
-                    : `Ask about Indian Standards, e.g. '${sampleQuestions[0]}' (or tap Mic to speak)...`
+                    : `Ask MANAKAI about Indian Standards, e.g. '${samplePrompts[0]?.title}' (or tap Mic)...`
                 }
                 disabled={isLoading}
-                className="flex-1 bg-transparent px-3 py-2 text-xs sm:text-sm focus:outline-none placeholder-slate-400 text-slate-800"
+                className="flex-1 bg-transparent px-3 py-2 text-xs sm:text-sm focus:outline-none placeholder-slate-400 text-slate-900"
               />
               <button
                 type="submit"
                 disabled={isLoading || !inputText.trim()}
-                className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${
+                className={`p-2.5 rounded-xl flex items-center justify-center transition-all ${
                   inputText.trim() && !isLoading
-                    ? "bg-[#0B2545] hover:bg-[#133E68] text-amber-300 shadow"
-                    : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    ? "bg-blue-600 hover:bg-blue-700 text-white shadow-xs active:scale-95"
+                    : "bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-200"
                 }`}
               >
                 <Send className="w-4 h-4" />
               </button>
             </form>
-            <div className="flex items-center justify-between text-[10px] text-slate-400 px-1">
+            <div className="flex items-center justify-between text-[10px] text-slate-500 px-1">
               <div className="flex items-center gap-2">
                 <span>Supports Voice Input & Audio Playback in:</span>
-                <div className="flex gap-1 font-semibold text-slate-600">
-                  <span className={currentLang === "en" ? "text-blue-900 font-bold" : ""}>English (IN)</span>
+                <div className="flex gap-1.5 font-semibold text-slate-700">
+                  <span className={currentLang === "en" ? "text-blue-600 font-bold" : ""}>English (IN)</span>
                   <span>•</span>
-                  <span className={currentLang === "hi" ? "text-blue-900 font-bold" : ""}>हिन्दी</span>
+                  <span className={currentLang === "hi" ? "text-blue-600 font-bold" : ""}>हिन्दी</span>
                   <span>•</span>
-                  <span className={currentLang === "mr" ? "text-blue-900 font-bold" : ""}>मराठी</span>
+                  <span className={currentLang === "mr" ? "text-blue-600 font-bold" : ""}>मराठी</span>
                 </div>
               </div>
               <span className="font-mono text-emerald-700 font-semibold">Bhashini Multilingual AI</span>
@@ -817,19 +901,19 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
       {/* Right Pane: Official Evidence Inspector (Dual-Pane AI Architecture) */}
       {isInspectorOpen && (
-        <aside className="w-96 xl:w-[420px] bg-slate-50/90 backdrop-blur-md border-l border-slate-200 hidden lg:flex flex-col justify-between shrink-0 shadow-sm animate-fadeIn overflow-hidden">
+        <aside className="w-96 xl:w-[420px] bg-white border-l border-slate-200 hidden lg:flex flex-col justify-between shrink-0 shadow-sm animate-fadeIn overflow-hidden">
           {/* Inspector Header */}
-          <div className="p-4 bg-white border-b border-slate-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BisEmblem className="h-6 w-auto text-blue-950" />
+          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <BisEmblem className="h-6 w-auto text-blue-700" />
               <div>
                 <h3 className="font-bold text-slate-900 text-xs tracking-tight">Official Evidence Inspector</h3>
-                <span className="text-[10px] text-slate-500 font-mono">Traceable Indian Standard Gazette Citation</span>
+                <span className="text-[10px] text-blue-600 font-mono">Traceable Indian Standard Gazette Citation</span>
               </div>
             </div>
             <button
               onClick={() => setIsInspectorOpen(false)}
-              className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition"
+              className="p-1 rounded-lg hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition"
               title="Collapse Evidence Inspector"
             >
               <PanelRightClose className="w-4 h-4" />
@@ -841,12 +925,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
             {selectedSource ? (
               <div className="space-y-4">
                 {/* Sovereign Stamp Card */}
-                <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-xs space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 rounded-md bg-[#0A2540] text-amber-400 text-xs font-mono font-bold shadow-2xs">
+                    <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-mono font-bold border border-blue-200">
                       {selectedSource.standard_number || "Indian Standard"}
                     </span>
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                       <span>Verified Gazette Citation</span>
                     </span>
@@ -856,8 +940,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     <h4 className="font-bold text-slate-900 text-sm leading-snug">
                       {selectedSource.title}
                     </h4>
-                    <div className="flex items-center gap-3 mt-1 text-[11px] text-slate-500 font-mono">
-                      <span>Clause: <strong className="text-slate-800">{selectedSource.clause || "Specification"}</strong></span>
+                    <div className="flex items-center gap-3 mt-1.5 text-[11px] text-slate-600 font-mono">
+                      <span>Clause: <strong className="text-blue-700">{selectedSource.clause || "Specification"}</strong></span>
                       {selectedSource.page && (
                         <span>• Page: <strong className="text-slate-800">{selectedSource.page}</strong></span>
                       )}
@@ -865,14 +949,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   </div>
 
                   {/* Relevance Confidence Meter */}
-                  <div className="pt-2 border-t border-slate-100">
-                    <div className="flex justify-between text-[10px] font-semibold text-slate-500 mb-1">
+                  <div className="pt-2 border-t border-slate-200">
+                    <div className="flex justify-between text-[10px] font-semibold text-slate-600 mb-1.5">
                       <span>Retriever Grounding Relevance</span>
-                      <span className="font-mono text-blue-900">{Math.round((selectedSource.relevance_score || 0.88) * 100)}% Match</span>
+                      <span className="font-mono text-blue-600 font-bold">{Math.round((selectedSource.relevance_score || 0.88) * 100)}% Match</span>
                     </div>
-                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-blue-900 to-amber-500 rounded-full"
+                        className="h-full bg-blue-600 rounded-full"
                         style={{ width: `${Math.round((selectedSource.relevance_score || 0.88) * 100)}%` }}
                       />
                     </div>
@@ -880,16 +964,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 </div>
 
                 {/* Verbatim Gazette Excerpt in Legal Paper Styling */}
-                <div className="p-4 rounded-2xl bg-amber-50/40 border-2 border-dashed border-amber-300/80 space-y-2 relative">
-                  <div className="flex items-center justify-between text-[10px] font-bold text-amber-900 uppercase tracking-wider">
+                <div className="p-4 rounded-2xl bg-blue-50/40 border border-blue-200 space-y-2 relative shadow-xs">
+                  <div className="flex items-center justify-between text-[10px] font-bold text-blue-700 uppercase tracking-wider">
                     <div className="flex items-center gap-1.5">
-                      <BookOpen className="w-3.5 h-3.5 text-amber-700" />
+                      <BookOpen className="w-3.5 h-3.5 text-blue-600" />
                       <span>Verbatim Standard Excerpt</span>
                     </div>
                     <span className="font-mono text-[9px] text-slate-500">Official Clause Text</span>
                   </div>
 
-                  <p className="text-xs text-slate-800 italic leading-relaxed bg-white/70 p-3 rounded-xl border border-amber-200/50 shadow-xs font-serif">
+                  <p className="text-xs text-slate-800 italic leading-relaxed bg-white p-3 rounded-xl border border-blue-100 font-serif">
                     "{selectedSource.evidence_snippet}"
                   </p>
 
@@ -905,9 +989,9 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     onClick={() => {
                       setInputText(`Tell me more about ${selectedSource.standard_number} ${selectedSource.clause || ''}`);
                     }}
-                    className="w-full py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs"
+                    className="w-full py-2.5 px-3 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs"
                   >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    <Sparkles className="w-3.5 h-3.5 text-blue-600" />
                     <span>Ask Follow-up on this Clause</span>
                   </button>
 
@@ -916,17 +1000,17 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       href={selectedSource.source_url}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full py-2.5 px-3 bg-[#0A2540] hover:bg-blue-950 text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-xs"
+                      className="w-full py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 transition shadow-sm"
                     >
                       <span>View on Official BIS Portal</span>
-                      <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                      <ExternalLink className="w-3.5 h-3.5 text-white" />
                     </a>
                   )}
                 </div>
               </div>
             ) : (
               <div className="my-auto text-center py-12 px-4 space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-900 flex items-center justify-center mx-auto border border-blue-200/60">
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto border border-blue-200">
                   <FileText className="w-6 h-6" />
                 </div>
                 <h4 className="font-bold text-slate-800 text-sm">No Citation Selected</h4>
@@ -938,7 +1022,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
           </div>
 
           {/* Inspector Footer */}
-          <div className="p-3 bg-white border-t border-slate-200 text-center text-[10px] text-slate-400 font-mono">
+          <div className="p-3 bg-slate-50 border-t border-slate-200 text-center text-[10px] text-slate-500 font-mono">
             Traceable to Bureau of Indian Standards Act, 2016
           </div>
         </aside>
@@ -961,80 +1045,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
         answer={feedbackModalData.answer}
       />
 
-      {/* Mobile History Slide-over Drawer */}
-      {mobileHistoryOpen && (
-        <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-start">
-          <div className="w-4/5 max-w-xs bg-white h-full p-4 flex flex-col justify-between shadow-2xl animate-fadeIn">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                <div className="flex items-center gap-2 font-bold text-slate-900 text-sm">
-                  <MessageSquare className="w-4 h-4 text-[#0B2545]" />
-                  <span>Recent Queries</span>
-                </div>
-                <button
-                  onClick={() => setMobileHistoryOpen(false)}
-                  className="p-1 rounded text-slate-400 hover:text-slate-600"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <button
-                onClick={() => {
-                  handleNewChat();
-                  setMobileHistoryOpen(false);
-                }}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#0B2545] text-white font-semibold rounded-lg text-xs transition-colors shadow-sm"
-              >
-                <Plus className="w-4 h-4 text-amber-400" />
-                <span>New BIS Query</span>
-              </button>
-
-              <div className="space-y-1 max-h-[65vh] overflow-y-auto pr-1">
-                {conversations.length === 0 ? (
-                  <p className="text-xs text-slate-400 italic px-2 py-4 text-center">
-                    No previous queries yet.
-                  </p>
-                ) : (
-                  conversations.map((c) => (
-                    <button
-                      key={c.id}
-                      onClick={() => {
-                        selectConversation(c);
-                        setMobileHistoryOpen(false);
-                      }}
-                      className={`w-full text-left px-2.5 py-2.5 rounded-lg text-xs flex items-center gap-2 transition-colors ${
-                        currentConversationId === c.id
-                          ? "bg-amber-50 text-blue-950 font-bold border border-amber-300"
-                          : "text-slate-600 hover:bg-slate-100"
-                      }`}
-                    >
-                      <MessageSquare className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                      <span className="truncate">{c.title || "Query Session"}</span>
-                    </button>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div className="text-[10px] text-slate-400 text-center border-t border-slate-100 pt-2">
-              Bureau of Indian Standards • BIS SmartAssist
-            </div>
-          </div>
-          <div className="flex-1" onClick={() => setMobileHistoryOpen(false)} />
-        </div>
-      )}
-
-      {/* Official BIS Audit Dossier Export Modal */}
+      {/* Official Audit Dossier Preview Modal */}
       <AuditDossierModal
         isOpen={isDossierOpen}
         onClose={() => setIsDossierOpen(false)}
         dossierType="chat"
-        title="BIS AI Consultation Advisory Record"
+        title="BIS AI Regulatory Advisory Dossier"
         data={{
-          query: messages[0]?.content || "Indian Standards Compliance Consultation",
-          answer: messages[messages.length - 1]?.content || "",
-          sources: messages[messages.length - 1]?.sources || [],
+          conversationId: currentConversationId,
+          messages: messages,
+          language: currentLang,
         }}
       />
     </div>

@@ -6,20 +6,27 @@ from backend.app.core.config import settings
 from backend.app.core.circuit_breaker import llm_circuit_breaker
 from backend.app.schemas.schemas import SourceCitation
 
-SYSTEM_PROMPT = """You are "BIS SmartAssist", the official AI-powered Assistant for Indian Standards and BIS Services (Bureau of Indian Standards).
-Your role is to assist industries, MSMEs, startups, manufacturers, students, and consumers with authoritative and context-aware information.
+SYSTEM_PROMPT = """You are "MANAKAI", the official AI-powered Assistant for Indian Standards and BIS Services (Bureau of Indian Standards).
+Your role is to assist industries, MSMEs, startups, manufacturers, students, and consumers with authoritative, strictly grounded, and context-aware information.
 
 CRITICAL RULES:
-1. Answer accurately using the facts present in the provided BIS Context and Conversation History.
-2. Maintain conversational context across questions. When the user asks a follow-up question (e.g. "What are the test limits?", "Which lab tests this?"), remember the standard or product being discussed.
-3. Never invent standard numbers or clauses. If context is missing, guide the user to the official portal (manakonline.in / services.bis.gov.in).
-4. Format your responses with clean Markdown headers, bullet points, and citations.
-5. Respond in the requested language ({language}: English, Hindi, or Marathi).
+1. Answer accurately using ONLY the facts present in the provided BIS Context and Conversation History.
+2. Strictly cite only the standards, clauses, booklets, and page numbers that appear in the provided BIS Context.
+3. NEVER fabricate or invent standard numbers, clause numbers, or page numbers.
+4. If the provided BIS Context does not contain sufficient evidence to answer the user's question, explicitly state:
+   "The available official BIS sources do not provide sufficient evidence to answer this query. Please consult the official BIS portal at manakonline.in or services.bis.gov.in."
+5. Format your responses with clean Markdown headers, bullet points, and explicit source references:
+   - Standard: IS Number
+   - Clause: Clause number (only if provided in context)
+   - Source/Booklet: Title/Booklet (only if provided in context)
+   - Page: Page number (only if provided in context)
+6. Respond in the requested language ({language}: English, Hindi, or Marathi).
 """
+
 
 def generate_greeting_response(language: str = "en") -> str:
     if language == "hi":
-        return """### नमस्ते! मैं बीआईएस स्मार्टअसिस्ट (BIS SmartAssist) हूँ।
+        return """### नमस्ते! मैं मानकई (MANAKAI) हूँ।
 
 मैं भारतीय मानक ब्यूरो (Bureau of Indian Standards) से संबंधित निम्नलिखित विषयों में आपकी सहायता कर सकता हूँ:
 
@@ -31,6 +38,23 @@ def generate_greeting_response(language: str = "en") -> str:
 • **उपभोक्ता सेवाएं**: बीआईएस केयर (BIS CARE) ऐप और शिकायत दर्ज करने की प्रक्रिया।
 
 आप किस उत्पाद या मानक के बारे में जानना चाहते हैं?"""
+    elif language == "mr":
+        return """### नमस्कार! मी मानकई (MANAKAI) आहे.
+
+मी भारतीय मानक ब्युरो (BIS) संबंधित खालील विषयांमध्ये आपली मदत करू शकतो:
+
+• **भारतीय मानके शोधणे**: 23,800+ अधिकृत मानकांची माहिती (उदा. IS 1786, IS 14543, IS 269).
+• **उत्पादन निकष आणि चाचणी**: चाचणी पद्धती, रासायनिक व यांत्रिक मर्यादा.
+• **प्रमाणीकरण आणि परवाना**: ISI मार्क, CRS आणि MSME साठी सुलभ प्रक्रिया.
+• **हॉलमार्किंग आणि HUID**: 6-अंकी HUID द्वारे सोन्या-चांदीची शुद्धता तपासणी.
+• **चाचणी प्रयोगशाळा**: बीआयएस प्रादेशिक प्रयोगशाळांची माहिती.
+• **ग्राहक सेवा**: BIS CARE ॲप आणि तक्रार नोंदणी.
+
+आपण कोणत्या उत्पादनाबद्दल किंवा मानकाबद्दल जाणून घेऊ इच्छिता?"""
+    else:
+        return """### Hello! Welcome to MANAKAI.
+
+I am your AI assistant for official **Bureau of Indian Standards (BIS)** compliance, standards lookup, and certification services:�द या मानक के बारे में जानना चाहते हैं?"""
     elif language == "mr":
         return """### नमस्कार! मी बीआयएस स्मार्टअसिस्ट (BIS SmartAssist) आहे.
 
@@ -511,15 +535,26 @@ def generate_rag_answer(
 
     context_blocks = []
     for i, src in enumerate(sources, 1):
-        context_blocks.append(
-            f"Source {i}:\n"
-            f"Document: {src.title}\n"
-            f"Standard: {src.standard_number}\n"
-            f"Clause: {src.clause}, Page: {src.page}\n"
-            f"Content: {src.evidence_snippet}\n"
-            f"URL: {src.source_url}\n"
-        )
+        s_type = src.source_type or ("booklet" if src.booklet_name else "standard")
+        clause_info = f"Clause: {src.clause}" if src.clause else "Clause: General Requirement"
+        page_info = f"Page: {src.page}" if src.page else ""
+        booklet_info = f"Booklet/Dept: {src.booklet_name} ({src.department})" if src.booklet_name else ""
+        
+        details = [f"Source {i} ({s_type.upper()}):", f"Title: {src.title}"]
+        if src.standard_number:
+            details.append(f"Standard Number: {src.standard_number}")
+        if booklet_info:
+            details.append(booklet_info)
+        details.append(clause_info)
+        if page_info:
+            details.append(page_info)
+        details.append(f"Evidence Content: {src.evidence_snippet}")
+        if src.source_url:
+            details.append(f"Source URL: {src.source_url}")
+
+        context_blocks.append("\n".join(details))
     context_str = "\n---\n".join(context_blocks) if context_blocks else "General BIS Knowledge"
+
 
     history_str = ""
     history_messages = []

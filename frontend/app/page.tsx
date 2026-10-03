@@ -13,7 +13,9 @@ import {
 } from "lucide-react";
 import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
-import { LandingHero } from "../components/LandingHero";
+import { ManakaiLanding } from "../components/ManakaiLanding";
+import { ManakaiLoginView } from "../components/ManakaiLoginView";
+import { ManakaiInfoView, InfoTopic } from "../components/ManakaiInfoView";
 
 // Lightweight loading skeleton for dynamically imported heavy tabs
 const ViewLoadingSkeleton = () => (
@@ -82,10 +84,42 @@ const CommandPalette = dynamic(
 );
 
 export default function Home() {
+  const [mounted, setMounted] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("home");
   const [currentLang, setCurrentLang] = useState<string>("en");
   const [chatInitialQuery, setChatInitialQuery] = useState<string>("");
   const [isPaletteOpen, setIsPaletteOpen] = useState<boolean>(false);
+  const [infoTopic, setInfoTopic] = useState<InfoTopic>("about");
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Sync logged in user from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("bis_user");
+      if (stored) {
+        try {
+          setCurrentUser(JSON.parse(stored));
+        } catch (e) {}
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("bis_token");
+      localStorage.removeItem("bis_user");
+    }
+    setCurrentUser(null);
+  };
+
+  const handleLoginSuccess = (user: any) => {
+    setCurrentUser(user);
+    setActiveTab("home");
+  };
 
   // Global Cmd+K / Ctrl+K keyboard shortcut
   useEffect(() => {
@@ -111,26 +145,64 @@ export default function Home() {
     setActiveTab("chat");
   };
 
+  const handleOpenInfo = (topic: InfoTopic) => {
+    setInfoTopic(topic);
+    setActiveTab("info");
+  };
+
+  // Determine if current screen is one of the standalone MANAKAI custom views
+  const isManakaiCustomView = !mounted || activeTab === "home" || activeTab === "login" || activeTab === "info";
+
   return (
     <div className="min-h-screen flex flex-col justify-between">
-      {/* Gov-Tech Navigation Bar */}
-      <Navbar
-        currentLang={currentLang}
-        onLanguageChange={(lang) => setCurrentLang(lang)}
-        activeTab={activeTab}
-        onOpenSpotlight={() => setIsPaletteOpen(true)}
-        setActiveTab={(tab) => {
-          if (tab !== "chat") setChatInitialQuery("");
-          setActiveTab(tab);
-        }}
-      />
+      {/* Gov-Tech Navigation Bar (visible on all tool pages; on Home/Login/Info, custom MANAKAI header is used) */}
+      {!isManakaiCustomView && (
+        <Navbar
+          currentLang={currentLang}
+          onLanguageChange={(lang) => setCurrentLang(lang)}
+          activeTab={activeTab}
+          onOpenSpotlight={() => setIsPaletteOpen(true)}
+          onOpenLogin={() => setActiveTab("login")}
+          currentUser={currentUser}
+          onLogout={handleLogout}
+          setActiveTab={(tab) => {
+            if (tab !== "chat") setChatInitialQuery("");
+            setActiveTab(tab);
+          }}
+        />
+      )}
 
       {/* Main Content Area based on Active Tab */}
-      <main className={`flex-1 ${activeTab === "chat" ? "" : "pb-16 lg:pb-0"}`}>
+      <main className={`flex-1 ${activeTab === "chat" || isManakaiCustomView ? "" : "pb-16 lg:pb-0"}`}>
         {activeTab === "home" && (
-          <LandingHero
+          <ManakaiLanding
+            currentLang={currentLang}
+            onLanguageChange={(lang) => setCurrentLang(lang)}
             onStartChat={handleStartChat}
-            onNavigateTab={(tab) => setActiveTab(tab)}
+            onNavigateTab={(tab) => {
+              setChatInitialQuery("");
+              setActiveTab(tab);
+            }}
+            onOpenLogin={() => setActiveTab("login")}
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            onOpenInfo={handleOpenInfo}
+          />
+        )}
+
+        {activeTab === "login" && (
+          <ManakaiLoginView
+            onSuccess={handleLoginSuccess}
+            onBack={() => setActiveTab("home")}
+          />
+        )}
+
+        {activeTab === "info" && (
+          <ManakaiInfoView
+            topic={infoTopic}
+            onSelectTopic={(t) => setInfoTopic(t)}
+            onBack={() => setActiveTab("home")}
+            onStartChat={handleStartChat}
           />
         )}
 
@@ -179,72 +251,74 @@ export default function Home() {
         )}
       </main>
 
-      {/* Official Government Footer */}
-      {activeTab !== "chat" && <Footer />}
+      {/* Official Government Footer (on tool views) */}
+      {!isManakaiCustomView && activeTab !== "chat" && <Footer />}
 
-      {/* Native-Style Mobile Bottom Navigation Bar */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl px-2 py-1 flex items-center justify-around">
-        <button
-          onClick={() => setActiveTab("home")}
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "home" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          <HomeIcon className={`w-5 h-5 mb-0.5 ${activeTab === "home" ? "text-[#0B2545]" : "text-slate-400"}`} />
-          <span>Home</span>
-          {activeTab === "home" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
-        </button>
+      {/* Native-Style Mobile Bottom Navigation Bar (on tool views) */}
+      {!isManakaiCustomView && (
+        <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-xl px-2 py-1 flex items-center justify-around">
+          <button
+            onClick={() => setActiveTab("home")}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+              activeTab === "home" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <HomeIcon className={`w-5 h-5 mb-0.5 ${activeTab === "home" ? "text-[#0B2545]" : "text-slate-400"}`} />
+            <span>Home</span>
+            {activeTab === "home" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          </button>
 
-        <button
-          onClick={() => setActiveTab("chat")}
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "chat" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          <div className="relative">
-            <MessageSquare className={`w-5 h-5 mb-0.5 ${activeTab === "chat" ? "text-amber-500" : "text-slate-400"}`} />
-            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          </div>
-          <span>AI Assist</span>
-          {activeTab === "chat" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
-        </button>
+          <button
+            onClick={() => setActiveTab("chat")}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+              activeTab === "chat" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <div className="relative">
+              <MessageSquare className={`w-5 h-5 mb-0.5 ${activeTab === "chat" ? "text-amber-500" : "text-slate-400"}`} />
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            </div>
+            <span>AI Assist</span>
+            {activeTab === "chat" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          </button>
 
-        <button
-          onClick={() => setActiveTab("finder")}
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "finder" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          <Search className={`w-5 h-5 mb-0.5 ${activeTab === "finder" ? "text-[#0B2545]" : "text-slate-400"}`} />
-          <span>Standards</span>
-          {activeTab === "finder" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
-        </button>
+          <button
+            onClick={() => setActiveTab("finder")}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+              activeTab === "finder" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Search className={`w-5 h-5 mb-0.5 ${activeTab === "finder" ? "text-[#0B2545]" : "text-slate-400"}`} />
+            <span>Standards</span>
+            {activeTab === "finder" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          </button>
 
-        <button
-          onClick={() => setActiveTab("inspector")}
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "inspector" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          <div className="relative">
-            <FileCheck2 className={`w-5 h-5 mb-0.5 ${activeTab === "inspector" ? "text-amber-500" : "text-slate-400"}`} />
-            <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-amber-500" />
-          </div>
-          <span>MTC Audit</span>
-          {activeTab === "inspector" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
-        </button>
+          <button
+            onClick={() => setActiveTab("inspector")}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+              activeTab === "inspector" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <div className="relative">
+              <FileCheck2 className={`w-5 h-5 mb-0.5 ${activeTab === "inspector" ? "text-amber-500" : "text-slate-400"}`} />
+              <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-amber-500" />
+            </div>
+            <span>MTC Audit</span>
+            {activeTab === "inspector" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          </button>
 
-        <button
-          onClick={() => setActiveTab("verify")}
-          className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
-            activeTab === "verify" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
-          }`}
-        >
-          <ShieldCheck className={`w-5 h-5 mb-0.5 ${activeTab === "verify" ? "text-[#0B2545]" : "text-slate-400"}`} />
-          <span>Scanner</span>
-          {activeTab === "verify" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
-        </button>
-      </nav>
+          <button
+            onClick={() => setActiveTab("verify")}
+            className={`flex flex-col items-center justify-center py-1 px-2 rounded-lg text-[10px] font-semibold transition-all ${
+              activeTab === "verify" ? "text-[#0B2545] font-bold" : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <ShieldCheck className={`w-5 h-5 mb-0.5 ${activeTab === "verify" ? "text-[#0B2545]" : "text-slate-400"}`} />
+            <span>Scanner</span>
+            {activeTab === "verify" && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5" />}
+          </button>
+        </nav>
+      )}
 
       {/* Global Cmd+K / Ctrl+K Spotlight Command Palette (Dynamically loaded) */}
       {isPaletteOpen && (

@@ -8,17 +8,32 @@ export interface SourceCitation {
   source_url?: string;
   relevance_score?: number;
   evidence_snippet?: string;
+  source_type?: string;
+  booklet_name?: string;
+  department?: string;
+  rerank_score?: number;
+  final_score?: number;
 }
 
 export interface ExplainabilityData {
   intent: string;
   detected_entities: Record<string, any>;
   query_language: string;
+  detected_language?: string;
+  extracted_standard_number?: string;
+  reasoning_steps?: string[];
   retrieved_documents_count: number;
-  confidence_level: "High" | "Medium" | "Low";
+  confidence_level: "Very High" | "High" | "Medium" | "Low";
   confidence_score: number;
   search_strategy: string;
   reasoning_summary?: string;
+  timing_ms?: {
+    retrieval_ms?: number;
+    rerank_ms?: number;
+    total_ms?: number;
+  };
+  confidence_breakdown?: Record<string, any>;
+  reranker_applied?: boolean;
   rl_action?: {
     dense_weight: number;
     bm25_weight: number;

@@ -55,11 +55,11 @@ export function AuditDossierModal({
       <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Modal Top Control Bar (Hidden in Print) */}
-        <div className="no-print bg-[#0B2545] text-white px-5 py-3.5 flex items-center justify-between border-b border-blue-900 shrink-0">
+        <div className="no-print bg-white text-slate-800 px-5 py-3.5 flex items-center justify-between border-b border-slate-200 shrink-0">
           <div className="flex items-center gap-2">
-            <FileCheck2 className="w-5 h-5 text-amber-400" />
-            <span className="font-bold text-sm">Official BIS Audit Dossier Preview</span>
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-blue-900/60 text-amber-300">
+            <FileCheck2 className="w-5 h-5 text-blue-600" />
+            <span className="font-bold text-sm text-slate-900">Official BIS Audit Dossier Preview</span>
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-700 border border-blue-200">
               PDF-Ready
             </span>
           </div>
@@ -67,7 +67,7 @@ export function AuditDossierModal({
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs transition flex items-center gap-1.5 shadow-sm"
+              className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs transition flex items-center gap-1.5 shadow-sm"
             >
               <Printer className="w-4 h-4" />
               <span>Print / Save PDF</span>
@@ -75,7 +75,7 @@ export function AuditDossierModal({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition"
+              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -144,7 +144,7 @@ export function AuditDossierModal({
                 {title}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Official Regulatory Scrutiny Record • Generated via BIS SmartAssist Portal
+                Official Regulatory Scrutiny Record • Generated via MANAKAI Portal
               </p>
             </div>
 
@@ -386,7 +386,7 @@ export function AuditDossierModal({
               <div className="text-center sm:text-right border-t sm:border-t-0 sm:border-l border-slate-200 pt-2 sm:pt-0 sm:pl-4">
                 <span className="text-[10px] text-slate-400 font-mono uppercase block">Authorized Officer Signature</span>
                 <span className="font-serif font-black text-blue-950 text-sm block mt-0.5">
-                  BIS SmartAssist AI Regulatory Engine
+                  MANAKAI AI Regulatory Engine
                 </span>
                 <span className="text-[10px] text-slate-500 block">
                   Smart India Hackathon (SIH26107) • Govt of India
