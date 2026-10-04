@@ -31,8 +31,54 @@ export const ManakaiInfoView: React.FC<ManakaiInfoViewProps> = ({
           </div>
           <button type="button" className="info-back" onClick={onBack}>
             <i className="fa-solid fa-arrow-left"></i>
-            <span>Back to Home</span>
+            <span className="info-back-text">Back to Home</span>
           </button>
+        </div>
+
+        {/* Mobile-Friendly Topic Selector Scrollable Bar */}
+        <div className="mk-info-topic-bar" aria-label="Documentation Topics">
+          <div className="mk-info-topic-scroll">
+            <button
+              type="button"
+              className={`topic-pill ${topic === "about" ? "active" : ""}`}
+              onClick={() => onSelectTopic("about")}
+            >
+              <i className="fa-solid fa-landmark"></i>
+              <span>About</span>
+            </button>
+            <button
+              type="button"
+              className={`topic-pill ${topic === "help" ? "active" : ""}`}
+              onClick={() => onSelectTopic("help")}
+            >
+              <i className="fa-solid fa-circle-question"></i>
+              <span>Help Center</span>
+            </button>
+            <button
+              type="button"
+              className={`topic-pill ${topic === "privacy" ? "active" : ""}`}
+              onClick={() => onSelectTopic("privacy")}
+            >
+              <i className="fa-solid fa-shield-halved"></i>
+              <span>Privacy</span>
+            </button>
+            <button
+              type="button"
+              className={`topic-pill ${topic === "terms" ? "active" : ""}`}
+              onClick={() => onSelectTopic("terms")}
+            >
+              <i className="fa-solid fa-file-contract"></i>
+              <span>Terms</span>
+            </button>
+            <button
+              type="button"
+              className={`topic-pill ${topic === "accessibility" ? "active" : ""}`}
+              onClick={() => onSelectTopic("accessibility")}
+            >
+              <i className="fa-solid fa-universal-access"></i>
+              <span>Accessibility</span>
+            </button>
+          </div>
         </div>
 
         <div className="info-hero">

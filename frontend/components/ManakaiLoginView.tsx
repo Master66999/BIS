@@ -140,26 +140,11 @@ export const ManakaiLoginView: React.FC<ManakaiLoginViewProps> = ({
   return (
     <div className="mk-login">
       {/* Floating Back Button */}
-      <div style={{ position: "fixed", top: "1.25rem", left: "1.5rem", zIndex: 100 }}>
+      <div className="mk-login-back-wrapper">
         <button
           type="button"
           onClick={onBack}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            padding: "0.55rem 1.1rem",
-            backgroundColor: "rgba(6, 28, 49, 0.85)",
-            backdropFilter: "blur(8px)",
-            color: "#ffffff",
-            borderRadius: "30px",
-            border: "1px solid rgba(255, 255, 255, 0.2)",
-            fontSize: "0.85rem",
-            fontWeight: 600,
-            cursor: "pointer",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.25)",
-            transition: "all 0.2s ease",
-          }}
+          className="mk-login-back-btn"
           title="Return to Home"
         >
           <i className="fa-solid fa-arrow-left"></i>

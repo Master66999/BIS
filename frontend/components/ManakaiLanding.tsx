@@ -30,6 +30,23 @@ export const ManakaiLanding: React.FC<ManakaiLandingProps> = ({
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [localUser, setLocalUser] = useState<any>(currentUser || null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (mobileMenuOpen) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
+    }
+    return () => {
+      if (typeof document !== "undefined") {
+        document.body.style.overflow = "";
+      }
+    };
+  }, [mobileMenuOpen]);
 
   const langWrapperRef = useRef<HTMLDivElement>(null);
   const centerPillRef = useRef<HTMLElement>(null);
@@ -108,11 +125,15 @@ export const ManakaiLanding: React.FC<ManakaiLandingProps> = ({
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // Parallax footer reveal calculation
+  // Parallax footer reveal calculation (disabled on mobile for smooth scrolling)
   useEffect(() => {
     const updateFooterReveal = () => {
       if (footerRef.current && mainRef.current) {
-        mainRef.current.style.marginBottom = `${footerRef.current.offsetHeight}px`;
+        if (typeof window !== "undefined" && window.innerWidth <= 768) {
+          mainRef.current.style.marginBottom = "0px";
+        } else {
+          mainRef.current.style.marginBottom = `${footerRef.current.offsetHeight}px`;
+        }
       }
     };
     updateFooterReveal();
@@ -423,8 +444,232 @@ export const ManakaiLanding: React.FC<ManakaiLandingProps> = ({
           >
             <i className="fa-solid fa-yin-yang"></i>
           </button>
+          {/* Mobile Menu Hamburger Button */}
+          <div className="nav-divider mk-mobile-divider"></div>
+          <button
+            type="button"
+            className="btn-mobile-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            title="Menu"
+          >
+            <i className={`fa-solid ${mobileMenuOpen ? "fa-xmark" : "fa-bars"}`}></i>
+          </button>
         </div>
       </header>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div
+          className="mk-mobile-menu-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <div
+            className="mk-mobile-menu-drawer"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mk-mobile-menu-header">
+              <div className="mk-mobile-logo">
+                <img
+                  src="/images/Manakai_AI_Tech_Logo_on_Navy_Gradient-removebg-preview.png"
+                  alt="MANAKAI"
+                />
+              </div>
+              <button
+                type="button"
+                className="mk-mobile-close"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <i className="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            {/* Mobile User Profile or Login */}
+            <div className="mk-mobile-user-section">
+              {localUser ? (
+                <div className="mk-mobile-user-card">
+                  <div className="mk-mobile-user-avatar">
+                    {(localUser.full_name || localUser.email || "U").charAt(0).toUpperCase()}
+                  </div>
+                  <div className="mk-mobile-user-info">
+                    <div className="mk-mobile-user-name">
+                      {localUser.full_name || "Authorized Citizen"}
+                    </div>
+                    <div className="mk-mobile-user-email">
+                      {localUser.email || "user@bis.gov.in"}
+                    </div>
+                    <span className="mk-mobile-user-badge">
+                      {localUser.role === "admin" ? "BIS Nodal Officer" : "Industry MSME"}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="mk-mobile-login-btn"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenLogin();
+                  }}
+                >
+                  <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                  <span>{t["nav.login"] || "Sign In to Workspace"}</span>
+                </button>
+              )}
+            </div>
+
+            {/* Mobile Nav Links */}
+            <nav className="mk-mobile-nav-list">
+              <a
+                href="#features"
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  scrollToSection(e, "features");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-microchip"></i>
+                <span>{t["nav.features"] || "Features"}</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </a>
+
+              <a
+                href="#major-categories"
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  scrollToSection(e, "major-categories");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-layer-group"></i>
+                <span>{t["nav.standards"] || "Standards Categories"}</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigateTab("labs");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-flask-vial"></i>
+                <span>{t["nav.labs"] || "Accredited Labs"}</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigateTab("journey");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-route"></i>
+                <span>MSME Certification Journey</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onNavigateTab("verify");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-qrcode"></i>
+                <span>Mark &amp; HUID Scanner</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenInfo?.("about");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-landmark"></i>
+                <span>{t["nav.company"] || "About BIS & Consortium"}</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenInfo?.("help");
+                }}
+                className="mk-mobile-nav-item"
+              >
+                <i className="fa-solid fa-circle-question"></i>
+                <span>Help &amp; Documentation</span>
+                <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+              </button>
+
+              {localUser && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    if (onLogout) {
+                      onLogout();
+                    } else if (typeof window !== "undefined") {
+                      localStorage.removeItem("bis_token");
+                      localStorage.removeItem("bis_user");
+                    }
+                    setLocalUser(null);
+                  }}
+                  className="mk-mobile-nav-item logout"
+                >
+                  <i className="fa-solid fa-right-from-bracket"></i>
+                  <span>Sign Out</span>
+                  <i className="fa-solid fa-chevron-right mk-mobile-arrow"></i>
+                </button>
+              )}
+            </nav>
+
+            {/* Mobile Footer Meta */}
+            <div className="mk-mobile-menu-footer">
+              <div className="mk-mobile-theme-row">
+                <span className="mk-mobile-lang-label">Appearance:</span>
+                <button
+                  type="button"
+                  className="mk-mobile-theme-btn"
+                  onClick={toggleTheme}
+                  title="Toggle Light/Dark Theme"
+                >
+                  <i className="fa-solid fa-yin-yang"></i>
+                  <span>{theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}</span>
+                </button>
+              </div>
+              <div className="mk-mobile-lang-row">
+                <span className="mk-mobile-lang-label">Language:</span>
+                <div className="mk-mobile-lang-chips">
+                  {MANAKAI_LANGS.map((item) => (
+                    <button
+                      key={item.code}
+                      type="button"
+                      className={`mk-mobile-chip ${lang === item.code ? "active" : ""}`}
+                      onClick={() => handleSelectLang(item.code)}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <p className="mk-mobile-copy">
+                &copy; 2026 Bureau of Indian Standards &bull; MANAKAI
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <main className="mk-main" ref={mainRef} id="top">

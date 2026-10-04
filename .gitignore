@@ -58,3 +58,4 @@ models/bis_cross_encoder_checkpoints/
 Thumbs.db
 *.swp
 *.swo
+~$*
