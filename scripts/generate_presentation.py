@@ -10,6 +10,8 @@ covering:
 6. Viability
 7. Impact and Benefits
 8. Research Paper Highlights & Conclusion
+
+Features rich visual icon badges on all cards and points.
 """
 
 import os
@@ -74,6 +76,18 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
         shape.line.width = Pt(1)
         return shape
 
+    def add_icon_badge(slide, left, top, icon_char, bg_color=BLUE_PILL, size=Inches(0.45)):
+        badge = slide.shapes.add_shape(MSO_SHAPE.OVAL, left, top, size, size)
+        badge.fill.solid()
+        badge.fill.fore_color.rgb = bg_color
+        badge.line.fill.background()
+        tf = badge.text_frame
+        p = tf.paragraphs[0]
+        p.text = icon_char
+        p.font.size = Pt(14)
+        p.alignment = PP_ALIGN.CENTER
+        return badge
+
     # -------------------------------------------------------------
     # SLIDE 1: Title Slide
     # -------------------------------------------------------------
@@ -84,12 +98,12 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     bg1.line.fill.background()
 
     # Badge
-    badge = slide1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(1.2), Inches(5.2), Inches(0.45))
+    badge = slide1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(1.2), Inches(5.6), Inches(0.45))
     badge.fill.solid()
     badge.fill.fore_color.rgb = RGBColor(20, 55, 90)
     badge.line.color.rgb = ACCENT_GOLD
     p = badge.text_frame.paragraphs[0]
-    p.text = "SMART INDIA HACKATHON 2026 • SIH26107"
+    p.text = "🇮🇳 SMART INDIA HACKATHON 2026 • SIH26107"
     p.font.size = Pt(11)
     p.font.bold = True
     p.font.color.rgb = ACCENT_GOLD
@@ -107,14 +121,14 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     p1.font.name = "Georgia"
 
     p2 = tf.add_paragraph()
-    p2.text = "AI-Powered Intelligent Assistant for Indian Standards & BIS Services"
+    p2.text = "🛡️ AI-Powered Intelligent Assistant for Indian Standards & BIS Services"
     p2.font.size = Pt(22)
     p2.font.bold = True
     p2.font.color.rgb = ACCENT_GOLD
     p2.font.name = "Arial"
 
     # Subtitle card
-    card_sub = slide1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(4.3), Inches(11.3), Inches(2.2))
+    card_sub = slide1.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(1.0), Inches(4.3), Inches(11.3), Inches(2.3))
     card_sub.fill.solid()
     card_sub.fill.fore_color.rgb = RGBColor(16, 48, 80)
     card_sub.line.color.rgb = RGBColor(30, 75, 120)
@@ -122,23 +136,23 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_sub.word_wrap = True
     
     ps1 = tf_sub.paragraphs[0]
-    ps1.text = "Core Innovation: Fine-Tuned Cross-Encoder RAG Architecture with Clause-Level Grounding & Zero Hallucination"
+    ps1.text = "🧠 Core Innovation: Fine-Tuned Cross-Encoder RAG Architecture with Clause-Level Grounding & Zero Hallucination"
     ps1.font.size = Pt(14)
     ps1.font.bold = True
     ps1.font.color.rgb = RGBColor(255, 255, 255)
 
     ps2 = tf_sub.add_paragraph()
-    ps2.text = "• 23,866 Published Indian Standards indexed with full metadata and classification"
+    ps2.text = "• 📚 23,866 Published Indian Standards indexed with full metadata and classification"
     ps2.font.size = Pt(13)
     ps2.font.color.rgb = RGBColor(203, 213, 225)
 
     ps3 = tf_sub.add_paragraph()
-    ps3.text = "• 17 Official Technical Department Booklets extracted with multi-channel candidate pooling"
+    ps3.text = "• 📑 17 Official Technical Department Booklets extracted with multi-channel candidate pooling"
     ps3.font.size = Pt(13)
     ps3.font.color.rgb = RGBColor(203, 213, 225)
 
     ps4 = tf_sub.add_paragraph()
-    ps4.text = "• Real-Time Calibrated Confidence Meter & Tri-Lingual Support (English, Hindi, Marathi)"
+    ps4.text = "• 📊 Real-Time Calibrated Confidence Meter & Tri-Lingual Support (English, हिन्दी, मराठी)"
     ps4.font.size = Pt(13)
     ps4.font.color.rgb = RGBColor(203, 213, 225)
 
@@ -162,16 +176,16 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_c1.word_wrap = True
 
     p = tf_c1.paragraphs[0]
-    p.text = "The Problem & Critical Challenges"
+    p.text = "⚠️ The Problem & Critical Challenges"
     p.font.size = Pt(18)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     bullets_c1 = [
-        ("Information Overload:", " Over 23,800+ published Indian Standards across diverse technical departments make compliance discovery arduous for MSMEs, startups, and citizens."),
-        ("Hallucination Risk in Generic AI:", " Standard LLMs frequently fabricate standard codes, clauses, fee structures, and testing criteria, which is catastrophic for legal conformity."),
-        ("Siloed Regulatory Documentation:", " Standards, Quality Control Orders (QCOs), departmental booklets, and laboratory testing directories are fragmented across multiple portals."),
-        ("Language & Accessibility Barrier:", " Technical standards are predominantly in complex regulatory English, alienating vernacular manufacturers across Indian states.")
+        ("📚 Information Overload:", " Over 23,800+ published Indian Standards across diverse technical departments make compliance discovery arduous for MSMEs, startups, and citizens."),
+        ("🤖 Hallucination Risk in Generic AI:", " Standard LLMs frequently fabricate standard codes, clauses, fee structures, and testing criteria, which is catastrophic for legal conformity."),
+        ("🗄️ Siloed Regulatory Documentation:", " Standards, Quality Control Orders (QCOs), departmental booklets, and laboratory testing directories are fragmented across multiple portals."),
+        ("🌐 Language & Accessibility Barrier:", " Technical standards are predominantly in complex regulatory English, alienating vernacular manufacturers across Indian states.")
     ]
     for title, desc in bullets_c1:
         p_b = tf_c1.add_paragraph()
@@ -192,17 +206,17 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_c2.word_wrap = True
 
     p = tf_c2.paragraphs[0]
-    p.text = "The Solution: BIS SmartAssist"
+    p.text = "💡 The Solution: BIS SmartAssist"
     p.font.size = Pt(18)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     bullets_c2 = [
-        ("End-to-End Grounded Assistant:", " An intelligent conversational platform linking queries to exact clauses, standards, and official e-BIS/Manakonline sources."),
-        ("Hybrid Retrieval Engine:", " Blends BM25 Okapi lexical indexing with 384-dimensional dense semantic vector representations for high recall."),
-        ("Domain-Adapted Neural Reranker:", " Fine-tuned Cross-Encoder on real PyTorch pipeline with adversarial hard-negative mining for precision scoring."),
-        ("Explainability & Trust:", " Every response includes a real-time Calibrated Confidence Score, clause citations, and direct portal verification links."),
-        ("Comprehensive Compliance Hub:", " Product Standard Finder, QCO mandatory lookup, accredited lab directory, and audit dossier generator.")
+        ("🎯 End-to-End Grounded Assistant:", " An intelligent conversational platform linking queries to exact clauses, standards, and official e-BIS/Manakonline sources."),
+        ("⚡ Hybrid Retrieval Engine:", " Blends BM25 Okapi lexical indexing with 384-dimensional dense semantic vector representations for high recall."),
+        ("🧠 Domain-Adapted Neural Reranker:", " Fine-tuned Cross-Encoder on real PyTorch pipeline with adversarial hard-negative mining for precision scoring."),
+        ("🛡️ Explainability & Trust:", " Every response includes a real-time Calibrated Confidence Score, clause citations, and direct portal verification links."),
+        ("📋 Comprehensive Compliance Hub:", " Product Standard Finder, QCO mandatory lookup, accredited lab directory, and audit dossier generator.")
     ]
     for title, desc in bullets_c2:
         p_b = tf_c2.add_paragraph()
@@ -228,24 +242,23 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     slide3 = prs.slides.add_slide(prs.slide_layouts[6])
     add_header(slide3, "Innovation & Uniqueness")
 
-    # 3x2 Grid or 4 Cards
     innovations = [
-        ("Zero-Hallucination Strict Grounding",
-         "Strict dual-source verification against the published BIS catalogue and departmental booklets. The system is constrained to refuse unsupported queries rather than hallucinating answers (achieving 100% unsupported query accuracy).",
+        ("🛡️ Zero-Hallucination Strict Grounding",
+         "Strict dual-source verification against the published BIS catalogue and departmental booklets. Refuses unsupported queries rather than hallucinating answers (100% unsupported query accuracy).",
          NAVY_BLUE),
-        ("Domain Fine-Tuned Cross-Encoder",
+        ("🧠 Domain Fine-Tuned Cross-Encoder",
          "Trained on real PyTorch sentence-transformers with 3-phase adversarial hard-negative mining (mining false-positive standard overlaps). Reaches 96.15% validation accuracy and 98% Recall@5.",
          GREEN_ACCENT),
-        ("Clause-Level & Page-Level Traceability",
+        ("📑 Clause-Level & Page-Level Traceability",
          "Directly pinpoints specific clauses (e.g., IS 4984 Clause 7.2) and departmental booklet pages with clickable source cards directly hyperlinked to official BIS Manakonline & e-BIS portals.",
          NAVY_BLUE),
-        ("Multi-Signal Calibrated Confidence Meter",
+        ("📊 Multi-Signal Calibrated Confidence Meter",
          "Dynamically computes confidence via an explainable 4-signal formula: Top Candidate Score (35%), Exact IS Number match (25%), Channel Agreement (20%), and Rank-1 vs Rank-2 Margin (20%).",
          ACCENT_GOLD),
-        ("Multi-Channel Candidate Pooling (Top-60)",
+        ("🔀 Multi-Channel Candidate Pooling (Top-60)",
          "Parallel retrieval retrieves Top 30 BM25 Okapi lexical candidates and Top 30 dense semantic vector candidates, normalized and deduplicated before neural reranking for zero missed edge cases.",
          NAVY_BLUE),
-        ("Native Tri-Lingual Accessibility",
+        ("🗣️ Native Tri-Lingual Accessibility",
          "Full multilingual accessibility supporting English, हिन्दी (Hindi), and मराठी (Marathi) with instant localized UI toggling and multilingual cross-lingual query understanding.",
          NAVY_BLUE),
     ]
@@ -300,18 +313,18 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_tech.word_wrap = True
 
     p = tf_tech.paragraphs[0]
-    p.text = "Technology Stack"
+    p.text = "🛠️ Technology Stack"
     p.font.size = Pt(17)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     tech_items = [
-        ("Frontend Application:", "Next.js 14 (App Router), React 18, TypeScript, Lucide Icons, Responsive Mobile-First CSS"),
-        ("Backend Framework:", "FastAPI (Asynchronous Python 3.11), Pydantic v2, SQLAlchemy ORM"),
-        ("Retrieval & Search:", "PureBM25Okapi (k1=1.5, b=0.75), TF-IDF sublinear vectors, ChromaDB persistent store"),
-        ("Deep Learning Models:", "PyTorch, Sentence-Transformers, Fine-Tuned Cross-Encoder (MiniLM-L6-v2)"),
-        ("Data Pipeline:", "Dynamic header inspection, regex IS extractors, PDFPlumber & PyPDF for departmental booklets"),
-        ("Deployment & DevOps:", "Docker, Docker-Compose, Railway / Uvicorn, SQLite/PostgreSQL")
+        ("⚛️ Frontend App:", "Next.js 14 (App Router), React 18, TypeScript, Mobile-First CSS"),
+        ("⚡ Backend Framework:", "FastAPI (Asynchronous Python 3.11), Pydantic v2, SQLAlchemy"),
+        ("🔍 Retrieval Engine:", "PureBM25Okapi (k1=1.5, b=0.75), Sublinear TF-IDF, ChromaDB"),
+        ("🧠 Deep Learning:", "PyTorch, Sentence-Transformers, Fine-Tuned Cross-Encoder (MiniLM)"),
+        ("📄 Data Pipeline:", "Dynamic header inspection, regex IS extractors, PDFPlumber"),
+        ("🐳 Deployment & DevOps:", "Docker, Docker-Compose, Railway / Uvicorn, SQLite/Postgres")
     ]
     for k, v in tech_items:
         p_item = tf_tech.add_paragraph()
@@ -332,19 +345,19 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_app.word_wrap = True
 
     p_app = tf_app.paragraphs[0]
-    p_app.text = "Methodological Approach: 4-Stage Pipeline"
+    p_app.text = "🔄 Methodological Approach: 4-Stage Pipeline"
     p_app.font.size = Pt(17)
     p_app.font.bold = True
     p_app.font.color.rgb = NAVY_BLUE
 
     stages = [
-        ("Stage 1: Intent & Dual-Channel Candidate Pooling",
+        ("1️⃣ Stage 1: Intent & Dual-Channel Candidate Pooling",
          "Extract entities (IS codes, products, clauses). Concurrently query BM25 Lexical Index (Top-30) and Dense Semantic Vector Index (Top-30). Merge, deduplicate, and normalize scores into a candidate pool of 50-60 items."),
-        ("Stage 2: Fine-Tuned Neural Cross-Encoder Reranking",
+        ("2️⃣ Stage 2: Fine-Tuned Neural Cross-Encoder Reranking",
          "Pass (Query, Candidate) pairs into fine-tuned Cross-Encoder. Compute neural matching scores. Blend: Final = 0.70 * RerankScore + 0.30 * NormalizedRetrievalScore to elevate precise standards and eliminate distractors."),
-        ("Stage 3: Calibrated Multi-Signal Confidence Calibration",
+        ("3️⃣ Stage 3: Calibrated Multi-Signal Confidence Calibration",
          "Calculate composite score: Confidence = 0.35 * Stop + 0.25 * Sexact + 0.20 * Sagree + 0.20 * Smargin. Assign dynamic category (VERY_HIGH, HIGH, MEDIUM, LOW) to govern answer generation."),
-        ("Stage 4: Grounded Synthesis & Citations Injection",
+        ("4️⃣ Stage 4: Grounded Synthesis & Citations Injection",
          "Generate structured factual summary citing Standard Number, Title, Clause, Department, and direct link to Manakonline/e-BIS. Refuse out-of-scope queries if confidence is insufficient.")
     ]
     for st_title, st_desc in stages:
@@ -372,21 +385,21 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     add_header(slide5, "Feasibility")
 
     feas_cards = [
-        ("Technical Feasibility",
+        ("🚀 Technical Feasibility",
          "High Readiness Level (TRL 7/8)",
          [
              "Fully functional end-to-end working prototype with 23,866 Indian Standards already ingested and cleaned.",
              "17 Official Departmental Resource Handouts parsed, chunked, and indexed with clause metadata.",
              "Automated PyTest validation suite passing 100% across dataset, cleaning, retrieval, API, and booklets."
          ]),
-        ("Computational Feasibility",
+        ("⏱️ Computational Feasibility",
          "Ultra-Lightweight & Sub-Second Latency",
          [
              "Average retrieval & rerank latency is under 55 ms on standard CPU hardware without requiring expensive GPUs.",
-             "Compact vector index footprint (under 300 MB RAM) allows cost-effective deployment on minimal cloud instances or edge servers.",
+             "Compact vector index footprint (under 300 MB RAM) allows cost-effective deployment on minimal cloud instances.",
              "Asynchronous FastAPI server handles high concurrent user requests with sub-100ms P95 latency."
          ]),
-        ("Operational & Integration Feasibility",
+        ("🔌 Operational & Integration Feasibility",
          "Seamless API & Portal Integration",
          [
              "RESTful API architecture effortlessly embeds into existing BIS portals: Manakonline, e-BIS, and BIS Care App.",
@@ -402,7 +415,6 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
         h = Inches(5.1)
         add_card(slide5, x, y, w, h)
 
-        # Top tag
         tag = slide5.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y, w, Inches(0.08))
         tag.fill.solid()
         tag.fill.fore_color.rgb = NAVY_BLUE
@@ -443,28 +455,28 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     add_header(slide6, "Viability")
 
     viability_pillars = [
-        ("Institutional Viability (BIS)",
+        ("🏛️ Institutional Viability (BIS)",
          NAVY_BLUE,
          [
              "Directly aligns with BIS's mandate for standardization, product quality, and consumer safety.",
              "Drastically reduces manual inquiry burdens on BIS nodal officers and helpline executives.",
              "Provides real-time administrative telemetry, tracking emerging compliance trends and common MSME query hotspots."
          ]),
-        ("Economic & MSME Viability",
+        ("💼 Economic & MSME Viability",
          GREEN_ACCENT,
          [
              "Zero-cost barrier for MSMEs and startups: Replaces expensive third-party compliance consultants.",
              "Fast-tracks certification cycles: Cuts standards identification time from days to sub-seconds.",
              "Mitigates regulatory penalties: Clear QCO visibility prevents product confiscation or compliance failure."
          ]),
-        ("Commercial & Scalability Model",
+        ("📈 Commercial & Scalability Model",
          ACCENT_GOLD,
          [
              "Public-Private Utility: Free public citizen access with potential premium API webhooks for enterprise ERP integration.",
              "Modular Extensibility: Easily scalable to include state regulations, international ISO/IEC equivalencies, and live lab test slot booking.",
              "Sustainable Maintenance: Automated ingestion scrapers update changes in gazette notifications with zero system downtime."
          ]),
-        ("Consumer & Societal Viability",
+        ("🤝 Consumer & Societal Viability",
          NAVY_BLUE,
          [
              "Democratizes quality standards knowledge for consumers checking ISI and Hallmarked gold authenticity.",
@@ -515,12 +527,12 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     slide7 = prs.slides.add_slide(prs.slide_layouts[6])
     add_header(slide7, "Impact and Benefits")
 
-    # Metrics Row (4 Badges)
+    # Metrics Row (4 Badges with Icons)
     metrics = [
-        ("98.00%", "Recall @ 5", "+13% over baseline hybrid retrieval", GREEN_ACCENT),
-        ("90.00%", "Recall @ 1", "Accurate standard at Top-1 result", GREEN_ACCENT),
-        ("100.0%", "Clause Accuracy", "Zero hallucinations on technical limits", NAVY_BLUE),
-        ("100.0%", "Unsupported Refusal", "Protective zero-hallucination guardrail", ACCENT_GOLD)
+        ("🎯 98.00%", "Recall @ 5", "+13% over baseline hybrid retrieval", GREEN_ACCENT),
+        ("🥇 90.00%", "Recall @ 1", "Accurate standard at Top-1 result", GREEN_ACCENT),
+        ("🛡️ 100.0%", "Clause Accuracy", "Zero hallucinations on technical limits", NAVY_BLUE),
+        ("🛑 100.0%", "Unsupported Refusal", "Protective zero-hallucination guardrail", ACCENT_GOLD)
     ]
 
     for i, (val, title, subtitle, col) in enumerate(metrics):
@@ -535,7 +547,7 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
         tf_m.word_wrap = True
         p_val = tf_m.paragraphs[0]
         p_val.text = val
-        p_val.font.size = Pt(24)
+        p_val.font.size = Pt(22)
         p_val.font.bold = True
         p_val.font.color.rgb = col
         p_val.alignment = PP_ALIGN.CENTER
@@ -560,16 +572,16 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_imp1.word_wrap = True
 
     p = tf_imp1.paragraphs[0]
-    p.text = "Benefits to Industry & MSMEs"
+    p.text = "🏭 Benefits to Industry & MSMEs"
     p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     b_msme = [
-        "Instant Standard Discovery: Search by product name, application, or industry sector in seconds.",
-        "Clear QCO Enforcement Tracking: Instant warning if mandatory Quality Control Order applies.",
-        "Audit Dossier Generation: Automatically export structured compliance checklists for certification filings.",
-        "Cost Savings: Estimated 80% reduction in preliminary compliance advisory costs for new startups."
+        "⚡ Instant Standard Discovery: Search by product name, application, or industry sector in seconds.",
+        "⚠️ Clear QCO Enforcement Tracking: Instant warning if mandatory Quality Control Order applies.",
+        "📋 Audit Dossier Generation: Automatically export structured compliance checklists for certification filings.",
+        "💰 Cost Savings: Estimated 80% reduction in preliminary compliance advisory costs for new startups."
     ]
     for b in b_msme:
         p_b = tf_imp1.add_paragraph()
@@ -584,16 +596,16 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_imp2.word_wrap = True
 
     p = tf_imp2.paragraphs[0]
-    p.text = "Benefits to Government & Citizens"
+    p.text = "🇮🇳 Benefits to Government & Citizens"
     p.font.size = Pt(15)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     b_gov = [
-        "Empowers 'Make in India': Accelerates adoption of world-class manufacturing standards.",
-        "Protects Consumer Welfare: Easy verification of ISI marks, hallmark purities, and safety mandates.",
-        "Administrative Efficiency: Eases BIS departmental ticket queues via automated 24/7 self-service.",
-        "Transparent Governance: Direct links to official e-BIS gazettes eliminate misinformation."
+        "🚀 Empowers 'Make in India': Accelerates adoption of world-class manufacturing standards.",
+        "🛡️ Protects Consumer Welfare: Easy verification of ISI marks, hallmark purities, and safety mandates.",
+        "🏛️ Administrative Efficiency: Eases BIS departmental ticket queues via automated 24/7 self-service.",
+        "🌐 Transparent Governance: Direct links to official e-BIS gazettes eliminate misinformation."
     ]
     for b in b_gov:
         p_b = tf_imp2.add_paragraph()
@@ -620,16 +632,16 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_rp.word_wrap = True
 
     p = tf_rp.paragraphs[0]
-    p.text = "Scientific Research Contribution"
+    p.text = "🔬 Scientific Research Contribution"
     p.font.size = Pt(16)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     rp_points = [
-        ("Novel Benchmark Dataset:", " Curated 100-question multi-category gold benchmark spanning 10 complex regulatory query types with clause-level ground truth."),
-        ("Adversarial Hard-Negative Mining:", " Empirical methodology for mining confusing similar standards into fine-tuned Cross-Encoder training, raising MRR to 0.9323."),
-        ("Multi-Signal Confidence Formulation:", " Closed-form calibration equation combining top candidate score, exact entity recognition, channel consensus, and ranking margin."),
-        ("Zero-Hallucination Regulatory Bounds:", " Proven architecture achieving 100% accuracy on detecting and refusing out-of-domain / unsupported regulatory inquiries.")
+        ("📊 Novel Benchmark Dataset:", " Curated 100-question multi-category gold benchmark spanning 10 complex regulatory query types with clause-level ground truth."),
+        ("🧠 Adversarial Hard-Negative Mining:", " Empirical methodology for mining confusing similar standards into fine-tuned Cross-Encoder training, raising MRR to 0.9323."),
+        ("⚖️ Multi-Signal Confidence Formulation:", " Closed-form calibration equation combining top candidate score, exact entity recognition, channel consensus, and ranking margin."),
+        ("🛡️ Zero-Hallucination Regulatory Bounds:", " Proven architecture achieving 100% accuracy on detecting and refusing out-of-domain / unsupported regulatory inquiries.")
     ]
     for t, d in rp_points:
         p_rp = tf_rp.add_paragraph()
@@ -649,16 +661,16 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     tf_rd.word_wrap = True
 
     p = tf_rd.paragraphs[0]
-    p.text = "Project Roadmap & Scalability"
+    p.text = "🗺️ Project Roadmap & Scalability"
     p.font.size = Pt(16)
     p.font.bold = True
     p.font.color.rgb = NAVY_BLUE
 
     rd_points = [
-        ("Phase 1 (Current):", " Production prototype with 23,866 Indian Standards, 17 Technical Booklets, fine-tuned reranker, and multilingual UI."),
-        ("Phase 2 (Integration):", " Official pilot integration with BIS Manakonline & e-BIS portal search bars via lightweight REST microservices."),
-        ("Phase 3 (Mobile & Voice):", " WhatsApp chatbot and voice-first AI assistant in 10+ Indian regional languages for on-field factory inspectors and rural artisans."),
-        ("Phase 4 (Automated Compliance Auditor):", " PDF upload feature allowing manufacturers to upload lab test reports for automated BIS conformance auditing.")
+        ("🟢 Phase 1 (Current):", " Production prototype with 23,866 Indian Standards, 17 Technical Booklets, fine-tuned reranker, and multilingual UI."),
+        ("🌐 Phase 2 (Integration):", " Official pilot integration with BIS Manakonline & e-BIS portal search bars via lightweight REST microservices."),
+        ("📱 Phase 3 (Mobile & Voice):", " WhatsApp chatbot and voice-first AI assistant in 10+ Indian regional languages for on-field factory inspectors and rural artisans."),
+        ("📋 Phase 4 (Automated Compliance Auditor):", " PDF upload feature allowing manufacturers to upload lab test reports for automated BIS conformance auditing.")
     ]
     for t, d in rd_points:
         p_rd = tf_rd.add_paragraph()
@@ -678,8 +690,14 @@ def create_presentation(output_path="BIS_SmartAssist_Presentation.pptx"):
     )
 
     # Save
-    prs.save(output_path)
-    print(f"Presentation successfully created at: {output_path}")
+    try:
+        prs.save(output_path)
+        print(f"Presentation successfully created at: {output_path}")
+    except PermissionError:
+        fallback_path = "BIS_SmartAssist_Presentation_With_Icons.pptx"
+        prs.save(fallback_path)
+        print(f"Note: '{output_path}' is currently open in PowerPoint.")
+        print(f"Presentation successfully saved to fallback: {fallback_path}")
 
 if __name__ == "__main__":
     create_presentation()
